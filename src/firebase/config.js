@@ -1,24 +1,19 @@
-// Firebase initialization.
-// All values below come from Vite env vars (see .env.example).
-// The Firebase Web config is not a secret - it's safe to ship in the client bundle.
-// Real protection comes from Firestore/Storage Security Rules (see /firestore.rules).
-import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
-
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-}
-
-const app = initializeApp(firebaseConfig)
-
-export const auth = getAuth(app)
-export const db = getFirestore(app)
-export const storage = getStorage(app)
-export default app
+  apiKey: "AIzaSyBmAol0JD3uqul3BWCOzSPvOKVAgZlCct4",
+  authDomain: "invoice-contract-generator.firebaseapp.com",
+  projectId: "invoice-contract-generator",
+  storageBucket: "invoice-contract-generator.firebasestorage.app",
+  messagingSenderId: "56554555044",
+  appId: "1:56554555044:web:cd2d8cff81c10923170831",
+  measurementId: "G-810T4MGER9"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);

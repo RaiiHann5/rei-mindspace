@@ -1,40 +1,42 @@
-import { readAll, writeAll, generateId } from '../local/db'
+import {
+  collection, doc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, query, where, orderBy,
+} from 'firebase/firestore'
+import { db } from '../firebase/config'
 import { generatePublicId } from '../utils/generateId'
 
 const COLLECTION = 'invoices'
 
 export async function listInvoices(userId) {
-  return readAll(COLLECTION)
-    .filter((i) => i.userId === userId)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  const q = query(collection(db, COLLECTION), where('userId', '==', userId), orderBy('createdAt', 'desc'))
+  const snap = await getDocs(q)
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
 }
 
 export async function getInvoice(invoiceId) {
-  return readAll(COLLECTION).find((i) => i.id === invoiceId) || null
+  const snap = await getDoc(doc(db, COLLECTION, invoiceId))
+  return snap.exists() ? { id: snap.id, ...snap.data() } : null
 }
 
 // Public lookup used by the QR / public verification page.
 export async function getInvoiceByPublicId(publicId) {
-  return readAll(COLLECTION).find((i) => i.publicId === publicId) || null
+  const q = query(collection(db, COLLECTION), where('publicId', '==', publicId))
+  const snap = await getDocs(q)
+  if (snap.empty) return null
+  const d = snap.docs[0]
+  return { id: d.id, ...d.data() }
 }
 
 export async function createInvoice(userId, data) {
-  const items = readAll(COLLECTION)
-  const id = generateId('invoice_')
   const publicId = generatePublicId()
   const now = new Date().toISOString()
-  items.push({ ...data, id, userId, publicId, createdAt: now, updatedAt: now })
-  writeAll(COLLECTION, items)
-  return { id, publicId }
+  const ref = await addDoc(collection(db, COLLECTION), {
+    ...data, userId, publicId, createdAt: now, updatedAt: now,
+  })
+  return { id: ref.id, publicId }
 }
 
 export async function updateInvoice(invoiceId, data) {
-  const items = readAll(COLLECTION)
-  const idx = items.findIndex((i) => i.id === invoiceId)
-  if (idx !== -1) {
-    items[idx] = { ...items[idx], ...data, updatedAt: new Date().toISOString() }
-    writeAll(COLLECTION, items)
-  }
+  await updateDoc(doc(db, COLLECTION, invoiceId), { ...data, updatedAt: new Date().toISOString() })
 }
 
 export async function updateInvoiceStatus(invoiceId, status) {
@@ -42,7 +44,7 @@ export async function updateInvoiceStatus(invoiceId, status) {
 }
 
 export async function deleteInvoice(invoiceId) {
-  writeAll(COLLECTION, readAll(COLLECTION).filter((i) => i.id !== invoiceId))
+  await deleteDoc(doc(db, COLLECTION, invoiceId))
 }
 
 export function nextInvoiceNumber(existingInvoices) {

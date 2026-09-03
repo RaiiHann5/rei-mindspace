@@ -1,7 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import {
-  onAuthStateChanged, registerUser, loginUser, logoutUser, updateUserProfile,
-} from '../local/auth'
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from 'firebase/auth'
+import { auth } from '../firebase/config'
 import { getUserData, initUserData } from '../services/businessService'
 
 const AuthContext = createContext(null)
@@ -17,7 +22,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsub = onAuthStateChanged((user) => {
+    const unsub = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user)
       setLoading(false)
     })
@@ -25,14 +30,13 @@ export function AuthProvider({ children }) {
   }, [])
 
   async function register({ name, email, password }) {
-    const user = await registerUser({ name, email, password })
+    const cred = await createUserWithEmailAndPassword(auth, email, password)
+    await updateProfile(cred.user, { displayName: name })
 
     // Create the user's private profile/business record.
-    // Each user only ever reads/writes their own data (scoped by userId
-    // in every services/*.js call) - see /local/db.js for how this is
-    // stored locally, and /firestore.rules for the equivalent server-side
-    // isolation to apply once this is wired up to real Firebase.
-    await initUserData(user.uid, {
+    // Each user only ever reads/writes their own data, scoped by uid,
+    // matching firestore.rules ( /users/{userId} isOwner(userId) ).
+    await initUserData(cred.user.uid, {
       profile: { name, email, createdAt: new Date().toISOString() },
       business: {
         businessName: '',
@@ -46,19 +50,20 @@ export function AuthProvider({ children }) {
       },
     })
 
-    return user
+    return cred.user
   }
 
   async function login({ email, password }) {
-    return loginUser({ email, password })
+    const cred = await signInWithEmailAndPassword(auth, email, password)
+    return cred.user
   }
 
   async function logout() {
-    await logoutUser()
+    await signOut(auth)
   }
 
   async function updateDisplayName(name) {
-    await updateUserProfile(currentUser.uid, { displayName: name })
+    await updateProfile(auth.currentUser, { displayName: name })
     setCurrentUser((prev) => (prev ? { ...prev, displayName: name } : prev))
   }
 

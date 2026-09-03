@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import clsx from 'clsx'
 
 export default function Card({ children, className, title, subtitle, action }) {
@@ -12,6 +13,21 @@ export default function Card({ children, className, title, subtitle, action }) {
           {action}
         </div>
       )}
+=======
+import { cn } from '@/lib/utils'
+
+export default function Card({ className, children, glass = true, hover = false, ...props }) {
+  return (
+    <div
+      className={cn(
+        'rounded-2xl p-5',
+        glass ? 'glass' : 'glass-solid',
+        hover && 'transition-all duration-200 hover:shadow-lg hover:shadow-black/5 hover:-translate-y-0.5',
+        className
+      )}
+      {...props}
+    >
+>>>>>>> b4b2ee123dad43c2655a52eab73876263db4f19f
       {children}
     </div>
   )

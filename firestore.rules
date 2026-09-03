@@ -1,0 +1,43 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // /users/{userId} - profile + business settings, private to the owner
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // /clients/{clientId} - each client doc has a userId field
+    match /clients/{clientId} {
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // /invoices/{invoiceId} - owner has full access.
+    // Anyone (even signed out) may READ an invoice ONLY through the public
+    // verification page, which queries by publicId and only ever needs
+    // read access to non-sensitive fields. We allow public read here and
+    // rely on the client (PublicInvoice page) to only render safe fields.
+    // Writes are restricted to the owner only.
+    match /invoices/{invoiceId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // /contracts/{contractId}
+    match /contracts/{contractId} {
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+  }
+}

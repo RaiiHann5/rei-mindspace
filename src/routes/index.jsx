@@ -65,7 +65,12 @@ export const router = createHashRouter([
       { path: 'login', element: <LoginPage /> },
       { path: 'signup', element: <SignupPage /> },
       {
-        index: true,
+        // Pathless layout route: no `path` and no `index`, which is what lets
+        // it legally own `children`. It used to be `index: true` with a
+        // `children` array, which react-router v7 rejects outright at runtime
+        // ("Cannot specify children on an index route") — the whole app
+        // rendered as a blank page. The Dashboard below is the real index
+        // route, so URLs are unchanged.
         element: <ProtectedRoute><AppLayout /></ProtectedRoute>,
         children: [
           { index: true, element: <Dashboard /> },

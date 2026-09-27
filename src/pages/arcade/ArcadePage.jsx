@@ -174,16 +174,12 @@ const retroStyles = `
     linear-gradient(90deg, rgba(244, 244, 245, 0.08) 1px, transparent 1px);
 }
 
+/* Was cyan-over-purple; retinted to the single ember corner glow used
+   everywhere else in Space+ so the Break Room belongs to the same console. */
 .retro-root-glow {
   background-image:
-    radial-gradient(circle at top, rgba(6, 182, 212, 0.12), transparent 32%),
-    radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.10), transparent 28%);
-}
-
-.dark .retro-root-glow {
-  background-image:
-    radial-gradient(circle at top, rgba(34, 211, 238, 0.14), transparent 32%),
-    radial-gradient(circle at bottom right, rgba(217, 70, 239, 0.12), transparent 28%);
+    radial-gradient(circle at top right, rgba(255, 122, 41, 0.11), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(193, 64, 13, 0.07), transparent 30%);
 }
 
 .crt-overlay {
@@ -294,125 +290,137 @@ const retroStyles = `
 }
 `
 
+// Game accent tones.
+//
+// This used to be seven saturated neons (cyan / violet / amber / rose / lime /
+// orange / teal), each with its own coloured outer glow. Seven hues at once read
+// as a rainbow and fought the ember accent everywhere else in the app, and the
+// per-card neon bloom meant there was no "one glow per screen" left.
+//
+// The keys are kept because GAMES references them by name. The values now come
+// from the Space+ palette — two ember, two teal, amber, rose, dusk — so seven
+// games still read as distinct but the page holds together as one system. The
+// retro character (2px borders, hard offset shadows, scanlines, the pixel face)
+// is untouched; only the colour is brought in line.
 const TONES = {
   cyan: {
     iconBox:
-      'border-cyan-500/50 bg-cyan-500/10 text-cyan-600 shadow-[0_0_18px_rgba(6,182,212,0.25)] dark:border-cyan-400/60 dark:bg-cyan-500/10 dark:text-cyan-300 dark:shadow-[0_0_24px_rgba(34,211,238,0.25)]',
+      'border-teal-500/50 bg-teal-500/10 text-teal-700 dark:border-teal-300/40 dark:bg-teal-500/10 dark:text-teal-300',
     badge:
-      'border-cyan-500/40 bg-cyan-500/10 text-cyan-700 dark:border-cyan-400/50 dark:bg-cyan-500/15 dark:text-cyan-200',
+      'border-teal-500/40 bg-teal-500/10 text-teal-700 dark:border-teal-300/30 dark:bg-teal-500/10 dark:text-teal-300',
     glow:
-      'from-cyan-500/15 via-cyan-500/10 to-transparent dark:from-cyan-500/30 dark:via-cyan-500/10 dark:to-transparent',
+      'from-teal-500/10 via-teal-500/[0.06] to-transparent dark:from-teal-500/15 dark:via-teal-500/[0.05] dark:to-transparent',
     cta:
-      'border-cyan-600/50 bg-cyan-500 text-white shadow-[0_0_18px_rgba(6,182,212,0.3)] hover:bg-cyan-400 dark:border-cyan-200/70 dark:bg-cyan-400 dark:text-zinc-950 dark:shadow-[0_0_24px_rgba(34,211,238,0.35)] dark:hover:bg-cyan-300',
-    focus: 'focus-visible:ring-cyan-500/50 dark:focus-visible:ring-cyan-400/70',
+      'border-teal-600/50 bg-teal-500 text-white hover:bg-teal-600 dark:border-teal-300/40 dark:bg-teal-500 dark:text-white dark:hover:bg-teal-400',
+    focus: 'focus-visible:ring-teal-500/50 dark:focus-visible:ring-teal-300/60',
     cardHover:
-      'hover:border-cyan-500/60 hover:shadow-[10px_10px_0_0_rgba(6,182,212,0.18)] dark:hover:border-cyan-400/70 dark:hover:shadow-[10px_10px_0_0_rgba(34,211,238,0.25)]',
+      'hover:border-teal-500/50 dark:hover:border-teal-300/40 dark:hover:shadow-[10px_10px_0_0_rgba(110,140,136,0.22)]',
     statIcon:
-      'border-cyan-500/40 bg-cyan-500/10 text-cyan-600 dark:border-cyan-400/40 dark:bg-cyan-500/10 dark:text-cyan-300',
-    text: 'text-cyan-600 dark:text-cyan-300',
-    dot: 'bg-cyan-500 dark:bg-cyan-400',
+      'border-teal-500/40 bg-teal-500/10 text-teal-700 dark:border-teal-300/30 dark:bg-teal-500/10 dark:text-teal-300',
+    text: 'text-teal-700 dark:text-teal-300',
+    dot: 'bg-teal-500 dark:bg-teal-300',
   },
   violet: {
     iconBox:
-      'border-violet-500/50 bg-violet-500/10 text-violet-600 shadow-[0_0_18px_rgba(124,58,237,0.25)] dark:border-violet-400/60 dark:bg-violet-500/10 dark:text-violet-300 dark:shadow-[0_0_24px_rgba(139,92,246,0.25)]',
+      'border-[color:var(--line-strong)] bg-black/[0.05] text-dusk dark:bg-white/[0.06] dark:text-dusk',
     badge:
-      'border-violet-500/40 bg-violet-500/10 text-violet-700 dark:border-violet-400/50 dark:bg-violet-500/15 dark:text-violet-200',
+      'border-[color:var(--line)] bg-black/[0.04] text-muted-light dark:bg-white/[0.05] dark:text-muted-dark',
     glow:
-      'from-violet-500/15 via-violet-500/10 to-transparent dark:from-violet-500/30 dark:via-violet-500/10 dark:to-transparent',
+      'from-black/[0.06] via-black/[0.03] to-transparent dark:from-white/[0.05] dark:via-white/[0.03] dark:to-transparent',
     cta:
-      'border-violet-600/50 bg-violet-500 text-white shadow-[0_0_18px_rgba(124,58,237,0.3)] hover:bg-violet-400 dark:border-violet-200/70 dark:bg-violet-400 dark:text-zinc-950 dark:shadow-[0_0_24px_rgba(139,92,246,0.35)] dark:hover:bg-violet-300',
-    focus: 'focus-visible:ring-violet-500/50 dark:focus-visible:ring-violet-400/70',
+      'border-[color:var(--line-strong)] bg-panel2-light text-ink-light hover:border-ember-500/60 hover:text-ember-500 dark:bg-panel2-dark dark:text-ink-dark dark:hover:text-ember-300',
+    focus: 'focus-visible:ring-dusk/50',
     cardHover:
-      'hover:border-violet-500/60 hover:shadow-[10px_10px_0_0_rgba(124,58,237,0.18)] dark:hover:border-violet-400/70 dark:hover:shadow-[10px_10px_0_0_rgba(139,92,246,0.25)]',
+      'hover:border-[color:var(--line-strong)] dark:hover:shadow-[10px_10px_0_0_rgba(0,0,0,0.45)]',
     statIcon:
-      'border-violet-500/40 bg-violet-500/10 text-violet-600 dark:border-violet-400/40 dark:bg-violet-500/10 dark:text-violet-300',
-    text: 'text-violet-600 dark:text-violet-300',
-    dot: 'bg-violet-500 dark:bg-violet-400',
+      'border-[color:var(--line)] bg-black/[0.04] text-dusk dark:bg-white/[0.05] dark:text-dusk',
+    text: 'text-muted-light dark:text-muted-dark',
+    dot: 'bg-dusk',
   },
   amber: {
     iconBox:
-      'border-amber-500/50 bg-amber-500/10 text-amber-600 shadow-[0_0_18px_rgba(245,158,11,0.25)] dark:border-amber-400/60 dark:bg-amber-500/10 dark:text-amber-300 dark:shadow-[0_0_24px_rgba(251,191,36,0.25)]',
+      'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:border-amber-300/40 dark:bg-amber-500/10 dark:text-amber-300',
     badge:
-      'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:border-amber-400/50 dark:bg-amber-500/15 dark:text-amber-200',
+      'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:border-amber-300/30 dark:bg-amber-500/10 dark:text-amber-300',
     glow:
-      'from-amber-500/15 via-amber-500/10 to-transparent dark:from-amber-500/30 dark:via-amber-500/10 dark:to-transparent',
+      'from-amber-500/10 via-amber-500/[0.06] to-transparent dark:from-amber-500/15 dark:via-amber-500/[0.05] dark:to-transparent',
     cta:
-      'border-amber-600/50 bg-amber-500 text-zinc-950 shadow-[0_0_18px_rgba(245,158,11,0.3)] hover:bg-amber-400 dark:border-amber-200/70 dark:bg-amber-400 dark:text-zinc-950 dark:shadow-[0_0_24px_rgba(251,191,36,0.35)] dark:hover:bg-amber-300',
-    focus: 'focus-visible:ring-amber-500/50 dark:focus-visible:ring-amber-400/70',
+      'border-amber-600/50 bg-amber-500 text-ink-light hover:bg-amber-600 dark:border-amber-300/40 dark:bg-amber-500 dark:text-ink-light dark:hover:bg-amber-400',
+    focus: 'focus-visible:ring-amber-500/50 dark:focus-visible:ring-amber-300/60',
     cardHover:
-      'hover:border-amber-500/60 hover:shadow-[10px_10px_0_0_rgba(245,158,11,0.18)] dark:hover:border-amber-400/70 dark:hover:shadow-[10px_10px_0_0_rgba(251,191,36,0.25)]',
+      'hover:border-amber-500/50 dark:hover:border-amber-300/40 dark:hover:shadow-[10px_10px_0_0_rgba(192,168,118,0.20)]',
     statIcon:
-      'border-amber-500/40 bg-amber-500/10 text-amber-600 dark:border-amber-400/40 dark:bg-amber-500/10 dark:text-amber-300',
-    text: 'text-amber-600 dark:text-amber-300',
-    dot: 'bg-amber-500 dark:bg-amber-400',
+      'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:border-amber-300/30 dark:bg-amber-500/10 dark:text-amber-300',
+    text: 'text-amber-700 dark:text-amber-300',
+    dot: 'bg-amber-500 dark:bg-amber-300',
   },
   rose: {
     iconBox:
-      'border-rose-500/50 bg-rose-500/10 text-rose-600 shadow-[0_0_18px_rgba(244,63,94,0.25)] dark:border-rose-400/60 dark:bg-rose-500/10 dark:text-rose-300 dark:shadow-[0_0_24px_rgba(251,113,133,0.25)]',
+      'border-rose-500/50 bg-rose-500/10 text-rose-700 dark:border-rose-300/40 dark:bg-rose-500/10 dark:text-rose-300',
     badge:
-      'border-rose-500/40 bg-rose-500/10 text-rose-700 dark:border-rose-400/50 dark:bg-rose-500/15 dark:text-rose-200',
+      'border-rose-500/40 bg-rose-500/10 text-rose-700 dark:border-rose-300/30 dark:bg-rose-500/10 dark:text-rose-300',
     glow:
-      'from-rose-500/15 via-rose-500/10 to-transparent dark:from-rose-500/30 dark:via-rose-500/10 dark:to-transparent',
+      'from-rose-500/10 via-rose-500/[0.06] to-transparent dark:from-rose-500/15 dark:via-rose-500/[0.05] dark:to-transparent',
     cta:
-      'border-rose-600/50 bg-rose-500 text-white shadow-[0_0_18px_rgba(244,63,94,0.3)] hover:bg-rose-400 dark:border-rose-200/70 dark:bg-rose-400 dark:text-zinc-950 dark:shadow-[0_0_24px_rgba(251,113,133,0.35)] dark:hover:bg-rose-300',
-    focus: 'focus-visible:ring-rose-500/50 dark:focus-visible:ring-rose-400/70',
+      'border-rose-600/50 bg-rose-500 text-white hover:bg-rose-600 dark:border-rose-300/40 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400',
+    focus: 'focus-visible:ring-rose-500/50 dark:focus-visible:ring-rose-300/60',
     cardHover:
-      'hover:border-rose-500/60 hover:shadow-[10px_10px_0_0_rgba(244,63,94,0.18)] dark:hover:border-rose-400/70 dark:hover:shadow-[10px_10px_0_0_rgba(251,113,133,0.25)]',
+      'hover:border-rose-500/50 dark:hover:border-rose-300/40 dark:hover:shadow-[10px_10px_0_0_rgba(168,83,95,0.22)]',
     statIcon:
-      'border-rose-500/40 bg-rose-500/10 text-rose-600 dark:border-rose-400/40 dark:bg-rose-500/10 dark:text-rose-300',
-    text: 'text-rose-600 dark:text-rose-300',
-    dot: 'bg-rose-500 dark:bg-rose-400',
+      'border-rose-500/40 bg-rose-500/10 text-rose-700 dark:border-rose-300/30 dark:bg-rose-500/10 dark:text-rose-300',
+    text: 'text-rose-700 dark:text-rose-300',
+    dot: 'bg-rose-500 dark:bg-rose-300',
   },
   lime: {
     iconBox:
-      'border-lime-500/50 bg-lime-500/10 text-lime-600 shadow-[0_0_18px_rgba(132,204,22,0.25)] dark:border-lime-400/60 dark:bg-lime-500/10 dark:text-lime-300 dark:shadow-[0_0_24px_rgba(163,230,53,0.25)]',
+      'border-ember-500/50 bg-ember-500/10 text-ember-700 dark:border-ember-300/40 dark:bg-ember-500/10 dark:text-ember-300',
     badge:
-      'border-lime-500/40 bg-lime-500/10 text-lime-700 dark:border-lime-400/50 dark:bg-lime-500/15 dark:text-lime-200',
+      'border-ember-500/40 bg-ember-500/10 text-ember-700 dark:border-ember-300/30 dark:bg-ember-500/10 dark:text-ember-300',
     glow:
-      'from-lime-500/15 via-lime-500/10 to-transparent dark:from-lime-500/30 dark:via-lime-500/10 dark:to-transparent',
+      'from-ember-500/12 via-ember-500/[0.06] to-transparent dark:from-ember-500/18 dark:via-ember-500/[0.06] dark:to-transparent',
     cta:
-      'border-lime-600/50 bg-lime-500 text-zinc-950 shadow-[0_0_18px_rgba(132,204,22,0.3)] hover:bg-lime-400 dark:border-lime-200/70 dark:bg-lime-400 dark:text-zinc-950 dark:shadow-[0_0_24px_rgba(163,230,53,0.35)] dark:hover:bg-lime-300',
-    focus: 'focus-visible:ring-lime-500/50 dark:focus-visible:ring-lime-400/70',
+      'border-ember-700/50 bg-ember-500 text-accent-ink hover:bg-ember-600 dark:border-ember-300/40 dark:bg-ember-500 dark:text-accent-ink dark:hover:bg-ember-400',
+    focus: 'focus-visible:ring-ember-500/50 dark:focus-visible:ring-ember-300/60',
     cardHover:
-      'hover:border-lime-500/60 hover:shadow-[10px_10px_0_0_rgba(132,204,22,0.18)] dark:hover:border-lime-400/70 dark:hover:shadow-[10px_10px_0_0_rgba(163,230,53,0.25)]',
+      'hover:border-ember-500/50 dark:hover:border-ember-300/40 dark:hover:shadow-[10px_10px_0_0_rgba(193,64,13,0.26)]',
     statIcon:
-      'border-lime-500/40 bg-lime-500/10 text-lime-600 dark:border-lime-400/40 dark:bg-lime-500/10 dark:text-lime-300',
-    text: 'text-lime-600 dark:text-lime-300',
-    dot: 'bg-lime-500 dark:bg-lime-400',
+      'border-ember-500/40 bg-ember-500/10 text-ember-700 dark:border-ember-300/30 dark:bg-ember-500/10 dark:text-ember-300',
+    text: 'text-ember-700 dark:text-ember-300',
+    dot: 'bg-ember-500 dark:bg-ember-300',
   },
   orange: {
     iconBox:
-      'border-orange-500/50 bg-orange-500/10 text-orange-600 shadow-[0_0_18px_rgba(249,115,22,0.25)] dark:border-orange-400/60 dark:bg-orange-500/10 dark:text-orange-300 dark:shadow-[0_0_24px_rgba(251,146,60,0.25)]',
+      'border-ember-300/50 bg-ember-300/10 text-ember-700 dark:border-ember-300/40 dark:bg-ember-300/10 dark:text-ember-300',
     badge:
-      'border-orange-500/40 bg-orange-500/10 text-orange-700 dark:border-orange-400/50 dark:bg-orange-500/15 dark:text-orange-200',
+      'border-ember-300/40 bg-ember-300/10 text-ember-700 dark:border-ember-300/30 dark:bg-ember-300/10 dark:text-ember-300',
     glow:
-      'from-orange-500/15 via-orange-500/10 to-transparent dark:from-orange-500/30 dark:via-orange-500/10 dark:to-transparent',
+      'from-ember-300/12 via-ember-300/[0.06] to-transparent dark:from-ember-300/16 dark:via-ember-300/[0.05] dark:to-transparent',
     cta:
-      'border-orange-600/50 bg-orange-500 text-white shadow-[0_0_18px_rgba(249,115,22,0.3)] hover:bg-orange-400 dark:border-orange-200/70 dark:bg-orange-400 dark:text-zinc-950 dark:shadow-[0_0_24px_rgba(251,146,60,0.35)] dark:hover:bg-orange-300',
-    focus: 'focus-visible:ring-orange-500/50 dark:focus-visible:ring-orange-400/70',
+      'border-ember-700/50 bg-ember-300 text-accent-ink hover:bg-ember-400 dark:border-ember-300/40 dark:bg-ember-300 dark:text-accent-ink dark:hover:bg-ember-400',
+    focus: 'focus-visible:ring-ember-300/50',
     cardHover:
-      'hover:border-orange-500/60 hover:shadow-[10px_10px_0_0_rgba(249,115,22,0.18)] dark:hover:border-orange-400/70 dark:hover:shadow-[10px_10px_0_0_rgba(251,146,60,0.25)]',
+      'hover:border-ember-300/50 dark:hover:border-ember-300/40 dark:hover:shadow-[10px_10px_0_0_rgba(255,179,67,0.22)]',
     statIcon:
-      'border-orange-500/40 bg-orange-500/10 text-orange-600 dark:border-orange-400/40 dark:bg-orange-500/10 dark:text-orange-300',
-    text: 'text-orange-600 dark:text-orange-300',
-    dot: 'bg-orange-500 dark:bg-orange-400',
+      'border-ember-300/40 bg-ember-300/10 text-ember-700 dark:border-ember-300/30 dark:bg-ember-300/10 dark:text-ember-300',
+    text: 'text-ember-700 dark:text-ember-300',
+    dot: 'bg-ember-300',
   },
   teal: {
     iconBox:
-      'border-teal-500/50 bg-teal-500/10 text-teal-600 shadow-[0_0_18px_rgba(20,184,166,0.25)] dark:border-teal-400/60 dark:bg-teal-500/10 dark:text-teal-300 dark:shadow-[0_0_24px_rgba(45,212,191,0.25)]',
+      'border-teal-300/50 bg-teal-300/10 text-teal-700 dark:border-teal-300/35 dark:bg-teal-300/10 dark:text-teal-300',
     badge:
-      'border-teal-500/40 bg-teal-500/10 text-teal-700 dark:border-teal-400/50 dark:bg-teal-500/15 dark:text-teal-200',
+      'border-teal-300/40 bg-teal-300/10 text-teal-700 dark:border-teal-300/30 dark:bg-teal-300/10 dark:text-teal-300',
     glow:
-      'from-teal-500/15 via-teal-500/10 to-transparent dark:from-teal-500/30 dark:via-teal-500/10 dark:to-transparent',
+      'from-teal-300/10 via-teal-300/[0.06] to-transparent dark:from-teal-300/14 dark:via-teal-300/[0.05] dark:to-transparent',
     cta:
-      'border-teal-600/50 bg-teal-500 text-white shadow-[0_0_18px_rgba(20,184,166,0.3)] hover:bg-teal-400 dark:border-teal-200/70 dark:bg-teal-400 dark:text-zinc-950 dark:shadow-[0_0_24px_rgba(45,212,191,0.35)] dark:hover:bg-teal-300',
-    focus: 'focus-visible:ring-teal-500/50 dark:focus-visible:ring-teal-400/70',
+      'border-teal-600/50 bg-teal-300 text-ink-light hover:bg-teal-400 dark:border-teal-300/35 dark:bg-teal-300 dark:text-ink-light dark:hover:bg-teal-200',
+    focus: 'focus-visible:ring-teal-300/50',
     cardHover:
-      'hover:border-teal-500/60 hover:shadow-[10px_10px_0_0_rgba(20,184,166,0.18)] dark:hover:border-teal-400/70 dark:hover:shadow-[10px_10px_0_0_rgba(45,212,191,0.25)]',
+      'hover:border-teal-300/50 dark:hover:border-teal-300/35 dark:hover:shadow-[10px_10px_0_0_rgba(166,189,185,0.20)]',
     statIcon:
-      'border-teal-500/40 bg-teal-500/10 text-teal-600 dark:border-teal-400/40 dark:bg-teal-500/10 dark:text-teal-300',
-    text: 'text-teal-600 dark:text-teal-300',
-    dot: 'bg-teal-500 dark:bg-teal-400',
+      'border-teal-300/40 bg-teal-300/10 text-teal-700 dark:border-teal-300/30 dark:bg-teal-300/10 dark:text-teal-300',
+    text: 'text-teal-700 dark:text-teal-300',
+    dot: 'bg-teal-300',
   },
 }
 
@@ -626,13 +634,15 @@ export default function ArcadePage() {
   const baseBtn =
     'retro-pixel inline-flex items-center gap-2 border-2 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.12em] transition-all duration-200 active:translate-x-1 active:translate-y-1 active:shadow-none'
 
-  const secondaryBtn = `${baseBtn} border-zinc-400/70 bg-white/80 text-zinc-800 shadow-[4px_4px_0_0_rgba(148,163,184,0.45)] hover:border-zinc-500 hover:bg-zinc-100 dark:border-white/20 dark:bg-white/5 dark:text-zinc-100 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)] dark:hover:border-white/40 dark:hover:bg-white/10`
+  const secondaryBtn = `${baseBtn} border-[color:var(--line-strong)] bg-panel2-light text-ink-light shadow-[4px_4px_0_0_rgba(96,62,38,0.20)] hover:border-ember-500/50 dark:bg-panel2-dark dark:text-ink-dark dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)] dark:hover:border-ember-500/40`
 
-  const primaryBtn = `${baseBtn} border-zinc-900/20 bg-zinc-900 text-zinc-50 shadow-[4px_4px_0_0_rgba(148,163,184,0.45)] hover:bg-zinc-800 dark:border-zinc-100/20 dark:bg-zinc-100 dark:text-zinc-950 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)] dark:hover:bg-white`
+  // The one gradient in the Arcade: the primary action. Was flat zinc, which
+  // read as "disabled" next to the lime filter chips.
+  const primaryBtn = `${baseBtn} border-ember-700/40 bg-accent-gradient text-accent-ink shadow-[4px_4px_0_0_rgba(193,64,13,0.30)] hover:brightness-110`
 
   const soundBtn = `${baseBtn} ${
     soundOn
-      ? 'border-lime-500/60 bg-lime-500/15 text-lime-600 shadow-[4px_4px_0_0_rgba(148,163,184,0.35)] dark:border-lime-400/50 dark:bg-lime-500/10 dark:text-lime-300 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)]'
+      ? 'border-teal-500/60 bg-teal-500/12 text-teal-700 shadow-[4px_4px_0_0_rgba(96,62,38,0.18)] dark:border-teal-300/40 dark:bg-teal-500/12 dark:text-teal-300 dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)]'
       : secondaryBtn
   }`
 
@@ -641,10 +651,10 @@ export default function ArcadePage() {
       'retro-pixel inline-flex items-center gap-2 border-2 px-3.5 py-2.5 text-[9px] font-bold uppercase tracking-[0.12em] transition-all duration-200 active:translate-x-1 active:translate-y-1 active:shadow-none'
 
     if (filter === type) {
-      return `${base} border-lime-600/50 bg-lime-500 text-zinc-950 shadow-[4px_4px_0_0_rgba(148,163,184,0.45)] dark:border-lime-300/70 dark:bg-lime-400 dark:text-zinc-950 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)]`
+      return `${base} border-ember-700/40 bg-accent-gradient text-accent-ink shadow-[4px_4px_0_0_rgba(193,64,13,0.28)]`
     }
 
-    return `${base} border-zinc-400/70 bg-white/70 text-zinc-700 shadow-[4px_4px_0_0_rgba(148,163,184,0.4)] hover:border-zinc-500 hover:bg-zinc-100 dark:border-white/20 dark:bg-white/5 dark:text-zinc-200 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)] dark:hover:border-white/40 dark:hover:bg-white/10`
+    return `${base} border-[color:var(--line-strong)] bg-panel2-light text-muted-light shadow-[4px_4px_0_0_rgba(96,62,38,0.16)] hover:border-ember-500/40 hover:text-ember-700 dark:bg-panel2-dark dark:text-muted-dark dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)] dark:hover:text-ember-300`
   }
 
   let content = null
@@ -670,20 +680,20 @@ export default function ArcadePage() {
         value: runs,
         icon: Gamepad2,
         iconClass:
-          'border-zinc-500/40 bg-zinc-500/10 text-zinc-600 dark:border-zinc-500/40 dark:bg-zinc-500/10 dark:text-zinc-300',
+          'border-[color:var(--line)] bg-black/[0.04] text-dusk dark:bg-white/[0.05] dark:text-dusk',
       },
       {
         label: 'Status',
         value: runs > 0 ? 'Pernah dimainkan' : 'Belum dimainkan',
         icon: Flame,
         iconClass:
-          'border-amber-500/40 bg-amber-500/10 text-amber-600 dark:border-amber-400/40 dark:bg-amber-500/10 dark:text-amber-300',
+          'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:border-amber-300/30 dark:bg-amber-500/10 dark:text-amber-300',
       },
     ]
 
     content = (
       <>
-        <section className="retro-card scanlines relative overflow-hidden rounded-3xl border-2 border-zinc-300/90 bg-white/80 p-6 shadow-[10px_10px_0_0_rgba(148,163,184,0.4)] backdrop-blur-xl transition-colors duration-300 animate-arcade-fade-up dark:border-zinc-700/80 dark:bg-zinc-900/80 dark:shadow-[10px_10px_0_0_rgba(9,9,11,0.9)]">
+        <section className="retro-card scanlines relative overflow-hidden rounded-3xl border-2 border-[color:var(--line-strong)] bg-surface-light p-6 shadow-[10px_10px_0_0_rgba(96,62,38,0.18)] backdrop-blur-xl transition-colors duration-300 animate-arcade-fade-up dark:bg-surface-dark dark:shadow-[10px_10px_0_0_rgba(0,0,0,0.60)]">
           <div
             className={`pointer-events-none absolute inset-x-0 -top-24 h-56 bg-gradient-to-b ${tone.glow} opacity-70 blur-3xl`}
           />
@@ -702,8 +712,8 @@ export default function ArcadePage() {
                   onClick={toggleSound}
                   className={`${baseBtn} px-3 ${
                     soundOn
-                      ? 'border-lime-500/60 bg-lime-500/15 text-lime-600 shadow-[4px_4px_0_0_rgba(148,163,184,0.35)] dark:border-lime-400/50 dark:bg-lime-500/10 dark:text-lime-300 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)]'
-                      : 'border-zinc-400/70 bg-white/80 text-zinc-700 shadow-[4px_4px_0_0_rgba(148,163,184,0.4)] hover:border-zinc-500 hover:bg-zinc-100 dark:border-white/20 dark:bg-white/5 dark:text-zinc-200 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)] dark:hover:border-white/40 dark:hover:bg-white/10'
+                      ? 'border-teal-500/60 bg-teal-500/12 text-teal-700 shadow-[4px_4px_0_0_rgba(96,62,38,0.18)] dark:border-teal-300/40 dark:bg-teal-500/12 dark:text-teal-300 dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)]'
+                      : 'border-[color:var(--line-strong)] bg-panel2-light text-muted-light shadow-[4px_4px_0_0_rgba(96,62,38,0.16)] hover:border-ember-500/40 dark:bg-panel2-dark dark:text-muted-dark dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)] dark:hover:border-ember-500/40'
                   }`}
                   aria-label={soundOn ? 'Matikan sound' : 'Nyalakan sound'}
                   aria-pressed={soundOn}
@@ -716,14 +726,14 @@ export default function ArcadePage() {
                   onClick={() => toggleFavorite(active.id)}
                   className={`${baseBtn} ${
                     isActiveFav
-                      ? 'border-amber-500/60 bg-amber-400/90 text-zinc-950 shadow-[0_0_18px_rgba(251,191,36,0.3)] hover:bg-amber-300 dark:border-amber-300/70 dark:bg-amber-400/90 dark:text-zinc-950'
-                      : 'border-zinc-400/70 bg-white/80 text-zinc-800 shadow-[4px_4px_0_0_rgba(148,163,184,0.4)] hover:border-amber-500/50 hover:bg-amber-500/10 dark:border-white/20 dark:bg-white/5 dark:text-zinc-100 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)] dark:hover:border-amber-300/50 dark:hover:bg-amber-500/10'
+                      ? 'border-amber-600/50 bg-amber-500 text-ink-light shadow-[4px_4px_0_0_rgba(154,133,87,0.35)] hover:bg-amber-600 dark:border-amber-300/50 dark:bg-amber-500 dark:text-ink-light'
+                      : 'border-[color:var(--line-strong)] bg-panel2-light text-muted-light shadow-[4px_4px_0_0_rgba(96,62,38,0.16)] hover:border-amber-500/50 hover:text-amber-700 dark:bg-panel2-dark dark:text-muted-dark dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)] dark:hover:border-amber-300/50 dark:hover:text-amber-300'
                   }`}
                 >
                   <Star
                     size={14}
                     className={
-                      isActiveFav ? 'fill-zinc-950 text-zinc-950' : ''
+                      isActiveFav ? 'fill-ink-light text-ink-light dark:fill-ink-dark dark:text-ink-dark' : ''
                     }
                   />
                   {isActiveFav ? 'Favorit' : 'Add fav'}
@@ -745,13 +755,13 @@ export default function ArcadePage() {
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-500">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-dusk">
                     Now playing
                   </p>
-                  <h1 className="retro-pixel mt-2 text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-2xl">
+                  <h1 className="retro-pixel mt-2 text-xl font-black uppercase tracking-tight text-ink-light dark:text-ink-dark sm:text-2xl">
                     {active.name}
                   </h1>
-                  <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400">
+                  <p className="mt-2 text-xs text-muted-light dark:text-muted-dark">
                     {active.tagline}
                   </p>
                 </div>
@@ -771,7 +781,7 @@ export default function ArcadePage() {
                 return (
                   <div
                     key={item.label}
-                    className="scanlines relative overflow-hidden rounded-2xl border-2 border-zinc-300/90 bg-zinc-50/80 p-4 shadow-[6px_6px_0_0_rgba(148,163,184,0.35)] animate-arcade-fade-up dark:border-zinc-700/80 dark:bg-zinc-950/70 dark:shadow-[6px_6px_0_0_rgba(9,9,11,0.9)]"
+                    className="scanlines relative overflow-hidden rounded-2xl border-2 border-[color:var(--line)] bg-panel2-light p-4 shadow-[6px_6px_0_0_rgba(96,62,38,0.14)] animate-arcade-fade-up dark:bg-panel2-dark dark:shadow-[6px_6px_0_0_rgba(0,0,0,0.55)]"
                     style={{ animationDelay: `${140 + index * 70}ms` }}
                   >
                     <div className="relative z-10 flex items-center gap-3">
@@ -782,10 +792,10 @@ export default function ArcadePage() {
                       </div>
 
                       <div className="min-w-0">
-                        <p className="text-[9px] uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-500">
+                        <p className="text-[9px] uppercase tracking-[0.22em] text-dusk">
                           {item.label}
                         </p>
-                        <p className="mt-1 truncate text-sm font-black uppercase text-zinc-900 dark:text-zinc-100">
+                        <p className="mt-1 truncate text-sm font-black uppercase text-ink-light dark:text-ink-dark">
                           {item.value}
                         </p>
                       </div>
@@ -798,7 +808,7 @@ export default function ArcadePage() {
         </section>
 
         <section
-          className="scanlines relative overflow-hidden rounded-3xl border-2 border-zinc-300/90 bg-white/80 p-6 shadow-[10px_10px_0_0_rgba(148,163,184,0.4)] backdrop-blur-xl animate-arcade-fade-up dark:border-zinc-700/80 dark:bg-zinc-900/80 dark:shadow-[10px_10px_0_0_rgba(9,9,11,0.9)] sm:p-8"
+          className="scanlines relative overflow-hidden rounded-3xl border-2 border-[color:var(--line-strong)] bg-surface-light p-6 shadow-[10px_10px_0_0_rgba(96,62,38,0.18)] backdrop-blur-xl animate-arcade-fade-up dark:bg-surface-dark dark:shadow-[10px_10px_0_0_rgba(0,0,0,0.60)] sm:p-8"
           style={{ animationDelay: '90ms' }}
         >
           <div
@@ -818,37 +828,37 @@ export default function ArcadePage() {
         value: stats.totalRuns,
         icon: Gamepad2,
         className:
-          'border-cyan-500/40 bg-cyan-500/10 text-cyan-600 dark:border-cyan-400/40 dark:bg-cyan-500/10 dark:text-cyan-300',
+          'border-teal-500/40 bg-teal-500/10 text-teal-700 dark:border-teal-300/30 dark:bg-teal-500/10 dark:text-teal-300',
       },
       {
         label: 'Best tersimpan',
         value: `${stats.savedScores}/${GAMES.length}`,
         icon: Trophy,
         className:
-          'border-violet-500/40 bg-violet-500/10 text-violet-600 dark:border-violet-400/40 dark:bg-violet-500/10 dark:text-violet-300',
+          'border-[color:var(--line)] bg-black/[0.04] text-dusk dark:bg-white/[0.05] dark:text-dusk',
       },
       {
         label: 'Top game',
         value: stats.topName,
         icon: Flame,
         className:
-          'border-amber-500/40 bg-amber-500/10 text-amber-600 dark:border-amber-400/40 dark:bg-amber-500/10 dark:text-amber-300',
+          'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:border-amber-300/30 dark:bg-amber-500/10 dark:text-amber-300',
       },
     ]
 
     content = (
       <>
-        <section className="retro-card scanlines relative overflow-hidden rounded-3xl border-2 border-zinc-300/90 bg-white/80 p-6 shadow-[10px_10px_0_0_rgba(148,163,184,0.4)] backdrop-blur-xl animate-arcade-fade-up dark:border-zinc-700/80 dark:bg-zinc-900/80 dark:shadow-[10px_10px_0_0_rgba(9,9,11,0.9)] sm:p-8">
+        <section className="retro-card scanlines relative overflow-hidden rounded-3xl border-2 border-[color:var(--line-strong)] bg-surface-light p-6 shadow-[10px_10px_0_0_rgba(96,62,38,0.18)] backdrop-blur-xl animate-arcade-fade-up dark:bg-surface-dark dark:shadow-[10px_10px_0_0_rgba(0,0,0,0.60)] sm:p-8">
           <div className="pointer-events-none absolute inset-0 retro-grid opacity-20 dark:opacity-25" />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-violet-500/10 to-rose-500/10 dark:from-cyan-500/15 dark:via-violet-500/15 dark:to-rose-500/15" />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-ember-500/10 via-ember-500/[0.05] to-transparent dark:from-ember-500/14 dark:via-ember-500/[0.05] dark:to-transparent" />
           <div className="card-shine" />
 
           <div
-            className="pointer-events-none absolute right-10 top-12 h-3 w-3 bg-cyan-500/70 animate-arcade-float dark:bg-cyan-400/70"
+            className="pointer-events-none absolute right-10 top-12 h-3 w-3 bg-ember-500/70 animate-arcade-float"
             style={{ animationDelay: '0.2s' }}
           />
           <div
-            className="pointer-events-none absolute right-24 top-24 h-2 w-2 bg-violet-500/70 animate-arcade-float dark:bg-violet-400/70"
+            className="pointer-events-none absolute right-24 top-24 h-2 w-2 bg-ember-300/60 animate-arcade-float dark:bg-ember-400/70"
             style={{ animationDelay: '0.8s' }}
           />
           <div
@@ -858,7 +868,7 @@ export default function ArcadePage() {
 
           <div className="relative z-10 flex flex-col gap-7">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <span className="inline-flex items-center gap-2 border-2 border-cyan-500/40 bg-cyan-500/10 px-3 py-2 text-[9px] font-bold uppercase tracking-[0.22em] text-cyan-700 shadow-[0_0_18px_rgba(6,182,212,0.15)] dark:border-cyan-400/40 dark:bg-cyan-500/10 dark:text-cyan-200 dark:shadow-[0_0_24px_rgba(34,211,238,0.15)]">
+              <span className="inline-flex items-center gap-2 border-2 border-teal-500/40 bg-teal-500/10 px-3 py-2 text-[9px] font-bold uppercase tracking-[0.22em] text-teal-700 dark:border-teal-300/30 dark:bg-teal-500/10 dark:text-teal-300">
                 <Sparkles size={13} className="animate-arcade-blink" />
                 Retro Arcade
               </span>
@@ -869,8 +879,8 @@ export default function ArcadePage() {
                   onClick={toggleSound}
                   className={`${baseBtn} px-3 ${
                     soundOn
-                      ? 'border-lime-500/60 bg-lime-500/15 text-lime-600 shadow-[4px_4px_0_0_rgba(148,163,184,0.35)] dark:border-lime-400/50 dark:bg-lime-500/10 dark:text-lime-300 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)]'
-                      : 'border-zinc-400/70 bg-white/80 text-zinc-700 shadow-[4px_4px_0_0_rgba(148,163,184,0.4)] hover:border-zinc-500 hover:bg-zinc-100 dark:border-white/20 dark:bg-white/5 dark:text-zinc-200 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)] dark:hover:border-white/40 dark:hover:bg-white/10'
+                      ? 'border-teal-500/60 bg-teal-500/12 text-teal-700 shadow-[4px_4px_0_0_rgba(96,62,38,0.18)] dark:border-teal-300/40 dark:bg-teal-500/12 dark:text-teal-300 dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)]'
+                      : 'border-[color:var(--line-strong)] bg-panel2-light text-muted-light shadow-[4px_4px_0_0_rgba(96,62,38,0.16)] hover:border-ember-500/40 dark:bg-panel2-dark dark:text-muted-dark dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)] dark:hover:border-ember-500/40'
                   }`}
                   aria-label={soundOn ? 'Matikan sound' : 'Nyalakan sound'}
                   aria-pressed={soundOn}
@@ -898,20 +908,20 @@ export default function ArcadePage() {
             </div>
 
             <div className="max-w-3xl space-y-3">
-              <p className="animate-arcade-blink text-[10px] font-bold uppercase tracking-[0.35em] text-zinc-500 dark:text-zinc-500">
+              <p className="animate-arcade-blink text-[10px] font-bold uppercase tracking-[0.35em] text-dusk">
                 Insert coin to continue
               </p>
 
-              <h1 className="retro-pixel text-3xl font-black uppercase tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl">
-                <span className="bg-gradient-to-r from-cyan-600 via-violet-600 to-rose-600 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(34,211,238,0.2)] dark:from-cyan-300 dark:via-violet-300 dark:to-rose-300">
+              <h1 className="retro-pixel text-3xl font-black uppercase tracking-tight text-ink-light dark:text-ink-dark sm:text-4xl">
+                <span className="bg-gradient-to-r from-ember-300 via-ember-500 to-ember-700 bg-clip-text text-transparent">
                   Arcade
                 </span>
-                <span className="ml-2 inline-block w-[0.5ch] animate-arcade-blink text-cyan-600 dark:text-cyan-300">
+                <span className="ml-2 inline-block w-[0.5ch] animate-arcade-blink text-ember-600 dark:text-ember-300">
                   _
                 </span>
               </h1>
 
-              <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <p className="text-sm leading-relaxed text-muted-light dark:text-muted-dark">
                 Pilih mini game buat reset otak. Skor, jumlah main, dan favorit
                 disimpan di mesin arcade ini.
               </p>
@@ -921,14 +931,14 @@ export default function ArcadePage() {
               <button
                 type="button"
                 onClick={playRandom}
-                className={`${baseBtn} border-cyan-600/50 bg-cyan-500 text-white shadow-[4px_4px_0_0_rgba(148,163,184,0.45)] hover:bg-cyan-400 dark:border-cyan-200/70 dark:bg-cyan-400 dark:text-zinc-950 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)] dark:hover:bg-cyan-300`}
+                className={`${baseBtn} border-ember-700/40 bg-accent-gradient text-accent-ink shadow-[4px_4px_0_0_rgba(193,64,13,0.30)] hover:brightness-110`}
               >
                 <Dices size={14} />
                 Main acak
               </button>
 
-              <div className="inline-flex items-center gap-2 border-2 border-zinc-400/60 bg-white/70 px-4 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-700 shadow-[4px_4px_0_0_rgba(148,163,184,0.4)] dark:border-white/15 dark:bg-white/5 dark:text-zinc-300 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)]">
-                <Gamepad2 size={14} className="text-cyan-600 dark:text-cyan-300" />
+              <div className="inline-flex items-center gap-2 border-2 border-[color:var(--line)] bg-panel2-light px-4 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-light shadow-[4px_4px_0_0_rgba(96,62,38,0.16)] dark:bg-panel2-dark dark:text-muted-dark dark:shadow-[4px_4px_0_0_rgba(0,0,0,0.55)]">
+                <Gamepad2 size={14} className="text-ember-600 dark:text-ember-300" />
                 {GAMES.length} game • {stats.totalRuns} play
               </div>
             </div>
@@ -942,10 +952,10 @@ export default function ArcadePage() {
             return (
               <div
                 key={item.label}
-                className="scanlines relative overflow-hidden rounded-2xl border-2 border-zinc-300/90 bg-white/80 p-4 shadow-[8px_8px_0_0_rgba(148,163,184,0.4)] backdrop-blur-xl animate-arcade-fade-up dark:border-zinc-700/80 dark:bg-zinc-900/80 dark:shadow-[8px_8px_0_0_rgba(9,9,11,0.9)]"
+                className="scanlines relative overflow-hidden rounded-2xl border-2 border-[color:var(--line-strong)] bg-surface-light p-4 shadow-[8px_8px_0_0_rgba(96,62,38,0.16)] backdrop-blur-xl animate-arcade-fade-up dark:bg-surface-dark dark:shadow-[8px_8px_0_0_rgba(0,0,0,0.55)]"
                 style={{ animationDelay: `${120 + index * 70}ms` }}
               >
-                <div className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-gradient-to-b from-zinc-500/5 to-transparent opacity-50 blur-2xl dark:from-white/5" />
+                <div className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-gradient-to-b from-black/[0.04] to-transparent opacity-50 blur-2xl dark:from-white/[0.04]" />
 
                 <div className="relative z-10 flex items-center gap-3">
                   <div
@@ -955,11 +965,11 @@ export default function ArcadePage() {
                   </div>
 
                   <div className="min-w-0">
-                    <p className="text-[9px] uppercase tracking-[0.22em] text-zinc-500 dark:text-zinc-500">
+                    <p className="text-[9px] uppercase tracking-[0.22em] text-dusk">
                       {item.label}
                     </p>
                     <p
-                      className="mt-1 truncate text-lg font-black uppercase text-zinc-900 dark:text-zinc-100"
+                      className="mt-1 truncate text-lg font-black uppercase text-ink-light dark:text-ink-dark"
                       title={String(item.value)}
                     >
                       {item.value}
@@ -973,26 +983,26 @@ export default function ArcadePage() {
 
         {visibleGames.length === 0 ? (
           <section
-            className="scanlines relative overflow-hidden rounded-3xl border-2 border-dashed border-zinc-400 bg-white/60 p-10 text-center animate-arcade-fade-up dark:border-zinc-700 dark:bg-zinc-900/50"
+            className="scanlines relative overflow-hidden rounded-3xl border-2 border-dashed border-[color:var(--line-strong)] bg-panel2-light p-10 text-center animate-arcade-fade-up dark:bg-panel2-dark"
             style={{ animationDelay: '160ms' }}
           >
             <div className="relative z-10">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center border-2 border-amber-500/40 bg-amber-500/10 text-amber-600 shadow-[0_0_18px_rgba(245,158,11,0.2)] dark:border-amber-400/40 dark:bg-amber-500/10 dark:text-amber-300">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center border-2 border-amber-500/40 bg-amber-500/10 text-amber-700 dark:border-amber-300/30 dark:bg-amber-500/10 dark:text-amber-300">
                 <Star size={20} />
               </div>
 
-              <h2 className="retro-pixel text-sm font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-zinc-100">
+              <h2 className="retro-pixel text-sm font-black uppercase tracking-[0.2em] text-ink-light dark:text-ink-dark">
                 Belum ada favorit
               </h2>
 
-              <p className="mx-auto mt-3 max-w-md text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="mx-auto mt-3 max-w-md text-sm text-muted-light dark:text-muted-dark">
                 Klik ikon bintang pada kartu game untuk menyimpannya ke favorit.
               </p>
 
               <button
                 type="button"
                 onClick={() => changeFilter('all')}
-                className={`${baseBtn} mt-6 border-cyan-600/50 bg-cyan-500 text-white shadow-[4px_4px_0_0_rgba(148,163,184,0.45)] hover:bg-cyan-400 dark:border-cyan-200/70 dark:bg-cyan-400 dark:text-zinc-950 dark:shadow-[4px_4px_0_0_rgba(9,9,11,0.9)] dark:hover:bg-cyan-300`}
+                className={`${baseBtn} mt-6 border-ember-700/40 bg-accent-gradient text-accent-ink shadow-[4px_4px_0_0_rgba(193,64,13,0.30)] hover:brightness-110`}
               >
                 Lihat semua game
               </button>
@@ -1004,10 +1014,10 @@ export default function ArcadePage() {
               className="flex items-center justify-between animate-arcade-fade-up"
               style={{ animationDelay: '160ms' }}
             >
-              <h2 className="retro-pixel text-xs font-black uppercase tracking-[0.24em] text-zinc-700 dark:text-zinc-300">
+              <h2 className="retro-pixel text-xs font-black uppercase tracking-[0.24em] text-muted-light dark:text-muted-dark">
                 Level select
               </h2>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-500">
+              <span className="text-[10px] uppercase tracking-[0.2em] text-dusk">
                 {visibleGames.length} game
               </span>
             </div>
@@ -1032,7 +1042,7 @@ export default function ArcadePage() {
                     onKeyDown={(event) => handleCardKeyDown(event, g.id)}
                     onMouseEnter={() => playSound('hover')}
                     style={{ animationDelay: `${180 + index * 80}ms` }}
-                    className={`retro-card scanlines group relative overflow-hidden rounded-2xl border-2 border-zinc-300/90 bg-white/80 p-5 shadow-[8px_8px_0_0_rgba(148,163,184,0.4)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:-rotate-1 focus-visible:outline-none focus-visible:ring-2 ${tone.focus} animate-arcade-fade-up dark:border-zinc-700/80 dark:bg-zinc-900/80 dark:shadow-[8px_8px_0_0_rgba(9,9,11,0.9)] ${tone.cardHover}`}
+                    className={`retro-card scanlines group relative overflow-hidden rounded-2xl border-2 border-[color:var(--line-strong)] bg-surface-light p-5 shadow-[8px_8px_0_0_rgba(96,62,38,0.16)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:-rotate-1 focus-visible:outline-none focus-visible:ring-2 ${tone.focus} animate-arcade-fade-up dark:bg-surface-dark dark:shadow-[8px_8px_0_0_rgba(0,0,0,0.55)] ${tone.cardHover}`}
                   >
                     <div
                       className={`pointer-events-none absolute inset-x-0 -top-24 h-48 bg-gradient-to-b ${tone.glow} opacity-40 blur-3xl transition duration-500 group-hover:opacity-80`}
@@ -1053,7 +1063,7 @@ export default function ArcadePage() {
                             className={`inline-flex items-center gap-1 border-2 px-2.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.12em] ${
                               hasBest
                                 ? tone.badge
-                                : 'border-zinc-400 bg-zinc-100/80 text-zinc-500 dark:border-zinc-600 dark:bg-zinc-950/60 dark:text-zinc-400'
+                                : 'border-[color:var(--line)] bg-black/[0.03] text-dusk dark:bg-white/[0.04] dark:text-dusk'
                             }`}
                           >
                             <Trophy size={11} />
@@ -1074,15 +1084,15 @@ export default function ArcadePage() {
                             aria-pressed={isFavorite}
                             className={`inline-flex h-8 w-8 items-center justify-center border-2 transition-all duration-200 hover:-translate-y-0.5 ${
                               isFavorite
-                                ? 'border-amber-500/60 bg-amber-400/90 text-zinc-950 shadow-[0_0_18px_rgba(251,191,36,0.3)] dark:border-amber-300/70 dark:bg-amber-400/90 dark:text-zinc-950'
-                                : 'border-zinc-400 bg-white/80 text-zinc-400 hover:border-amber-500/60 hover:text-amber-500 dark:border-zinc-600 dark:bg-zinc-950/70 dark:text-zinc-400 dark:hover:border-amber-300/50 dark:hover:text-amber-300'
+                                ? 'border-amber-600/50 bg-amber-500 text-ink-light shadow-[4px_4px_0_0_rgba(154,133,87,0.30)] hover:bg-amber-600 dark:border-amber-300/50 dark:bg-amber-500 dark:text-ink-light'
+                                : 'border-[color:var(--line)] bg-panel2-light text-dusk hover:border-amber-500/60 hover:text-amber-700 dark:bg-panel2-dark dark:hover:text-amber-300 dark:border-[color:var(--line)] dark:bg-panel2-dark dark:text-dusk dark:hover:border-amber-300/50 dark:hover:text-amber-300'
                             }`}
                           >
                             <Star
                               size={15}
                               className={
                                 isFavorite
-                                  ? 'fill-zinc-950 text-zinc-950'
+                                  ? 'fill-ink-light text-ink-light dark:fill-ink-dark dark:text-ink-dark'
                                   : ''
                               }
                             />
@@ -1090,29 +1100,29 @@ export default function ArcadePage() {
                         </div>
                       </div>
 
-                      <h3 className="retro-pixel mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-zinc-900 dark:text-zinc-100">
+                      <h3 className="retro-pixel mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-ink-light dark:text-ink-dark">
                         {g.name}
                       </h3>
 
-                      <p className="mb-4 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                      <p className="mb-4 text-xs leading-relaxed text-muted-light dark:text-muted-dark">
                         {g.tagline}
                       </p>
 
-                      <div className="mt-auto flex items-center justify-between gap-3 border-t-2 border-dashed border-zinc-300 pt-4 dark:border-zinc-700">
+                      <div className="mt-auto flex items-center justify-between gap-3 border-t-2 border-dashed border-[color:var(--line)] pt-4">
                         <div className="min-w-0">
-                          <p className="text-[8px] uppercase tracking-[0.24em] text-zinc-500 dark:text-zinc-500">
+                          <p className="text-[8px] uppercase tracking-[0.24em] text-dusk">
                             Best
                           </p>
-                          <p className="mt-1 truncate text-xs font-black uppercase text-zinc-900 dark:text-zinc-100">
+                          <p className="mt-1 truncate text-xs font-black uppercase text-ink-light dark:text-ink-dark">
                             {g.format(best)}
                           </p>
                         </div>
 
                         <div className="text-right">
-                          <p className="text-[8px] uppercase tracking-[0.24em] text-zinc-500 dark:text-zinc-500">
+                          <p className="text-[8px] uppercase tracking-[0.24em] text-dusk">
                             Runs
                           </p>
-                          <p className="mt-1 text-xs font-black uppercase text-zinc-900 dark:text-zinc-100">
+                          <p className="mt-1 text-xs font-black uppercase text-ink-light dark:text-ink-dark">
                             {runs}
                           </p>
                         </div>
@@ -1142,13 +1152,13 @@ export default function ArcadePage() {
     // neobrutalism neutralizer in index.css rewrites exactly those utilities
     // for the rest of the app, so this subtree opts out of it — otherwise the
     // Arcade silently loses the 2px borders and the CRT frame it is built on.
-    <div className="arcade-scope relative overflow-hidden rounded-[2rem] bg-zinc-100 p-4 font-sans text-zinc-900 shadow-2xl shadow-zinc-400/20 transition-colors duration-300 dark:bg-zinc-950 dark:text-zinc-100 dark:shadow-black/50 sm:p-6">
+    <div className="arcade-scope relative overflow-hidden rounded-[2rem] bg-canvas-light dark:bg-canvas-dark p-4 font-sans text-ink-light dark:text-ink-dark transition-colors duration-300 sm:p-6">
       <style>{retroStyles}</style>
 
-      <div className="pointer-events-none absolute inset-0 retro-grid opacity-30 dark:opacity-35" />
+      <div className="pointer-events-none absolute inset-0 retro-grid opacity-30 dark:opacity-25" />
       <div className="pointer-events-none absolute inset-0 retro-root-glow" />
       <div className="crt-overlay" />
-      <div className="crt-beam h-28 bg-gradient-to-b from-zinc-900/5 via-zinc-900/5 to-transparent blur-2xl dark:from-white/10 dark:via-white/5 dark:to-transparent" />
+      <div className="crt-beam h-28 bg-gradient-to-b from-ink-light/[0.04] via-ink-light/[0.02] to-transparent blur-2xl dark:from-white/[0.05] dark:via-white/[0.02] dark:to-transparent" />
 
       <div className="relative z-10 space-y-5">{content}</div>
     </div>

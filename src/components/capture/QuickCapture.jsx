@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import { Modal, Button, Input, Textarea, Select } from '@/components/ui'
 import { useCollection } from '@/hooks/useCollection'
 import { useCaptureStore, CAPTURE_TYPES } from '@/store/useCaptureStore'
+import { useUIStore } from '@/store/useUIStore'
 import { cn } from '@/lib/utils'
 
 const TYPE_ICONS = { task: CheckSquare, note: StickyNote, event: CalendarDays }
@@ -13,6 +14,7 @@ const TYPE_ICONS = { task: CheckSquare, note: StickyNote, event: CalendarDays }
 // the same collections the full pages use, from any screen.
 export default function QuickCapture() {
   const { open, type, openCapture, setType, close } = useCaptureStore()
+  const { sidebarCollapsed } = useUIStore()
   const { createItem: createTask } = useCollection('tasks')
   const { createItem: createNote } = useCollection('notes')
   const { createItem: createEvent } = useCollection('events')
@@ -65,11 +67,15 @@ export default function QuickCapture() {
 
   return (
     <>
+      {/* Offset by the sidebar's live width. The console rail is edge-to-edge
+          and full height now, so a viewport-anchored `left-4` would sit on top
+          of the profile card. */}
       <button
         onClick={() => openModal('task')}
         aria-label="Quick capture — buat task, note, atau event"
         title="Quick capture"
-        className="fixed left-4 md:left-6 bottom-6 z-[60] h-14 w-14 rounded-2xl bg-accent-gradient text-accent-ink shadow-pop hover:brightness-[1.07] flex items-center justify-center transition-all duration-150 neo-press"
+        style={{ left: sidebarCollapsed ? 88 : 280 }}
+        className="fixed bottom-6 z-[60] h-14 w-14 rounded-2xl bg-accent-gradient text-accent-ink shadow-pop hover:brightness-[1.07] flex items-center justify-center transition-all duration-200 neo-press max-md:!left-4"
       >
         <Zap size={22} strokeWidth={2.2} />
       </button>

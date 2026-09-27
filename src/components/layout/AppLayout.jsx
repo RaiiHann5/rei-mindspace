@@ -14,6 +14,10 @@ function currentTitle(pathname) {
   return match?.label || 'Dashboard'
 }
 
+// Two-column console shell: a full-height sidebar and a scrolling content
+// column. The column is `h-screen overflow-hidden` with only <main> scrolling,
+// which is what lets pages opt into filling the viewport height instead of
+// leaving a dead band below short content.
 export default function AppLayout() {
   const { pathname } = useLocation()
 
@@ -23,14 +27,21 @@ export default function AppLayout() {
   }, [])
 
   return (
-    <div className="flex min-h-screen relative">
+    <div className="flex h-screen overflow-hidden bg-canvas-light dark:bg-canvas-dark">
       <Sidebar />
-      <div className="flex-1 min-w-0 relative z-[1] flex flex-col">
+
+      <div className="flex-1 min-w-0 flex flex-col h-screen">
         <Topbar title={currentTitle(pathname)} />
-        <main key={pathname} className="flex-1 px-3 pb-4 md:px-4 md:pb-6 max-w-[1600px] w-full mx-auto animate-fade-in">
-          <Outlet />
+        <main
+          key={pathname}
+          className="flex-1 min-h-0 overflow-y-auto px-4 pb-10 md:px-6 md:px-7 md:pb-12 animate-fade-in"
+        >
+          <div className="w-full mx-auto max-w-[1560px]">
+            <Outlet />
+          </div>
         </main>
       </div>
+
       <CommandPalette />
       {pathname !== '/assistant' && <FloatingAssistant />}
       <QuickCapture />

@@ -749,10 +749,40 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-4 max-w-3xl">
+    // Settings spans the full content width. The tab strip is a sticky rail on
+    // the left (a real Settings layout, and it stops the form from being
+    // marooned in an 768px column with half the viewport empty beside it),
+    // collapsing to a horizontal strip on narrow screens.
+    <div className="w-full">
       <PageHeader title="Settings" description="Your profile, theme, notifications, and data." />
-      <Tabs tabs={TABS} active={tab} onChange={setTab} className="mb-1" />
 
+      <div className="grid lg:grid-cols-[212px_1fr] xl:grid-cols-[240px_1fr] gap-6 lg:gap-8 items-start">
+        <div className="lg:sticky lg:top-24">
+          <div className="hidden lg:block">
+            <nav className="flex flex-col gap-1">
+              {TABS.map((t) => (
+                <button
+                  key={t.value}
+                  onClick={() => setTab(t.value)}
+                  className={cn(
+                    'flex items-center gap-3 h-10 px-3 rounded-md text-sm font-medium transition-colors text-left',
+                    tab === t.value
+                      ? 'ember-rail bg-primary-500/10 text-ink-light dark:text-ink-dark'
+                      : 'text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:bg-black/[0.04] dark:hover:bg-white/[0.05]'
+                  )}
+                >
+                  <t.icon size={17} strokeWidth={tab === t.value ? 2.3 : 2} className="shrink-0" />
+                  <span className="truncate">{t.label}</span>
+                </button>
+              ))}
+            </nav>
+          </div>
+          <div className="lg:hidden">
+            <Tabs tabs={TABS} active={tab} onChange={setTab} className="flex-wrap" />
+          </div>
+        </div>
+
+        <div className="min-w-0">
       {tab === 'general' && (
         <div className="space-y-4">
       <Card>
@@ -978,6 +1008,8 @@ export default function SettingsPage() {
 
       {tab === 'notifications' && <SettingsNotifications />}
       {tab === 'guide' && <SettingsGuide />}
+        </div>
+      </div>
     </div>
   )
 }

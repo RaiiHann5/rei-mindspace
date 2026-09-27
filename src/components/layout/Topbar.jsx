@@ -23,19 +23,21 @@ export default function Topbar() {
   const onToggle = () => { toggle(); setTimeout(applyTheme, 0) }
 
   return (
-    <header className="shrink-0 h-16 flex items-center gap-3 px-4 md:px-6 lg:px-8">
+    <header className="shrink-0 h-16 flex items-center gap-2 sm:gap-3 px-4 md:px-6 lg:px-8">
       <MobileNav />
 
+      {/* Search collapses to an icon button on a phone — the full field plus the
+          theme/notification/avatar cluster does not fit at 390px. */}
       <button
         onClick={() => setCommandOpen(true)}
-        className="flex items-center gap-2.5 h-9 px-3.5 rounded-lg text-sm w-full max-w-[420px] transition-colors border border-[color:var(--line)] bg-black/[0.02] dark:bg-white/[0.02] text-dusk hover:border-[color:var(--line-strong)] hover:text-muted-light dark:hover:text-muted-dark"
+        className="hidden sm:flex items-center gap-2.5 h-9 px-3.5 rounded-lg text-sm w-full max-w-[420px] transition-colors border border-[color:var(--line)] bg-black/[0.02] dark:bg-white/[0.02] text-dusk hover:border-[color:var(--line-strong)] hover:text-muted-light dark:hover:text-muted-dark"
       >
         <Search size={15} strokeWidth={2.2} />
         <span className="flex-1 text-left">Search</span>
         <kbd className="text-[10px] px-1.5 py-0.5 rounded-[7px] border border-[color:var(--line)] font-mono">⌘K</kbd>
       </button>
 
-      <div className="ml-auto flex items-center gap-1.5">
+      <div className="ml-auto flex items-center gap-0.5 sm:gap-1.5">
         <button className={cn(iconBtn, 'sm:hidden')} aria-label="Search" onClick={() => setCommandOpen(true)}>
           <Search size={17} strokeWidth={2.2} />
         </button>
@@ -43,7 +45,7 @@ export default function Topbar() {
           {theme === 'dark' ? <Sun size={17} strokeWidth={2.2} /> : <Moon size={17} strokeWidth={2.2} />}
         </button>
         <NotificationCenter />
-        <Link to="/settings" className="ml-1 rounded-full shrink-0" title={user?.displayName || 'Profile'}>
+        <Link to="/settings" className="ml-0.5 sm:ml-1 rounded-full shrink-0" title={user?.displayName || 'Profile'}>
           <Avatar name={user?.displayName || 'You'} src={user?.photoURL} size={32} />
         </Link>
       </div>

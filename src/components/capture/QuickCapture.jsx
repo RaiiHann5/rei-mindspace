@@ -74,8 +74,8 @@ export default function QuickCapture() {
         onClick={() => openModal('task')}
         aria-label="Quick capture — buat task, note, atau event"
         title="Quick capture"
-        style={{ left: sidebarCollapsed ? 84 : 224 }}
-        className="fixed bottom-4 z-[60] h-11 w-11 rounded-xl bg-accent-gradient text-accent-ink shadow-pop opacity-80 hover:opacity-100 hover:brightness-[1.07] flex items-center justify-center transition-all duration-200 neo-press max-md:!left-4"
+        style={{ left: sidebarCollapsed ? 82 : 224 }}
+        className="fixed bottom-4 z-[60] h-11 w-11 rounded-xl bg-accent-gradient text-accent-ink shadow-pop opacity-80 hover:opacity-100 hover:brightness-[1.07] flex items-center justify-center transition-all duration-200 neo-press max-md:!left-auto max-md:!right-4"
       >
         <Zap size={19} strokeWidth={2.2} />
       </button>

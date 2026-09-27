@@ -24,16 +24,19 @@ export default function AppLayout() {
     // strip of canvas (and the ember glow behind it) that the card sits on.
     // At mobile the padding goes to zero and the card goes full-bleed.
     <div className="h-screen flex overflow-hidden max-md:p-0 md:p-2.5 lg:p-4">
-      <div className="relative flex-1 min-h-0 flex overflow-hidden border border-[color:var(--line)] bg-surface-light dark:bg-surface-dark shadow-pop rounded-2xl md:rounded-3xl">
+      <div className="relative flex-1 min-w-0 min-h-0 flex overflow-hidden border border-[color:var(--line)] bg-surface-light dark:bg-surface-dark shadow-pop rounded-2xl md:rounded-3xl">
         <Sidebar />
 
-        <div className="flex-1 min-w-0 min-h-0 flex flex-col">
+        <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden">
           <Topbar />
           <main
             key={pathname}
             className="flex-1 min-h-0 overflow-y-auto px-4 pb-12 md:px-6 lg:px-8"
           >
-            <div className="w-full mx-auto max-w-[1440px] pt-1">
+            {/* Pages are grids and flex rows; without an explicit min-w-0 the
+                widest child sets the width and the whole column overflows
+                sideways on a phone. */}
+            <div className="w-full min-w-0 mx-auto max-w-[1440px] pt-1">
               <Outlet />
             </div>
           </main>

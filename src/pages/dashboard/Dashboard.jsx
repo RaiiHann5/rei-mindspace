@@ -130,17 +130,19 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {/* The one gradient surface on this screen: the primary action. */}
+        <div className="grid grid-cols-1 min-[420px]:grid-cols-2 lg:grid-cols-4 gap-3">
+          {/* The one gradient surface on this screen: the primary action.
+              Single column on a phone — at two columns the CTA label and the
+              shortcut text clip. */}
           <Link
             to="/tasks"
-            className="ember-cta rounded-2xl flex flex-col items-center justify-center gap-2 font-semibold hover:brightness-[1.06] transition-all min-h-[128px]"
+            className="ember-cta rounded-2xl flex flex-col items-center justify-center gap-2 font-semibold hover:brightness-[1.06] transition-all min-h-[112px]"
           >
             <Plus size={26} strokeWidth={2.2} />
             <span className="text-xs font-medium opacity-90">New task</span>
           </Link>
           {shortcuts.map((s) => (
-            <Link key={s.label} to={s.to} className="glass rounded-2xl p-4 flex flex-col justify-between min-h-[128px] card-hover">
+            <Link key={s.label} to={s.to} className="glass rounded-2xl p-4 flex flex-col justify-between min-h-[112px] card-hover">
               <div className={cn('h-10 w-10 rounded-lg flex items-center justify-center', toneClasses[s.tone])}>
                 <s.icon size={18} strokeWidth={2} />
               </div>

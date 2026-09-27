@@ -96,32 +96,76 @@ export default function CalendarPage() {
 
   return (
     <div>
+      {/* Row 1 — identity and the primary action. Row 2 — the period
+          navigator and the view switch. Same two-bar split as the reference
+          shells: the page owns its own chrome instead of a global toolbar. */}
       <PageHeader
         title="Calendar"
-        description="Your schedule at a glance."
-        actions={<Button onClick={() => openNew(new Date())}><Plus size={16} /> New event</Button>}
+        description="Everything scheduled, in one grid."
+        actions={
+          <>
+            <Button variant="secondary" size="sm" onClick={() => setCursor(new Date())}>Today</Button>
+            <Button onClick={() => openNew(new Date())}><Plus size={16} /> New event</Button>
+          </>
+        }
+        tools={
+          <>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => stepCursor(-1)}
+                aria-label="Periode sebelumnya"
+                className="h-8 w-8 rounded-lg grid place-items-center neo-press text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:bg-black/[0.05] dark:hover:bg-white/[0.06] transition-colors"
+              >
+                <ChevronLeft size={16} strokeWidth={2.2} />
+              </button>
+              <span className="font-display text-[15px] font-semibold tracking-tight px-2 min-w-[190px] text-center">
+                {view === 'month' && formatDate(cursor, { month: 'long', year: 'numeric' })}
+                {view === 'week' && `${formatDate(weekDays[0])} – ${formatDate(weekDays[6])}`}
+                {view === 'day' && formatDate(cursor, { weekday: 'long', month: 'long', day: 'numeric' })}
+              </span>
+              <button
+                onClick={() => stepCursor(1)}
+                aria-label="Periode berikutnya"
+                className="h-8 w-8 rounded-lg grid place-items-center neo-press text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:bg-black/[0.05] dark:hover:bg-white/[0.06] transition-colors"
+              >
+                <ChevronRight size={16} strokeWidth={2.2} />
+              </button>
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              <Tabs
+                tabs={[
+                  { value: 'month', label: 'Month' },
+                  { value: 'week', label: 'Week' },
+                  { value: 'day', label: 'Day' },
+                ]}
+                active={view}
+                onChange={setView}
+              />
+            </div>
+          </>
+        }
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <div className="flex items-center gap-2">
-          <button onClick={() => stepCursor(-1)} aria-label="Bulan sebelumnya" className="h-9 w-9 rounded-xl flex items-center justify-center neo-press text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:bg-black/5 dark:hover:bg-white/[0.07] transition-colors"><ChevronLeft size={17} /></button>
-          <h2 className="font-display font-semibold tracking-tight w-44 text-center">
-            {view === 'month' && formatDate(cursor, { month: 'long', year: 'numeric' })}
-            {view === 'week' && `${formatDate(weekDays[0])} – ${formatDate(weekDays[6])}`}
-            {view === 'day' && formatDate(cursor, { weekday: 'long', month: 'long', day: 'numeric' })}
-          </h2>
-          <button onClick={() => stepCursor(1)} aria-label="Bulan berikutnya" className="h-9 w-9 rounded-xl flex items-center justify-center neo-press text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:bg-black/5 dark:hover:bg-white/[0.07] transition-colors"><ChevronRight size={17} /></button>
-          <Button variant="secondary" size="sm" onClick={() => setCursor(new Date())}>Today</Button>
-        </div>
-        <Tabs tabs={[{ value: 'month', label: 'Month' }, { value: 'week', label: 'Week' }, { value: 'day', label: 'Day' }]} active={view} onChange={setView} />
-      </div>
-
       {view === 'month' && (
-        <Card glass={false} className="p-0 overflow-hidden">
+        <div className="rounded-2xl overflow-hidden border border-[color:var(--line)] bg-surface-light dark:bg-surface-dark">
+          {/* Day header — weekday over date, as in the reference. Today gets a
+              filled accent disc so the column is findable without tinting the
+              whole cell. */}
           <div className="grid grid-cols-7 border-b border-[color:var(--line)]">
-            {['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((d) => (
-              <div key={d} className="text-center text-[11px] font-medium text-dusk py-2">{d}</div>
-            ))}
+            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => {
+              const isWeekend = d === 'Sun' || d === 'Sat'
+              return (
+                <div
+                  key={d}
+                  className={cn(
+                    'py-2.5 text-center text-[11px] font-medium border-r border-[color:var(--line)] last:border-r-0',
+                    isWeekend ? 'text-dusk' : 'text-muted-light dark:text-muted-dark'
+                  )}
+                >
+                  {d}
+                </div>
+              )
+            })}
           </div>
           <div className="grid grid-cols-7">
             {monthGrid.map((day, i) => {
@@ -133,29 +177,43 @@ export default function CalendarPage() {
                   key={i}
                   onClick={() => openNew(day)}
                   className={cn(
-                    'min-h-[92px] p-1.5 border-b border-r border-[color:var(--line)] cursor-pointer hover:bg-black/[0.02] dark:hover:bg-white/[0.03] transition-colors',
-                    !inMonth && 'opacity-40'
+                    'min-h-[104px] p-1.5 border-b border-r border-[color:var(--line)] cursor-pointer transition-colors',
+                    'hover:bg-black/[0.02] dark:hover:bg-white/[0.03]',
+                    !inMonth && 'opacity-35'
                   )}
                 >
-                  {/* "Today" is marked with the accent, not a filled block, so the
-                      grid stays hairline-restrained. */}
-                  <span className={cn('inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium', isToday && 'font-semibold text-primary-600 dark:text-primary-400 bg-primary-500/10 ring-1 ring-primary-500/45')}>
+                  <span
+                    className={cn(
+                      'inline-grid h-6 w-6 place-items-center rounded-full text-[12px] font-mono tabular-nums',
+                      isToday
+                        ? 'bg-accent-gradient text-accent-ink font-semibold'
+                        : 'text-ink-light dark:text-ink-dark'
+                    )}
+                  >
                     {day.getDate()}
                   </span>
                   <div className="mt-1 space-y-0.5">
                     {dayEvents.slice(0, 3).map((e) => (
-                      <div key={e.id} onClick={(ev) => { ev.stopPropagation(); openEdit(e) }} className="flex items-center gap-1 text-[11px] px-1 py-0.5 rounded-[7px] bg-black/[0.04] dark:bg-white/[0.06] truncate">
+                      <div
+                        key={e.id}
+                        onClick={(ev) => { ev.stopPropagation(); openEdit(e) }}
+                        className="flex items-center gap-1.5 text-[11px] font-medium px-1.5 py-1 rounded-[7px] bg-black/[0.04] dark:bg-white/[0.05] hover:bg-black/[0.08] dark:hover:bg-white/[0.09] transition-colors truncate"
+                      >
                         <span className={cn('h-1.5 w-1.5 rounded-full shrink-0', categoryDot[e.category])} />
                         <span className="truncate">{e.title}</span>
                       </div>
                     ))}
-                    {dayEvents.length > 3 && <p className="text-[10px] text-dusk px-1"><span className="font-mono tabular-nums">+{dayEvents.length - 3}</span> more</p>}
+                    {dayEvents.length > 3 && (
+                      <p className="text-[10.5px] text-dusk px-1.5">
+                        <span className="font-mono tabular-nums">+{dayEvents.length - 3}</span> more
+                      </p>
+                    )}
                   </div>
                 </div>
               )
             })}
           </div>
-        </Card>
+        </div>
       )}
 
       {view === 'week' && (

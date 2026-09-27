@@ -67,17 +67,17 @@ export default function QuickCapture() {
 
   return (
     <>
-      {/* Offset by the sidebar's live width. The console rail is edge-to-edge
-          and full height now, so a viewport-anchored `left-4` would sit on top
-          of the profile card. */}
+      {/* Docked to the bottom-left of the floating console card, clear of the
+          208px rail. Smaller and dimmed at rest so it reads as a dock control
+          rather than a floating button sitting on top of the content. */}
       <button
         onClick={() => openModal('task')}
         aria-label="Quick capture — buat task, note, atau event"
         title="Quick capture"
-        style={{ left: sidebarCollapsed ? 88 : 280 }}
-        className="fixed bottom-6 z-[60] h-14 w-14 rounded-2xl bg-accent-gradient text-accent-ink shadow-pop hover:brightness-[1.07] flex items-center justify-center transition-all duration-200 neo-press max-md:!left-4"
+        style={{ left: sidebarCollapsed ? 84 : 224 }}
+        className="fixed bottom-4 z-[60] h-11 w-11 rounded-xl bg-accent-gradient text-accent-ink shadow-pop opacity-80 hover:opacity-100 hover:brightness-[1.07] flex items-center justify-center transition-all duration-200 neo-press max-md:!left-4"
       >
-        <Zap size={22} strokeWidth={2.2} />
+        <Zap size={19} strokeWidth={2.2} />
       </button>
 
       <Modal open={open} onClose={close} title="Quick Capture" size="md"

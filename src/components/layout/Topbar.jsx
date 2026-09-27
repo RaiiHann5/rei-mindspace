@@ -31,7 +31,7 @@ export default function Topbar() {
         className="flex items-center gap-2.5 h-9 px-3.5 rounded-lg text-sm w-full max-w-[420px] transition-colors border border-[color:var(--line)] bg-black/[0.02] dark:bg-white/[0.02] text-dusk hover:border-[color:var(--line-strong)] hover:text-muted-light dark:hover:text-muted-dark"
       >
         <Search size={15} strokeWidth={2.2} />
-        <span className="flex-1 text-left">Search or jump to</span>
+        <span className="flex-1 text-left">Search</span>
         <kbd className="text-[10px] px-1.5 py-0.5 rounded-[7px] border border-[color:var(--line)] font-mono">⌘K</kbd>
       </button>
 

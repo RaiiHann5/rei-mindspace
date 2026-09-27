@@ -5,8 +5,8 @@ export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
       <h1 className="ember-num font-display text-5xl font-semibold mb-3">404</h1>
-      <p className="text-muted-light dark:text-muted-dark mb-6">This page drifted off somewhere.</p>
-      <Link to="/"><Button size="sm">Back to dashboard</Button></Link>
+      <p className="text-muted-light dark:text-muted-dark mb-6">No such page.</p>
+      <Link to="/"><Button size="sm">Dashboard</Button></Link>
     </div>
   )
 }

@@ -9,9 +9,9 @@ export default function MobileNav() {
 
   const item = ({ isActive }) =>
     cn(
-      'flex items-center gap-3 px-3.5 h-10 rounded-md text-sm font-medium transition-colors',
+      'flex items-center gap-3 h-10 rounded-lg px-3 text-[13px] font-medium transition-colors',
       isActive
-        ? 'ember-rail bg-primary-500/10 text-ink-light dark:text-ink-dark'
+        ? 'bg-accent-gradient text-accent-ink font-semibold shadow-soft'
         : 'text-muted-light dark:text-muted-dark'
     )
 
@@ -38,9 +38,9 @@ export default function MobileNav() {
             <div className="flex items-center justify-between px-4 h-16 shrink-0 border-b border-[color:var(--line)]">
               <div className="flex items-center gap-2.5">
                 <div className="h-8 w-8 rounded-lg bg-accent-gradient text-accent-ink flex items-center justify-center">
-                  <Sparkles size={16} strokeWidth={2.2} />
+                  <Sparkles size={15} strokeWidth={2.2} />
                 </div>
-                <span className="font-display font-semibold tracking-tight">
+                <span className="font-serif text-[19px] leading-none">
                   Space<span className="text-ember-500">+</span>
                 </span>
               </div>
@@ -56,7 +56,7 @@ export default function MobileNav() {
             <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
               {NAV_SECTIONS.map((section) => (
                 <div key={section.label}>
-                  <p className="px-3 mb-1.5 text-[11px] font-medium text-dusk">{section.label}</p>
+                  <p className="px-3 mb-1.5 text-[10.5px] font-medium text-dusk">{section.label}</p>
                   <div className="space-y-0.5">
                     {section.items.map((item) => (
                       <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setOpen(false)} className={item}>

@@ -69,14 +69,14 @@ export default function CommandPalette() {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search tasks, projects, notes, goals"
+            placeholder="Search"
             className="flex-1 bg-transparent outline-none text-sm"
           />
           <kbd className="text-[10px] px-1.5 py-0.5 rounded-[7px] border border-[color:var(--line)] font-mono text-dusk">ESC</kbd>
         </div>
         <div className="max-h-80 overflow-y-auto p-2">
           {filtered.length === 0 && (
-            <p className="text-sm text-center text-dusk py-8">No results found</p>
+            <p className="text-sm text-center text-dusk py-8">Nothing found</p>
           )}
           {filtered.map((r) => {
             const Icon = ICONS[r.__collection] || Search

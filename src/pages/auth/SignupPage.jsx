@@ -38,8 +38,8 @@ export default function SignupPage() {
           <div className="h-11 w-11 rounded-2xl bg-accent-gradient text-accent-ink flex items-center justify-center mb-3">
             <Sparkles size={20} strokeWidth={2.2} />
           </div>
-          <h1 className="font-display font-semibold text-xl">Create your account</h1>
-          <p className="text-sm text-muted-light dark:text-muted-dark">Start organizing your life with Space+</p>
+          <h1 className="font-serif text-[26px] leading-none">Create an account</h1>
+          <p className="text-sm text-muted-light dark:text-muted-dark mt-1">Start with Space+</p>
         </div>
         <form onSubmit={submit} className="space-y-3">
           <Input placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} />
@@ -48,7 +48,7 @@ export default function SignupPage() {
           <Button type="submit" className="w-full justify-center" loading={loading}>Create account</Button>
         </form>
         <p className="text-sm text-center mt-5 text-muted-light dark:text-muted-dark">
-          Already have an account? <Link to="/login" className="text-primary-600 dark:text-primary-400 font-medium">Sign in</Link>
+          Have an account? <Link to="/login" className="text-ember-500 font-medium hover:opacity-80 transition-opacity">Sign in</Link>
         </p>
       </Card>
     </div>

@@ -18,17 +18,23 @@
    ========================================================================= */
 
 /* 1. Fonts ================================================================ */
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
+/* Four families, four jobs. The serif is deliberately rationed — it appears on
+   the product wordmark and nowhere else, which is the single place the
+   reference shells reach for an editorial voice. Everything functional stays
+   sans (UI) or mono (data). */
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* 2. Theme tokens ========================================================= */
 @theme {
-  /* Display = character. Body = neutral. Mono = functional data only. */
+  /* Display = character. Body = neutral. Mono = functional data only.
+     Serif = the wordmark, and only the wordmark. */
   --font-display: "Bricolage Grotesque", ui-sans-serif, sans-serif;
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, sans-serif;
   --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
 
   /* --- Canvas / surface / ink -------------------------------------------
      Named per-mode because every component picks with `dark:` variants.

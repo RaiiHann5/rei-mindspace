@@ -43,8 +43,8 @@ export default function LoginPage() {
           <div className="h-11 w-11 rounded-2xl bg-accent-gradient text-accent-ink flex items-center justify-center mb-3">
             <Sparkles size={20} strokeWidth={2.2} />
           </div>
-          <h1 className="font-display font-semibold text-xl">Welcome back</h1>
-          <p className="text-sm text-muted-light dark:text-muted-dark">Sign in to Space+</p>
+          <h1 className="font-serif text-[26px] leading-none">Welcome back</h1>
+          <p className="text-sm text-muted-light dark:text-muted-dark mt-1">Sign in</p>
         </div>
         <form onSubmit={submit} className="space-y-3">
           <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -56,9 +56,9 @@ export default function LoginPage() {
           <span className="text-xs text-muted-light dark:text-muted-dark">or</span>
           <div className="h-px flex-1 bg-border-light dark:bg-border-dark" />
         </div>
-        <Button variant="secondary" className="w-full justify-center" onClick={google}>Continue with Google</Button>
+        <Button variant="secondary" className="w-full justify-center" onClick={google}>Google</Button>
         <p className="text-sm text-center mt-5 text-muted-light dark:text-muted-dark">
-          No account? <Link to="/signup" className="text-primary-600 dark:text-primary-400 font-medium">Sign up</Link>
+          No account? <Link to="/signup" className="text-ember-500 font-medium hover:opacity-80 transition-opacity">Sign up</Link>
         </p>
       </Card>
     </div>

@@ -40,10 +40,12 @@ export default function Sidebar() {
           {!collapsed && (
             <>
               <span className="min-w-0 flex-1 text-left">
-                <span className="block font-display text-[14px] font-semibold tracking-tight leading-tight">
+                {/* Instrument Serif — the one place the app uses the editorial
+                    face. The wordmark is the only element that earns it. */}
+                <span className="block font-serif text-[19px] leading-none tracking-[-0.01em]">
                   Space<span className="text-ember-500">+</span>
                 </span>
-                <span className="block text-[10.5px] text-dusk leading-tight truncate">Personal console</span>
+                <span className="block text-[10.5px] text-dusk leading-tight truncate mt-0.5">Personal console</span>
               </span>
               <ChevronsUpDown size={14} className="shrink-0 text-dusk" strokeWidth={2} />
             </>

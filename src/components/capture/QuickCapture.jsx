@@ -41,25 +41,25 @@ export default function QuickCapture() {
           dueDate: null, tags: [], checklist: [], archived: false, repeat: '',
           createdAt: now, updatedAt: now,
         })
-        toast.success('Task captured')
+        toast.success('Task ditambahkan')
       } else if (type === 'note') {
         await createNote({
           title: text, content: detail.trim(), folder: '', tags: [],
           pinned: false, favorite: false, archived: false, color: '',
           createdAt: now, updatedAt: now,
         })
-        toast.success('Note captured')
+        toast.success('Catatan ditambahkan')
       } else {
         await createEvent({
           title: text, date: detail, end: null, category: 'personal',
           reminder: false, journal: [], createdAt: now, updatedAt: now,
         })
-        toast.success('Event captured')
+        toast.success('Agenda ditambahkan')
       }
       reset()
       close()
     } catch {
-      toast.error('Gagal menyimpan — coba lagi')
+      toast.error('Gagal menyimpan')
     } finally {
       setSubmitting(false)
     }

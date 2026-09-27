@@ -1,121 +1,170 @@
 import { useMemo, useState } from 'react'
-import { marked } from 'marked'
-import { Plus, Search, Star, Pin, Trash2, Eye, Edit3, StickyNote } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Plus, Search, StickyNote, Archive, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useCollection } from '@/hooks/useCollection'
-import { PageHeader, Button, Input, Card, Badge, EmptyState, Skeleton } from '@/components/ui'
-import { cn, formatDate } from '@/lib/utils'
+import { PageHeader, Button, Input, EmptyState, Skeleton } from '@/components/ui'
+import { cn } from '@/lib/utils'
+import CardNotes, { colorForNote } from '@/components/notes/CardNotes'
+
+const DEFAULT_CATEGORIES = ['General', 'Work', 'Personal', 'Ideas', 'Study']
 
 export default function NotesPage() {
   const { items, isLoading, createItem, updateItem, removeItem } = useCollection('notes')
+  const navigate = useNavigate()
   const [query, setQuery] = useState('')
-  const [folder, setFolder] = useState('All')
-  const [activeId, setActiveId] = useState(null)
-  const [preview, setPreview] = useState(false)
+  const [category, setCategory] = useState('All')
+  const [showArchived, setShowArchived] = useState(false)
+  const [addingCategory, setAddingCategory] = useState(false)
+  const [newCategory, setNewCategory] = useState('')
 
-  const folders = useMemo(() => ['All', ...new Set(items.map((n) => n.folder).filter(Boolean))], [items])
+  const categories = useMemo(() => {
+    const existing = new Set(items.map((n) => n.folder).filter(Boolean))
+    DEFAULT_CATEGORIES.forEach((c) => existing.add(c))
+    return ['All', ...existing]
+  }, [items])
 
   const filtered = useMemo(() => items
-    .filter((n) => folder === 'All' || n.folder === folder)
-    .filter((n) => !query.trim() || n.title.toLowerCase().includes(query.toLowerCase()) || n.content.toLowerCase().includes(query.toLowerCase()))
+    .filter((n) => (showArchived ? !!n.archived : !n.archived))
+    .filter((n) => category === 'All' || n.folder === category)
+    .filter((n) => !query.trim() || `${n.title || ''}`.toLowerCase().includes(query.toLowerCase()) || `${n.content || ''}`.toLowerCase().includes(query.toLowerCase()))
     .sort((a, b) => (b.pinned - a.pinned) || (new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))),
-    [items, folder, query])
+    [items, category, query, showArchived])
 
-  const active = items.find((n) => n.id === activeId) || filtered[0]
+  const archivedCount = useMemo(() => items.filter((n) => n.archived).length, [items])
 
   const createNote = async () => {
-    const note = await createItem({ title: 'Untitled note', content: '', folder: folder === 'All' ? 'General' : folder, tags: [], pinned: false, favorite: false })
-    setActiveId(note.id)
+    const folder = category === 'All' ? 'General' : category
+    const note = await createItem({ title: 'Untitled note', content: '', folder, tags: [], pinned: false, favorite: false, archived: false, color: '' })
     toast.success('Note created')
+    navigate(`/notes/${note.id}`)
+  }
+
+  const duplicate = async (n) => {
+    await createItem({ ...n, id: undefined, title: `${n.title} (copy)`, pinned: false })
+    toast.success('Note duplicated')
   }
 
   const del = async (n) => {
     if (!confirm(`Delete "${n.title}"?`)) return
     await removeItem(n.id)
-    if (activeId === n.id) setActiveId(null)
     toast.success('Note deleted')
+  }
+
+  const toggleArchive = async (n) => {
+    await updateItem(n.id, { archived: !n.archived })
+    toast.success(n.archived ? 'Note unarchived' : 'Note archived')
+  }
+
+  const changeColor = async (n, color) => {
+    await updateItem(n.id, { color })
+  }
+
+  const submitNewCategory = (e) => {
+    e.preventDefault()
+    const name = newCategory.trim()
+    if (name) setCategory(name)
+    setNewCategory('')
+    setAddingCategory(false)
   }
 
   return (
     <div>
-      <PageHeader title="Notes" description="Markdown notes, organized by folder." actions={<Button onClick={createNote}><Plus size={16} /> New note</Button>} />
+      <PageHeader
+        title="Notes"
+        description="Rich-text notes, organized by category."
+        actions={<Button onClick={createNote}><Plus size={16} /> New note</Button>}
+      />
 
-      <div className="grid lg:grid-cols-[260px_1fr] gap-4">
-        <div>
-          <div className="relative mb-3">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-light dark:text-muted-dark" />
-            <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search notes..." className="pl-9" />
-          </div>
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {folders.map((f) => (
-              <button key={f} onClick={() => setFolder(f)} className={cn('h-7 px-2.5 rounded-full text-xs font-medium', folder === f ? 'bg-primary-500 text-white' : 'bg-black/[0.04] dark:bg-white/[0.06]')}>{f}</button>
-            ))}
-          </div>
-          {isLoading ? <div className="space-y-2">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16" />)}</div> : (
-            <div className="space-y-1.5 max-h-[65vh] overflow-y-auto pr-1">
-              {filtered.map((n) => (
-                <button key={n.id} onClick={() => setActiveId(n.id)} className={cn('w-full text-left p-3 rounded-xl transition-colors', active?.id === n.id ? 'bg-primary-500/10' : 'hover:bg-black/[0.03] dark:hover:bg-white/[0.05]')}>
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    {n.pinned && <Pin size={11} className="text-primary-500" />}
-                    {n.favorite && <Star size={11} className="text-amber-500 fill-amber-500" />}
-                    <p className="text-sm font-medium truncate flex-1">{n.title}</p>
-                  </div>
-                  <p className="text-xs text-muted-light dark:text-muted-dark line-clamp-2">{n.content || 'No content yet'}</p>
-                  <p className="text-[10px] text-muted-light dark:text-muted-dark mt-1">{formatDate(n.updatedAt || n.createdAt)}</p>
-                </button>
-              ))}
-              {filtered.length === 0 && <p className="text-sm text-muted-light dark:text-muted-dark text-center py-8">No notes found.</p>}
-            </div>
-          )}
+      <div className="flex flex-wrap items-center gap-3 mb-3">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-dusk" />
+          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search notes..." className="pl-9" />
         </div>
 
-        <Card className="min-h-[65vh]">
-          {!active ? (
-            <EmptyState icon={StickyNote} title="No note selected" description="Create a note or pick one from the list." actionLabel="New note" onAction={createNote} />
-          ) : (
-            <div className="flex flex-col h-full">
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <input
-                  value={active.title}
-                  onChange={(e) => updateItem(active.id, { title: e.target.value })}
-                  className="font-display text-xl font-semibold bg-transparent outline-none flex-1 min-w-0"
-                />
-                <div className="flex items-center gap-1 shrink-0">
-                  <button onClick={() => updateItem(active.id, { pinned: !active.pinned })} className={cn('h-8 w-8 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10', active.pinned && 'text-primary-500')}><Pin size={15} /></button>
-                  <button onClick={() => updateItem(active.id, { favorite: !active.favorite })} className={cn('h-8 w-8 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10', active.favorite && 'text-amber-500')}><Star size={15} className={active.favorite ? 'fill-amber-500' : ''} /></button>
-                  <button onClick={() => setPreview(!preview)} className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10">{preview ? <Edit3 size={15} /> : <Eye size={15} />}</button>
-                  <button onClick={() => del(active)} className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-rose-500/10 hover:text-rose-500"><Trash2 size={15} /></button>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mb-3">
-                <input
-                  defaultValue={active.folder}
-                  onBlur={(e) => updateItem(active.id, { folder: e.target.value })}
-                  className="text-xs px-2 py-1 rounded-full bg-black/[0.04] dark:bg-white/[0.06] outline-none w-28"
-                  placeholder="Folder"
-                />
-                {active.tags?.map((t) => <Badge key={t}>{t}</Badge>)}
-              </div>
-              <div className="flex-1 min-h-0">
-                {preview ? (
-                  <div
-                    className="prose prose-sm dark:prose-invert max-w-none h-full overflow-y-auto text-sm leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: marked.parse(active.content || '*Nothing to preview*') }}
-                  />
-                ) : (
-                  <textarea
-                    key={active.id}
-                    defaultValue={active.content}
-                    onBlur={(e) => updateItem(active.id, { content: e.target.value })}
-                    placeholder="Write in Markdown..."
-                    className="w-full h-full min-h-[300px] resize-none outline-none bg-transparent font-mono text-sm leading-relaxed"
-                  />
-                )}
-              </div>
-            </div>
+        <button
+          onClick={() => setShowArchived((v) => !v)}
+          className={cn(
+            'h-8 px-3 rounded-full text-xs font-semibold border flex items-center gap-1.5 transition-colors neo-press',
+            showArchived
+              ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
+              : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'
           )}
-        </Card>
+        >
+          <Archive size={12} /> {showArchived ? 'Viewing archived' : `Archived${archivedCount ? ` (${archivedCount})` : ''}`}
+        </button>
       </div>
+
+      <div className="flex flex-wrap items-center gap-1.5 mb-5">
+        {categories.map((f) => (
+          <button
+            key={f}
+            onClick={() => setCategory(f)}
+            className={cn(
+              'h-8 px-3 rounded-md text-[13px] font-semibold border transition-colors neo-press',
+              category === f
+                ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
+                : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'
+            )}
+          >
+            {f}
+          </button>
+        ))}
+
+        {addingCategory ? (
+          <form onSubmit={submitNewCategory} className="inline-flex items-center gap-1">
+            <input
+              autoFocus
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              onBlur={() => { if (!newCategory.trim()) setAddingCategory(false) }}
+              placeholder="Category name"
+              className="h-8 w-32 rounded-md px-3 text-xs font-medium bg-surface-light dark:bg-surface-dark outline-none border border-[color:var(--line)] placeholder:text-dusk"
+            />
+            <button type="button" onClick={() => { setAddingCategory(false); setNewCategory('') }} className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-light dark:text-muted-dark hover:bg-black/[0.05] dark:hover:bg-white/[0.07] hover:text-ink-light dark:hover:text-ink-dark neo-press">
+              <X size={13} />
+            </button>
+          </form>
+        ) : (
+          <button
+            onClick={() => setAddingCategory(true)}
+            className="h-8 px-3 rounded-md text-xs font-semibold border border-dashed border-[color:var(--line-strong)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark flex items-center gap-1 transition-colors neo-press"
+          >
+            <Plus size={12} /> Category
+          </button>
+        )}
+      </div>
+
+      {isLoading ? (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-48 rounded-2xl" />)}
+        </div>
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          icon={showArchived ? Archive : StickyNote}
+          title={showArchived ? 'No archived notes' : 'No notes found'}
+          description={showArchived ? 'Notes you archive will show up here.' : 'Create a note or try a different search.'}
+          actionLabel={showArchived ? undefined : 'New note'}
+          onAction={showArchived ? undefined : createNote}
+        />
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {filtered.map((n, i) => (
+            <CardNotes
+              key={n.id}
+              note={n}
+              colorKey={colorForNote(n, i)}
+              onOpen={() => navigate(`/notes/${n.id}`)}
+              onTogglePin={() => updateItem(n.id, { pinned: !n.pinned })}
+              onToggleFavorite={() => updateItem(n.id, { favorite: !n.favorite })}
+              onDuplicate={() => duplicate(n)}
+              onDelete={() => del(n)}
+              onToggleArchive={() => toggleArchive(n)}
+              onChangeColor={(color) => changeColor(n, color)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

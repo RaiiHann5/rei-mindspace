@@ -1,13 +1,13 @@
-import { isFirebaseConfigured } from './firebase'
+import { isSupabaseConfigured } from './supabase'
 import { localData } from './localData'
 
-// Unified data access. Swaps to Firestore automatically once real Firebase
+// Unified data access. Swaps to Supabase automatically once real Supabase
 // keys are configured — every page in the app talks to this module only.
 let impl = localData
 export async function getImpl() {
-  if (isFirebaseConfigured && impl === localData) {
-    const mod = await import('./firestoreData')
-    impl = mod.firestoreData
+  if (isSupabaseConfigured && impl === localData) {
+    const mod = await import('./supabaseData')
+    impl = mod.supabaseData
   }
   return impl
 }
@@ -28,5 +28,9 @@ export const dataService = {
   async remove(collection, id) {
     const i = await getImpl()
     return i.remove(collection, id)
+  },
+  async setAll(collection, items) {
+    const i = await getImpl()
+    return i.setAll(collection, items)
   },
 }

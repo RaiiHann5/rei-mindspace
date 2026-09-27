@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Topbar from './Topbar'
-import AuroraField from './AuroraField'
 import CommandPalette from '@/components/command/CommandPalette'
+import FloatingAssistant from '@/components/assistant/FloatingAssistant'
+import QuickCapture from '@/components/capture/QuickCapture'
 import { NAV_SECTIONS, SETTINGS_ITEM } from './navConfig'
 import { startNotificationScheduler, stopNotificationScheduler } from '@/lib/notificationScheduler'
 
@@ -23,15 +24,16 @@ export default function AppLayout() {
 
   return (
     <div className="flex min-h-screen relative">
-      <AuroraField />
       <Sidebar />
-      <div className="flex-1 min-w-0 relative z-[1]">
+      <div className="flex-1 min-w-0 relative z-[1] flex flex-col">
         <Topbar title={currentTitle(pathname)} />
-        <main className="p-4 md:p-6 max-w-[1600px] mx-auto animate-fade-in">
+        <main key={pathname} className="flex-1 px-3 pb-4 md:px-4 md:pb-6 max-w-[1600px] w-full mx-auto animate-fade-in">
           <Outlet />
         </main>
       </div>
       <CommandPalette />
+      {pathname !== '/assistant' && <FloatingAssistant />}
+      <QuickCapture />
     </div>
   )
 }

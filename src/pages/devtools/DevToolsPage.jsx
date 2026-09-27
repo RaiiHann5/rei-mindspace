@@ -22,7 +22,9 @@ export default function DevToolsPage() {
   return (
     <div>
       <PageHeader title="Dev Tools" description="Small utilities for everyday development work." />
-      <Tabs tabs={TABS} active={tab} onChange={setTab} className="mb-5 flex-wrap h-auto" />
+      {/* Everything on this screen is functional data, so the tool names read as
+          literals (JSON, UUID, Base64) rather than as chrome. */}
+      <Tabs tabs={TABS} active={tab} onChange={setTab} className="mb-5 flex-wrap h-auto font-mono" />
       {tab === 'snippets' && <SnippetsTool />}
       {tab === 'colors' && <ColorPaletteTool />}
       {tab === 'gradient' && <GradientTool />}

@@ -15,19 +15,32 @@ export function useCollection(name) {
 
   const invalidate = () => qc.invalidateQueries({ queryKey: key })
 
+  // Mirror every successful mutation straight into the query cache so the UI
+  // reflects the change instantly instead of waiting for the background
+  // refetch (which also avoids "not found" flashes right after creating new
+  // records). `invalidate` still runs afterwards to reconcile with the server.
   const createItem = useMutation({
     mutationFn: (item) => dataService.create(name, item),
-    onSuccess: invalidate,
+    onSuccess: (created) => {
+      qc.setQueryData(key, (old = []) => [created, ...(old || [])])
+      invalidate()
+    },
   })
 
   const updateItem = useMutation({
     mutationFn: ({ id, patch }) => dataService.update(name, id, patch),
-    onSuccess: invalidate,
+    onSuccess: (updated) => {
+      qc.setQueryData(key, (old = []) => (old || []).map((i) => (i.id === updated.id ? updated : i)))
+      invalidate()
+    },
   })
 
   const removeItem = useMutation({
     mutationFn: (id) => dataService.remove(name, id),
-    onSuccess: invalidate,
+    onSuccess: (id) => {
+      qc.setQueryData(key, (old = []) => (old || []).filter((i) => i.id !== id))
+      invalidate()
+    },
   })
 
   return {

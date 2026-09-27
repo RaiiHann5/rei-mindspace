@@ -39,15 +39,15 @@ export default function SettingsNotifications() {
         <h3 className="font-display font-semibold mb-3 text-sm">Jenis pengingat</h3>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2"><CalendarClock size={15} className="text-primary-500" /><div><p className="text-sm font-medium">Reminder acara</p><p className="text-xs text-muted-light dark:text-muted-dark">±15 menit sebelum acara dengan reminder aktif</p></div></div>
+            <div className="flex items-center gap-2"><CalendarClock size={15} className="text-primary-600 dark:text-primary-400" /><div><p className="text-sm font-medium">Reminder acara</p><p className="text-xs text-muted-light dark:text-muted-dark">±15 menit sebelum acara dengan reminder aktif</p></div></div>
             <Switch checked={preferences.events} onChange={(v) => setPreference('events', v)} />
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2"><CheckSquare size={15} className="text-primary-500" /><div><p className="text-sm font-medium">Ringkasan task jatuh tempo</p><p className="text-xs text-muted-light dark:text-muted-dark">Sekali sehari kalau ada task due hari ini</p></div></div>
+            <div className="flex items-center gap-2"><CheckSquare size={15} className="text-primary-600 dark:text-primary-400" /><div><p className="text-sm font-medium">Ringkasan task jatuh tempo</p><p className="text-xs text-muted-light dark:text-muted-dark">Sekali sehari kalau ada task due hari ini</p></div></div>
             <Switch checked={preferences.tasks} onChange={(v) => setPreference('tasks', v)} />
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2"><Flame size={15} className="text-primary-500" /><div><p className="text-sm font-medium">Pengingat habit malam hari</p><p className="text-xs text-muted-light dark:text-muted-dark">Setelah jam 8 malam, kalau masih ada habit belum dicentang</p></div></div>
+            <div className="flex items-center gap-2"><Flame size={15} className="text-primary-600 dark:text-primary-400" /><div><p className="text-sm font-medium">Pengingat habit malam hari</p><p className="text-xs text-muted-light dark:text-muted-dark">Setelah jam 8 malam, kalau masih ada habit belum dicentang</p></div></div>
             <Switch checked={preferences.habits} onChange={(v) => setPreference('habits', v)} />
           </div>
         </div>

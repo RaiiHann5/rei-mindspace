@@ -4,8 +4,8 @@ import toast from 'react-hot-toast'
 import { Card, Button, Input, Select } from '@/components/ui'
 
 export default function GradientTool() {
-  const [c1, setC1] = useState('#5A4FFF')
-  const [c2, setC2] = useState('#2FD9C4')
+  const [c1, setC1] = useState('#FFB343')
+  const [c2, setC2] = useState('#C1400D')
   const [angle, setAngle] = useState(135)
   const [type, setType] = useState('linear')
 
@@ -44,7 +44,7 @@ export default function GradientTool() {
       </div>
       <div className="flex items-center gap-2">
         <code className="flex-1 text-xs font-mono bg-black/[0.04] dark:bg-white/[0.06] rounded-xl px-3 py-2.5 overflow-x-auto">{css}</code>
-        <Button size="icon" onClick={copy}><Copy size={15} /></Button>
+        <Button size="icon" onClick={copy} aria-label="Salin"><Copy size={15} /></Button>
       </div>
     </Card>
   )

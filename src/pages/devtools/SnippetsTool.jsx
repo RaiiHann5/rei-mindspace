@@ -36,8 +36,8 @@ export default function SnippetsTool() {
                   <Badge>{s.language}</Badge>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => updateItem(s.id, { favorite: !s.favorite })} className={s.favorite ? 'text-amber-500' : 'text-muted-light dark:text-muted-dark'}><Star size={13} className={s.favorite ? 'fill-amber-500' : ''} /></button>
-                  <button onClick={() => copy(s.code)} className="hover:text-primary-500"><Copy size={13} /></button>
+                  <button onClick={() => updateItem(s.id, { favorite: !s.favorite })} aria-label={s.favorite ? 'Hapus dari favorit' : 'Tandai favorit'} className={s.favorite ? 'text-amber-500' : 'text-muted-light dark:text-muted-dark'}><Star size={13} className={s.favorite ? 'fill-amber-500' : ''} /></button>
+                  <button onClick={() => copy(s.code)} aria-label="Salin code" className="hover:text-primary-600 dark:hover:text-primary-400"><Copy size={13} /></button>
                   <button onClick={() => del(s)} className="hover:text-rose-500"><Trash2 size={13} /></button>
                 </div>
               </div>

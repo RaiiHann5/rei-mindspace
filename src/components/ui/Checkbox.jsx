@@ -9,12 +9,14 @@ export default function Checkbox({ checked, onChange, className }) {
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={cn(
-        'h-5 w-5 shrink-0 rounded-md border flex items-center justify-center transition-colors',
-        checked ? 'bg-primary-500 border-primary-500' : 'border-border-light dark:border-border-dark bg-transparent',
+        'h-[18px] w-[18px] shrink-0 rounded-[7px] border flex items-center justify-center transition-all duration-150 neo-press',
+        'border-[color:var(--line-strong)] bg-surface-light dark:bg-surface-dark',
+        'hover:border-ember-500/60',
+        checked && 'border-transparent bg-accent-gradient',
         className
       )}
     >
-      {checked && <Check size={13} strokeWidth={3} className="text-white" />}
+      {checked && <Check size={12} strokeWidth={3.5} className="text-accent-ink" />}
     </button>
   )
 }

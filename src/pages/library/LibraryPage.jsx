@@ -5,6 +5,7 @@ import { useCollection } from '@/hooks/useCollection'
 import { PageHeader, Button, Card, Badge, EmptyState, Skeleton } from '@/components/ui'
 import FilterChip from '@/components/ui/FilterChip'
 import LibraryFormModal from './LibraryFormModal'
+import { cn } from '@/lib/utils'
 
 const TYPE_ICON = { book: Book, movie: Film, game: Gamepad2, music: Music, course: GraduationCap }
 const statusTone = { planned: 'default', in_progress: 'primary', completed: 'teal', dropped: 'rose' }
@@ -13,7 +14,7 @@ function Stars({ rating }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} size={12} className={i < rating ? 'fill-amber-500 text-amber-500' : 'text-black/15 dark:text-white/15'} />
+        <Star key={i} size={12} className={i < rating ? 'fill-amber-500 text-amber-500' : 'text-dusk/40'} />
       ))}
     </div>
   )
@@ -53,29 +54,29 @@ export default function LibraryPage() {
           {filtered.map((i) => {
             const Icon = TYPE_ICON[i.type] || Book
             return (
-              <Card key={i.id} hover className="group flex flex-col">
+              <Card key={i.id} hover className="group flex flex-col cursor-pointer" onClick={() => { setEditing(i); setModalOpen(true) }}>
                 {i.cover ? (
-                  <div className="h-32 rounded-xl overflow-hidden mb-3 bg-black/[0.04] dark:bg-white/[0.06]">
+                  <div className="h-32 rounded-xl overflow-hidden mb-3 bg-panel2-light dark:bg-panel2-dark">
                     <img src={i.cover} alt={i.title} className="h-full w-full object-cover" />
                   </div>
                 ) : (
-                  <div className="h-24 rounded-xl bg-gradient-to-br from-primary-500/20 to-teal-400/20 flex items-center justify-center mb-3">
-                    <Icon size={28} className="text-primary-500" />
+                  <div className="h-24 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-3">
+                    <Icon size={28} />
                   </div>
                 )}
                 <div className="flex items-start justify-between mb-1">
-                  <h3 className="font-display font-semibold text-sm leading-snug flex-1">{i.title}</h3>
-                  <button onClick={() => updateItem(i.id, { favorite: !i.favorite })} className={i.favorite ? 'text-amber-500 shrink-0' : 'text-muted-light dark:text-muted-dark opacity-0 group-hover:opacity-100 shrink-0'}>
+                  <h3 className="font-display font-semibold tracking-tight text-sm leading-snug flex-1">{i.title}</h3>
+                  <button onClick={(ev) => { ev.stopPropagation(); updateItem(i.id, { favorite: !i.favorite }) }} aria-label={i.favorite ? 'Remove favorite' : 'Mark favorite'} className={cn('shrink-0 neo-press', i.favorite ? 'text-amber-500' : 'text-dusk opacity-0 group-hover:opacity-100')}>
                     <Star size={14} className={i.favorite ? 'fill-amber-500' : ''} />
                   </button>
                 </div>
-                <p className="text-xs text-muted-light dark:text-muted-dark mb-2">{i.creator}</p>
+                <p className="text-[11px] text-dusk mb-2">{i.creator}</p>
                 <Stars rating={i.rating} />
                 <div className="mt-auto pt-3 flex items-center justify-between">
                   <Badge tone={statusTone[i.status]}>{i.status.replace('_', ' ')}</Badge>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => { setEditing(i); setModalOpen(true) }} className="h-6 w-6 rounded flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10"><Pencil size={12} /></button>
-                    <button onClick={() => del(i)} className="h-6 w-6 rounded flex items-center justify-center hover:bg-rose-500/10 hover:text-rose-500"><Trash2 size={12} /></button>
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(ev) => ev.stopPropagation()}>
+                    <button onClick={() => { setEditing(i); setModalOpen(true) }} aria-label="Edit item" className="h-6 w-6 rounded-md flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 neo-press"><Pencil size={12} /></button>
+                    <button onClick={() => del(i)} className="h-6 w-6 rounded-md flex items-center justify-center hover:bg-rose-500/10 hover:text-rose-500 neo-press"><Trash2 size={12} /></button>
                   </div>
                 </div>
               </Card>

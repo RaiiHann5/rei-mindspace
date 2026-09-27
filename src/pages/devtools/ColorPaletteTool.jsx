@@ -32,7 +32,7 @@ export default function ColorPaletteTool() {
             <div className="h-24" style={{ backgroundColor: c.hex }} />
             <div className="p-2 flex items-center gap-1">
               <input value={c.hex} onChange={(e) => updateColor(c.id, e.target.value)} className="flex-1 min-w-0 text-xs font-mono bg-transparent outline-none" />
-              <button onClick={() => copy(c.hex)} className="hover:text-primary-500"><Copy size={13} /></button>
+              <button onClick={() => copy(c.hex)} aria-label="Salin warna" className="hover:text-primary-600 dark:hover:text-primary-400"><Copy size={13} /></button>
               <button onClick={() => removeColor(c.id)} className="opacity-0 group-hover:opacity-100 hover:text-rose-500"><Trash2 size={13} /></button>
             </div>
           </div>

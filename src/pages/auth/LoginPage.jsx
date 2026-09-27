@@ -2,10 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Sparkles, Loader2 } from 'lucide-react'
 import { Button, Input, Card } from '@/components/ui'
-import { auth } from '@/lib/firebase'
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { supabase } from '@/lib/supabase'
 import toast from 'react-hot-toast'
-import AuroraField from '@/components/layout/AuroraField'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -17,10 +15,11 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) throw error
       navigate('/')
     } catch (err) {
-      toast.error(err.message.replace('Firebase: ', ''))
+      toast.error(err.message)
     } finally {
       setLoading(false)
     }
@@ -28,23 +27,24 @@ export default function LoginPage() {
 
   const google = async () => {
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider())
-      navigate('/')
+      // Redirects the browser to Google, then back to this app — no
+      // navigate('/') needed here since the redirect handles that.
+      const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' })
+      if (error) throw error
     } catch (err) {
-      toast.error(err.message.replace('Firebase: ', ''))
+      toast.error(err.message)
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
-      <AuroraField />
       <Card className="w-full max-w-sm relative z-[1]" glass={false}>
         <div className="flex flex-col items-center mb-6">
-          <div className="h-11 w-11 rounded-2xl bg-primary-500 flex items-center justify-center text-white mb-3">
-            <Sparkles size={20} />
+          <div className="h-11 w-11 rounded-2xl bg-accent-gradient text-accent-ink flex items-center justify-center mb-3">
+            <Sparkles size={20} strokeWidth={2.2} />
           </div>
           <h1 className="font-display font-semibold text-xl">Welcome back</h1>
-          <p className="text-sm text-muted-light dark:text-muted-dark">Sign in to Meridian</p>
+          <p className="text-sm text-muted-light dark:text-muted-dark">Sign in to Space+</p>
         </div>
         <form onSubmit={submit} className="space-y-3">
           <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -58,7 +58,7 @@ export default function LoginPage() {
         </div>
         <Button variant="secondary" className="w-full justify-center" onClick={google}>Continue with Google</Button>
         <p className="text-sm text-center mt-5 text-muted-light dark:text-muted-dark">
-          No account? <Link to="/signup" className="text-primary-500 font-medium">Sign up</Link>
+          No account? <Link to="/signup" className="text-primary-600 dark:text-primary-400 font-medium">Sign up</Link>
         </p>
       </Card>
     </div>

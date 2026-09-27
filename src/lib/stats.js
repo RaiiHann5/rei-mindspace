@@ -51,3 +51,21 @@ export function habitCompletionRate(history = {}, days = 30) {
   }
   return Math.round((done / total) * 100)
 }
+
+export function habitBestStreak(history = {}) {
+  const days = Object.keys(history).filter((k) => history[k]).sort()
+  if (days.length === 0) return 0
+  let best = 1, run = 1
+  for (let i = 1; i < days.length; i++) {
+    const prev = new Date(days[i - 1])
+    const cur = new Date(days[i])
+    const diff = Math.round((cur - prev) / 86400000)
+    run = diff === 1 ? run + 1 : 1
+    if (run > best) best = run
+  }
+  return best
+}
+
+export function habitTotalCompletions(history = {}) {
+  return Object.values(history).filter(Boolean).length
+}

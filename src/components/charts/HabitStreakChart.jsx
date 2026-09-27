@@ -1,17 +1,36 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts'
 
-const COLORS = { primary: '#5A4FFF', teal: '#1EC4B0', amber: '#F7A331', rose: '#F4506A' }
+// Streak bars wear the habit's own tone so a habit keeps its identity across
+// the heatmap, the streak chart and its chip. No ember here — the streak chart
+// is the quiet half of the analytics screen.
+const TONES = {
+  primary: '#6E8C88', // teal-500
+  teal: '#A6BDB9', // teal-300
+  amber: '#C0A876', // amber-500
+  rose: '#A8535F', // rose-500
+}
+
+const TOOLTIP = {
+  borderRadius: 10,
+  border: '1px solid var(--line)',
+  background: 'var(--tooltip-bg)',
+  color: 'var(--tooltip-ink)',
+  fontSize: 12,
+  boxShadow: 'var(--tooltip-shadow)',
+}
+
+const TICK = { fontSize: 11, fill: 'var(--color-dusk)' }
 
 export default function HabitStreakChart({ data }) {
   return (
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-        <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.15} />
-        <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'currentColor', opacity: 0.6 }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fontSize: 11, fill: 'currentColor', opacity: 0.6 }} axisLine={false} tickLine={false} width={28} />
-        <Tooltip contentStyle={{ borderRadius: 12, border: 'none', fontSize: 12, background: 'var(--color-surface-dark)', color: '#fff' }} />
-        <Bar dataKey="streak" radius={[8, 8, 0, 0]} maxBarSize={40}>
-          {data.map((d, i) => <Cell key={i} fill={COLORS[d.color] || COLORS.primary} />)}
+        <CartesianGrid vertical={false} stroke="var(--line)" />
+        <XAxis dataKey="name" tick={TICK} axisLine={false} tickLine={false} />
+        <YAxis hide />
+        <Tooltip contentStyle={TOOLTIP} />
+        <Bar dataKey="streak" radius={[4, 4, 0, 0]} maxBarSize={32}>
+          {data.map((d, i) => <Cell key={i} fill={TONES[d.color] || TONES.primary} />)}
         </Bar>
       </BarChart>
     </ResponsiveContainer>

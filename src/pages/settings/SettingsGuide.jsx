@@ -12,7 +12,7 @@ export default function SettingsGuide() {
       <Card>
         <h3 className="font-display font-semibold mb-1">Panduan Penggunaan</h3>
         <p className="text-xs text-muted-light dark:text-muted-dark mb-2">
-          Ringkasan singkat tiap fitur di Meridian. Klik bagian di bawah untuk buka detailnya.
+          Ringkasan singkat tiap fitur di Space+. Klik bagian di bawah untuk buka detailnya.
         </p>
         <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-300 mb-2">
           <Command size={14} className="shrink-0" />
@@ -59,7 +59,7 @@ export default function SettingsGuide() {
             <p>Simpan link penting supaya gampang ditemukan lagi, dikelompokkan per folder dan bisa ditandai favorit.</p>
           </AccordionItem>
           <AccordionItem title="Files" icon={FolderOpen}>
-            <p>Manajer file sederhana. Dalam mode lokal, file yang di-upload hanya tersimpan sebagai metadata di browser ini. Kalau Firebase sudah disambungkan (lihat tab Koneksi), file betulan ter-upload ke Firebase Storage.</p>
+            <p>Manajer file sederhana. Dalam mode lokal, file yang di-upload hanya tersimpan sebagai metadata di browser ini. Kalau Supabase sudah disambungkan (lihat tab Koneksi), file betulan ter-upload ke Supabase Storage.</p>
           </AccordionItem>
           <AccordionItem title="Dev Tools" icon={Wrench}>
             <p>Kumpulan utilitas: simpan snippet kode, buat palet warna, generator gradient CSS, JSON formatter (prettify/minify), generator UUID, dan encoder/decoder Base64. Semua berjalan langsung di browser, tidak butuh internet.</p>
@@ -68,33 +68,47 @@ export default function SettingsGuide() {
             <p>Rangkuman angka: total task selesai, total menit fokus, streak habit terpanjang, progress tiap goal — semua dalam bentuk grafik supaya gampang dibaca trennya.</p>
           </AccordionItem>
           <AccordionItem title="Notifications" icon={Bell}>
-            <p>Meridian memberi notifikasi untuk: acara dengan reminder aktif (±15 menit sebelumnya), ringkasan task yang jatuh tempo hari ini, dan pengingat habit yang belum dicentang di malam hari. Nyalakan izin notifikasi browser di tab "Notifikasi" supaya juga muncul sebagai notifikasi sistem, bukan cuma di lonceng atas. Catatan: pengecekan hanya berjalan selagi tab aplikasi ini terbuka.</p>
+            <p>Space+ memberi notifikasi untuk: acara dengan reminder aktif (±15 menit sebelumnya), ringkasan task yang jatuh tempo hari ini, dan pengingat habit yang belum dicentang di malam hari. Nyalakan izin notifikasi browser di tab "Notifikasi" supaya juga muncul sebagai notifikasi sistem, bukan cuma di lonceng atas. Catatan: pengecekan hanya berjalan selagi tab aplikasi ini terbuka.</p>
           </AccordionItem>
-          <AccordionItem title="AI Assistant (Gemini)" icon={Sparkles}>
-            <p className="mb-2">Chat assistant yang bisa "lihat" ringkasan task, project, habit, dan goal kamu saat itu juga — jadi sarannya nyambung sama kondisi kamu, bukan generik. Bisa juga dipakai buat pertanyaan apa saja di luar produktivitas.</p>
+          <AccordionItem title="AI Assistant (11 provider + custom)" icon={Sparkles}>
+            <p className="mb-2">Chat assistant yang bisa "lihat" ringkasan task, project, habit, dan goal kamu saat itu juga — jadi sarannya nyambung sama kondisi kamu, bukan generik. Bisa juga dipakai buat pertanyaan apa saja di luar produktivitas, dan bisa langsung bertindak di app (bikin task, mulai Pomodoro, centang habit).</p>
+            <p className="font-medium text-inherit mb-1">Pilih provider — semuanya gratis:</p>
+            <ul className="list-disc list-inside space-y-1 mb-2">
+              <li><b>Gemini</b> (Google AI Studio) — paling serba bisa: chat, coding, baca dokumen/PDF & gambar langsung.</li>
+              <li><b>Groq</b> — inference tercepat, enak buat chat yang butuh respons instan.</li>
+              <li><b>OpenRouter</b> — satu API key untuk banyak model (Qwen, DeepSeek, Llama, Mistral, dll).</li>
+              <li><b>Cerebras</b> — inference sangat cepat, fokus teks (tidak baca gambar).</li>
+              <li><b>Together AI</b> — banyak pilihan model open-source dengan free tier luas.</li>
+              <li><b>Mistral AI</b> — free tier paling luas: 1 miliar token/bulan, semua model termasuk yang besar.</li>
+              <li><b>NVIDIA NIM</b> — katalog model gratis terbanyak (100+), termasuk Llama 405B.</li>
+              <li><b>SambaNova</b> — salah satu dari sedikit tempat gratis buat Llama 3.1 405B, inference cepat.</li>
+              <li><b>Hugging Face</b> — satu key, auto-routing ke ratusan model open-source.</li>
+              <li><b>GitHub Models</b> — akses GPT-4o dkk cukup pakai Personal Access Token GitHub, tidak perlu daftar baru.</li>
+              <li><b>SiliconFlow</b> — free tier besar buat model DeepSeek & Qwen terbaru.</li>
+            </ul>
+            <p className="mb-2">Butuh provider lain yang belum ada di daftar (termasuk model self-hosted kamu sendiri seperti Ollama)? Klik <b>"Tambah provider custom"</b> di bagian bawah kartu provider — cukup isi nama, Base URL endpoint yang kompatibel format OpenAI (<code>/chat/completions</code>), dan model default-nya.</p>
             <p className="font-medium text-inherit mb-1">Lampiran (gambar & file):</p>
-            <p className="mb-2">Klik ikon <b>penjepit kertas</b> di sebelah kolom chat untuk melampirkan gambar (PNG/JPEG/WebP), PDF, atau file teks (maks 4 file, 8MB per file). Cocok buat minta dibacain isi screenshot, ringkas dokumen, atau analisis foto. Setelah refresh halaman, lampiran lama hanya tampil sebagai label nama file (data gambarnya tidak disimpan permanen di browser, biar hemat ruang).</p>
+            <p className="mb-2">Klik ikon <b>penjepit kertas</b> di sebelah kolom chat untuk melampirkan gambar (PNG/JPEG/WebP), PDF, atau file teks (maks 4 file, 8MB per file). Gemini bisa baca semuanya native (termasuk PDF). Provider lain membaca gambar hanya kalau model yang dipilih mendukung vision, dan file teks (txt/md/csv/json) otomatis disisipkan sebagai teks — PDF tidak bisa dibaca provider selain Gemini. Setelah refresh halaman, lampiran lama hanya tampil sebagai label nama file (data gambarnya tidak disimpan permanen, biar hemat ruang).</p>
             <p className="font-medium text-inherit mb-1">Cara mengaktifkan:</p>
             <ol className="list-decimal list-inside space-y-1 mb-2">
-              <li>Buka <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer" className="text-primary-500">aistudio.google.com/apikey</a>, login pakai akun Google, klik "Create API key". Gratis untuk pemakaian personal dalam batas kuota.</li>
-              <li>Copy API key yang muncul (diawali "AIza...").</li>
-              <li>Buka Settings → tab General di aplikasi ini, tempel di kolom "Gemini API key".</li>
-              <li>Buka menu AI Assistant di sidebar, langsung bisa dipakai.</li>
+              <li>Buka Settings → tab General di aplikasi ini, scroll ke kartu "AI Assistant".</li>
+              <li>Nyalakan switch di provider yang mau dipakai (boleh lebih dari satu sekaligus).</li>
+              <li>Klik link "Ambil API key gratis" di provider itu untuk buka halaman pembuatan key-nya, lalu tempel key-nya di kolom yang muncul.</li>
+              <li>Kalau lebih dari satu provider aktif, klik "Pakai ini" pada provider yang mau dijadikan default — atau ganti kapan saja lewat dropdown di pojok kanan atas halaman AI Assistant.</li>
             </ol>
-            <p className="text-xs">⚠️ API key ini cuma tersimpan di browser kamu (localStorage), tidak pernah ikut ter-upload ke GitHub atau ke build aplikasi. Tapi tetap jangan share API key ke orang lain, dan jangan taruh di file <code>.env</code> kalau aplikasi ini di-deploy publik — karena isi <code>.env</code> ikut terbundle ke kode yang bisa dilihat siapa saja.</p>
+            <p className="text-xs">⚠️ Semua API key hanya tersimpan di browser kamu (localStorage), tidak pernah ikut ter-upload ke GitHub atau ke build aplikasi. Tapi tetap jangan share API key ke orang lain, dan jangan taruh di file <code>.env</code> kalau aplikasi ini di-deploy publik — karena isi <code>.env</code> ikut terbundle ke kode yang bisa dilihat siapa saja.</p>
           </AccordionItem>
-          <AccordionItem title="Setup Firebase (opsional, buat sinkron ke cloud)" icon={CloudCog}>
-            <p className="mb-2">Secara default aplikasi ini jalan 100% lokal di browser kamu (mode "Local mode") — tidak wajib pakai Firebase sama sekali. Kalau nanti mau data kamu tersimpan online dan bisa diakses dari HP/laptop lain, ikuti langkah ini:</p>
+          <AccordionItem title="Setup Supabase (opsional, buat sinkron ke cloud)" icon={CloudCog}>
+            <p className="mb-2">Secara default aplikasi ini jalan 100% lokal di browser kamu (mode "Local mode") — tidak wajib pakai Supabase sama sekali. Kalau nanti mau data kamu tersimpan online dan bisa diakses dari HP/laptop lain, ikuti langkah ini:</p>
             <ol className="list-decimal list-inside space-y-1.5">
-              <li>Buka <a href="https://console.firebase.google.com" target="_blank" rel="noreferrer" className="text-primary-500">console.firebase.google.com</a>, login dengan akun Google, klik "Add project" / "Tambahkan project", ikuti wizard-nya (nama bebas, boleh matikan Google Analytics kalau tidak perlu).</li>
-              <li>Di dashboard project, klik ikon <code>&lt;/&gt;</code> (Web) untuk daftarkan "Web app" baru. Kasih nama bebas, tidak perlu centang Firebase Hosting.</li>
-              <li>Setelah itu Firebase akan menampilkan blok <code>firebaseConfig</code> berisi <code>apiKey</code>, <code>authDomain</code>, <code>projectId</code>, dst. Simpan halaman ini / jangan ditutup dulu.</li>
-              <li>Di menu kiri Firebase Console, buka <b>Build → Authentication</b> → klik "Get started" → aktifkan minimal provider "Email/Password" (atau juga "Google" kalau mau login pakai Google).</li>
-              <li>Buka <b>Build → Firestore Database</b> → "Create database" → pilih lokasi server terdekat → mode "Start in test mode" dulu supaya gampang (nanti bisa diperketat lewat Security Rules).</li>
-              <li>Buka <b>Build → Storage</b> → "Get started" → lanjut sampai selesai (dipakai untuk upload file & cover Library).</li>
+              <li>Buka <a href="https://supabase.com/dashboard" target="_blank" rel="noreferrer" className="text-primary-600 dark:text-primary-400">supabase.com/dashboard</a>, login/daftar, klik "New project", pilih organisasi, kasih nama + password database bebas, pilih region terdekat.</li>
+              <li>Setelah project selesai dibuat (tunggu 1-2 menit), buka menu <b>Project Settings → API</b>. Simpan halaman ini / jangan ditutup dulu — kamu butuh <code>Project URL</code> dan key <code>anon public</code> di sini.</li>
+              <li>Buka menu <b>SQL Editor</b> di sidebar kiri, klik "New query", buka file <code>supabase.sql</code> yang ada di folder project aplikasi ini, copy semua isinya, paste ke SQL Editor, lalu klik "Run". Ini bikin tabel data + aturan keamanan (Row Level Security) otomatis.</li>
+              <li>Buka menu <b>Storage</b> di sidebar → "New bucket" → kasih nama persis <code>uploads</code> → nyalakan toggle "Public bucket" → Save. (Bucket ini dipakai untuk upload file & cover Library.)</li>
+              <li>Buka menu <b>Authentication → Providers</b> → pastikan "Email" aktif (biasanya default sudah nyala). Mau tambah login Google? Aktifkan provider "Google" di situ juga dan isi Client ID/Secret sesuai instruksi di halamannya.</li>
               <li>Di dalam folder project aplikasi ini, cari file <code>.env.example</code>, duplikat lalu ubah namanya jadi <code>.env</code>.</li>
-              <li>Isi tiap baris di <code>.env</code> dengan nilai yang sesuai dari <code>firebaseConfig</code> di langkah 3 (contoh: <code>VITE_FIREBASE_API_KEY=</code> diisi nilai <code>apiKey</code>, dan seterusnya).</li>
-              <li>Simpan file, lalu jalankan ulang <code>npm run dev</code> (kalau lagi development) atau <code>npm run build</code> ulang (kalau mau deploy). Aplikasi otomatis mendeteksi <code>.env</code> ini dan pindah dari "Local mode" ke "Connected to Firebase" — bisa dicek statusnya di Settings → General → Connection.</li>
+              <li>Isi <code>VITE_SUPABASE_URL</code> dengan nilai <code>Project URL</code> dan <code>VITE_SUPABASE_ANON_KEY</code> dengan nilai key <code>anon public</code> dari langkah 2.</li>
+              <li>Simpan file, lalu jalankan ulang <code>npm run dev</code> (kalau lagi development) atau <code>npm run build</code> ulang (kalau mau deploy). Aplikasi otomatis mendeteksi <code>.env</code> ini dan pindah dari "Local mode" ke "Connected to Supabase" — bisa dicek statusnya di Settings → General → Connection.</li>
             </ol>
             <p className="text-xs mt-2">Kalau cuma dipakai sendiri di satu browser/HP, langkah ini boleh dilewati saja — Local mode sudah cukup dan datanya tetap aman tersimpan di perangkat kamu.</p>
           </AccordionItem>

@@ -5,8 +5,18 @@ import { Toaster } from 'react-hot-toast'
 import { queryClient } from '@/lib/queryClient'
 import { router } from '@/routes'
 import { applyTheme, useThemeStore } from '@/store/useThemeStore'
-import { isFirebaseConfigured, auth } from '@/lib/firebase'
+import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/useAuthStore'
+
+function mapSupabaseUser(user) {
+  if (!user) return null
+  return {
+    uid: user.id,
+    displayName: user.user_metadata?.display_name || user.email,
+    email: user.email,
+    photoURL: user.user_metadata?.avatar_url || '',
+  }
+}
 
 export default function App() {
   const theme = useThemeStore((s) => s.theme)
@@ -20,16 +30,14 @@ export default function App() {
   }, [theme])
 
   useEffect(() => {
-    if (!isFirebaseConfigured) return
-    let unsub = () => {}
-    import('firebase/auth').then(({ onAuthStateChanged }) => {
-      unsub = onAuthStateChanged(auth, (user) => {
-        useAuthStore.getState().setUser(
-          user ? { uid: user.uid, displayName: user.displayName || user.email, email: user.email, photoURL: user.photoURL } : null
-        )
-      })
+    if (!isSupabaseConfigured) return
+    supabase.auth.getSession().then(({ data }) => {
+      useAuthStore.getState().setUser(mapSupabaseUser(data.session?.user))
     })
-    return () => unsub()
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      useAuthStore.getState().setUser(mapSupabaseUser(session?.user))
+    })
+    return () => sub.subscription.unsubscribe()
   }, [])
 
   return (

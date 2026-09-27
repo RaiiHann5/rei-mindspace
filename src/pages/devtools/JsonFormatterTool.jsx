@@ -25,7 +25,7 @@ export default function JsonFormatterTool() {
         <div className="flex gap-2">
           <Button size="sm" variant="secondary" onClick={() => format(2)}><Sparkles size={13} /> Prettify</Button>
           <Button size="sm" variant="secondary" onClick={() => format(0)}><Minimize2 size={13} /> Minify</Button>
-          <Button size="icon" onClick={copy}><Copy size={14} /></Button>
+          <Button size="icon" onClick={copy} aria-label="Salin"><Copy size={14} /></Button>
         </div>
       </div>
       <Textarea rows={14} className="font-mono text-xs" value={input} onChange={(e) => { setInput(e.target.value); setError('') }} />

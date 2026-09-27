@@ -30,7 +30,7 @@ export default function UuidTool() {
         {list.map((u, i) => (
           <div key={i} className="flex items-center gap-2 text-sm font-mono px-3 py-2 rounded-lg bg-black/[0.04] dark:bg-white/[0.06]">
             <span className="flex-1 truncate">{u}</span>
-            <button onClick={() => copyOne(u)} className="hover:text-primary-500"><Copy size={13} /></button>
+            <button onClick={() => copyOne(u)} aria-label="Salin UUID" className="hover:text-primary-600 dark:hover:text-primary-400"><Copy size={13} /></button>
           </div>
         ))}
       </div>

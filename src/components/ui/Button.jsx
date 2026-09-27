@@ -1,18 +1,20 @@
 import { cn } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 
+// Primary is the one sanctioned place the ember gradient appears. Everything
+// else is a flat panel or a hairline outline so the gradient keeps its weight.
 const variants = {
-  primary: 'bg-primary-500 text-white hover:bg-primary-600 shadow-sm shadow-primary-500/30',
-  secondary: 'glass-solid hover:bg-black/[0.03] dark:hover:bg-white/[0.04] text-inherit',
-  ghost: 'hover:bg-black/[0.04] dark:hover:bg-white/[0.06] text-inherit',
-  danger: 'bg-rose-500 text-white hover:opacity-90',
-  outline: 'border border-border-light dark:border-border-dark hover:bg-black/[0.03] dark:hover:bg-white/[0.05]',
+  primary: 'ember-cta font-semibold hover:brightness-[1.06] active:brightness-100',
+  secondary: 'glass-solid font-semibold hover:bg-black/[0.04] dark:hover:bg-white/[0.05]',
+  ghost: 'border border-transparent font-semibold text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:bg-black/[0.04] dark:hover:bg-white/[0.05]',
+  danger: 'bg-rose-500 text-white border border-rose-600 font-semibold hover:bg-rose-600',
+  outline: 'border border-[color:var(--line-strong)] bg-transparent font-semibold hover:border-ember-500/60 hover:text-ember-500',
 }
 
 const sizes = {
-  sm: 'h-8 px-3 text-sm gap-1.5',
+  sm: 'h-8 px-3 text-[13px] gap-1.5',
   md: 'h-10 px-4 text-sm gap-2',
-  lg: 'h-12 px-6 text-base gap-2',
+  lg: 'h-12 px-6 text-[15px] gap-2',
   icon: 'h-9 w-9 p-0 justify-center',
 }
 
@@ -22,7 +24,8 @@ export default function Button({
   return (
     <button
       className={cn(
-        'inline-flex items-center rounded-xl font-medium transition-all duration-150 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none select-none',
+        'inline-flex items-center justify-center rounded-md transition-all duration-150 neo-press select-none',
+        'disabled:opacity-50 disabled:pointer-events-none',
         variants[variant], sizes[size], className
       )}
       disabled={disabled || loading}

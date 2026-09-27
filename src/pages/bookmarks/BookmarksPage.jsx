@@ -28,9 +28,9 @@ export default function BookmarksPage() {
     <div>
       <PageHeader title="Bookmarks" description="Links worth keeping." actions={<Button onClick={() => setModalOpen(true)}><Plus size={16} /> Add bookmark</Button>} />
 
-      <div className="flex flex-wrap gap-1.5 mb-4">
+      <div className="flex flex-wrap gap-1.5 mb-5">
         {folders.map((f) => (
-          <button key={f} onClick={() => setFolder(f)} className={`h-7 px-2.5 rounded-full text-xs font-medium ${folder === f ? 'bg-primary-500 text-white' : 'bg-black/[0.04] dark:bg-white/[0.06]'}`}>{f}</button>
+          <button key={f} onClick={() => setFolder(f)} className={`h-7 px-2.5 rounded-md text-[13px] font-semibold border transition-colors neo-press ${folder === f ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30' : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'}`}>{f}</button>
         ))}
       </div>
 
@@ -42,15 +42,15 @@ export default function BookmarksPage() {
         <div className="grid sm:grid-cols-2 gap-3">
           {filtered.map((b) => (
             <Card key={b.id} hover className="flex items-center gap-3 group">
-              <div className="h-9 w-9 rounded-xl bg-primary-500/10 flex items-center justify-center shrink-0"><ExternalLink size={15} className="text-primary-500" /></div>
+              <div className="h-9 w-9 rounded-lg bg-primary-500/10 flex items-center justify-center shrink-0"><ExternalLink size={15} className="text-primary-600 dark:text-primary-400" /></div>
               <div className="flex-1 min-w-0">
-                <a href={b.url} target="_blank" rel="noreferrer" className="text-sm font-medium hover:text-primary-500 truncate block">{b.title}</a>
-                <p className="text-xs text-muted-light dark:text-muted-dark truncate">{b.url}</p>
+                <a href={b.url} target="_blank" rel="noreferrer" className="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 truncate block">{b.title}</a>
+                <p className="text-[11px] font-mono truncate text-dusk">{b.url}</p>
                 <div className="flex gap-1 mt-1">{b.tags?.map((t) => <Badge key={t}>{t}</Badge>)}</div>
               </div>
               <div className="flex items-center gap-1 shrink-0">
-                <button onClick={() => updateItem(b.id, { favorite: !b.favorite })} className={b.favorite ? 'text-amber-500' : 'text-muted-light dark:text-muted-dark opacity-0 group-hover:opacity-100'}><Star size={14} className={b.favorite ? 'fill-amber-500' : ''} /></button>
-                <button onClick={() => del(b)} className="opacity-0 group-hover:opacity-100 hover:text-rose-500"><Trash2 size={14} /></button>
+                <button onClick={() => updateItem(b.id, { favorite: !b.favorite })} aria-label={b.favorite ? 'Hapus dari favorit' : 'Tandai favorit'} className={`h-7 w-7 rounded-lg flex items-center justify-center transition-colors neo-press ${b.favorite ? 'text-amber-500' : 'text-muted-light dark:text-muted-dark opacity-0 group-hover:opacity-100'}`}><Star size={14} className={b.favorite ? 'fill-amber-500' : ''} /></button>
+                <button onClick={() => del(b)} aria-label={`Hapus ${b.title}`} className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-light dark:text-muted-dark opacity-0 group-hover:opacity-100 hover:bg-rose-500/10 hover:text-rose-500 transition-colors neo-press"><Trash2 size={14} /></button>
               </div>
             </Card>
           ))}
@@ -59,11 +59,11 @@ export default function BookmarksPage() {
 
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Add bookmark" footer={<><Button variant="secondary" onClick={() => setModalOpen(false)}>Cancel</Button><Button onClick={submit}>Save</Button></>}>
         <form onSubmit={submit} className="space-y-4">
-          <div><label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Title</label><Input autoFocus value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} required /></div>
-          <div><label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">URL</label><Input value={form.url} onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://" required /></div>
+          <div><label className="text-[11px] font-medium text-dusk mb-1.5 block">Title</label><Input autoFocus value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} required /></div>
+          <div><label className="text-[11px] font-medium text-dusk mb-1.5 block">URL</label><Input value={form.url} onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://" required /></div>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Folder</label><Input value={form.folder} onChange={(e) => setForm((f) => ({ ...f, folder: e.target.value }))} /></div>
-            <div><label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Tags</label><Input value={form.tags} onChange={(e) => setForm((f) => ({ ...f, tags: e.target.value }))} /></div>
+            <div><label className="text-[11px] font-medium text-dusk mb-1.5 block">Folder</label><Input value={form.folder} onChange={(e) => setForm((f) => ({ ...f, folder: e.target.value }))} /></div>
+            <div><label className="text-[11px] font-medium text-dusk mb-1.5 block">Tags</label><Input value={form.tags} onChange={(e) => setForm((f) => ({ ...f, tags: e.target.value }))} /></div>
           </div>
         </form>
       </Modal>

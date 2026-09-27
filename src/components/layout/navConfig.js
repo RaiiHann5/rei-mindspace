@@ -1,7 +1,8 @@
 import {
   LayoutDashboard, CheckSquare, FolderKanban, CalendarDays, Timer,
   StickyNote, BookOpen, Lightbulb, Flame, Target, Library, Bookmark,
-  FolderOpen, Wrench, BarChart3, Settings, Sparkles,
+  FolderOpen, Wrench, BarChart3, Settings, Sparkles, Gamepad2, PenTool, Dumbbell, Wallet,
+  GraduationCap, Telescope, Clapperboard, Lock,
 } from 'lucide-react'
 
 export const NAV_SECTIONS = [
@@ -19,23 +20,44 @@ export const NAV_SECTIONS = [
     ],
   },
   {
+    label: 'Break Room',
+    items: [
+      { to: '/arcade', label: 'Arcade', icon: Gamepad2 },
+      { to: '/whiteboard', label: 'Whiteboard', icon: PenTool },
+    ],
+  },
+  {
     label: 'Knowledge',
     items: [
       { to: '/notes', label: 'Notes', icon: StickyNote },
       { to: '/journal', label: 'Journal', icon: BookOpen },
       { to: '/brainstorm', label: 'Brainstorm', icon: Lightbulb },
+      { to: '/vault', label: 'Private Vault', icon: Lock },
     ],
+  },
+  {
+    label: 'Fitness',
+    items: [{ to: '/workout', label: 'Workout', icon: Dumbbell }],
+  },
+  {
+    label: 'Finance',
+    items: [{ to: '/finance', label: 'Finance', icon: Wallet }],
   },
   {
     label: 'Tracking',
     items: [
       { to: '/habits', label: 'Habits', icon: Flame },
       { to: '/goals', label: 'Goals', icon: Target },
+      { to: '/learning', label: 'Skills & Learning', icon: GraduationCap },
+      { to: '/vision-board', label: 'Vision Board', icon: Telescope },
     ],
   },
   {
     label: 'Library',
-    items: [{ to: '/library', label: 'Media Library', icon: Library }],
+    items: [
+      { to: '/library', label: 'Media Library', icon: Library },
+      { to: '/movies', label: 'My Letterboxd', icon: Clapperboard },
+    ],
   },
   {
     label: 'Utilities',

@@ -1,85 +1,443 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+/* ============================================================================
+   Space+ — Night console design system
+   ----------------------------------------------------------------------------
+   Dark-first. Near-black canvas (#121016), elevated panels (#1B1820), never
+   pure black. ONE warm orange gradient is the only glow in the system: primary
+   CTA, active nav state, or a single hero number per screen. Everything else
+   stays a flat dark panel.
+
+   Structure of this file:
+     1. Fonts
+     2. @theme tokens  (mode-independent, consumed by Tailwind utilities)
+     3. Mode runtime   (:root / .dark — the values that actually switch)
+     4. Base           (body, ember corner glow, scrollbars, focus)
+     5. Surfaces       (.glass, .card-hover, .neo-press, hierarchy radius)
+     6. Ember          (the only three places the gradient is allowed)
+     7. Components     (markdown, notes editor, kanban)
+     8. Neo-brutalism  (global neutralizer — thin + recolour every hard border)
+   ========================================================================= */
+
+/* 1. Fonts ================================================================ */
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* 2. Theme tokens ========================================================= */
 @theme {
-  --font-display: "Space Grotesk", ui-sans-serif, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Display = character. Body = neutral. Mono = functional data only. */
+  --font-display: "Bricolage Grotesque", ui-sans-serif, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
 
-  --color-canvas-light: #f6f5f3;
-  --color-canvas-dark: #0a0b0f;
-  --color-surface-light: #ffffff;
-  --color-surface-dark: #14151b;
-  --color-ink-light: #14151a;
-  --color-ink-dark: #ecedf1;
-  --color-muted-light: #6b6e78;
-  --color-muted-dark: #8d919e;
-  --color-border-light: #e4e2dd;
-  --color-border-dark: #262832;
+  /* --- Canvas / surface / ink -------------------------------------------
+     Named per-mode because every component picks with `dark:` variants.
+     Light values are the *secondary* mode; dark is the primary one. */
+  --color-canvas-light: #F3F1F6;
+  --color-canvas-dark: #121016;
+  --color-surface-light: #FFFFFF;
+  --color-surface-dark: #1B1820;
+  --color-ink-light: #17141C;   /* text on light canvas */
+  --color-ink-dark: #F3F1EC;    /* text on dark canvas */
+  --color-muted-light: #6C6779;
+  --color-muted-dark: #A7A2B3;
+  /* Legacy alias. This used to be the neobrutalist "ink-coloured border"
+     (near-black in light mode, near-white in dark), which produced bright
+     hairline outlines on every card in dark mode. Space+ has exactly ONE
+     border colour, so the alias now points at the hairline token in both
+     modes. Kept because ~20 call sites still write `border-border-light
+     dark:border-border-dark`; it is now a no-op rename that resolves
+     correctly. */
+  --color-border-light: #E4E0EA;
+  --color-border-dark: #2E2A36;
 
-  --color-primary-50: #efedff;
-  --color-primary-100: #ded9ff;
-  --color-primary-300: #a79cff;
-  --color-primary-500: #5a4fff;
-  --color-primary-600: #4a3fef;
-  --color-primary-700: #3d33c9;
+  /* Second elevation tier — hero cards, nested panels. */
+  --color-panel2-light: #FBFAFC;
+  --color-panel2-dark: #221E28;
 
-  --color-amber-400: #ffb648;
-  --color-amber-500: #f7a331;
-  --color-teal-400: #2fd9c4;
-  --color-teal-500: #1ec4b0;
-  --color-rose-400: #ff6b81;
-  --color-rose-500: #f4506a;
+  /* Hairline separators. */
+  --color-line-light: #E4E0EA;
+  --color-line-dark: #2E2A36;
 
-  --radius-xl: 1rem;
-  --radius-2xl: 1.25rem;
-  --radius-3xl: 1.75rem;
+  /* Counter/accent-neutral tone for placeholders, disabled text, axes. */
+  --color-dusk: #8D89A6;
+
+  /* --- Ember: the only glow in the system ------------------------------- */
+  --color-ember-300: #FFB343;
+  --color-ember-400: #FF9638;
+  --color-ember-500: #FF7A29;
+  --color-ember-600: #DD5A1B;
+  --color-ember-700: #C1400D;
+
+  /* primary-* is the user-configurable accent slot (see useThemeStore). It
+     ships pointing at ember so the out-of-box look is the Space+ identity;
+     `--color-primary-500` and friends are rewritten at runtime by
+     applyTheme() when the person picks a different accent. */
+  --color-primary-50: #FFF4E4;
+  --color-primary-100: #FFE6C7;
+  --color-primary-300: #FFB343;
+  --color-primary-400: #FF9638;
+  --color-primary-500: #FF7A29;
+  --color-primary-600: #DD5A1B;
+  --color-primary-700: #C1400D;
+
+  /* --- Status colours -----------------------------------------------------
+     Desaturated hard so nothing competes with ember. These carry meaning
+     (streak, income, delete) and must stay legible, so they keep their hue
+     at very low chroma instead of disappearing into grey. */
+  --color-amber-300: #E4D3AE;
+  --color-amber-400: #D3BE93;
+  --color-amber-500: #C0A876;
+  --color-amber-600: #9C855A;
+  --color-amber-700: #7A6640;
+  --color-teal-300: #A6BDB9;
+  --color-teal-400: #8FA9A6;
+  --color-teal-500: #6E8C88;
+  --color-teal-600: #566F6C;
+  --color-teal-700: #3F5553;
+  --color-rose-300: #D9A0A8;
+  --color-rose-400: #C98690;
+  --color-rose-500: #A8535F;
+  --color-rose-600: #8C4350;
+  --color-rose-700: #6E343F;
+
+  /* --- Radius follows hierarchy -----------------------------------------
+     Large panels ≠ mid cards ≠ chips/inputs/buttons. Tailwind's scale is
+     remapped so `rounded-3xl`/`rounded-2xl`/`rounded-xl` keep meaning the
+     same thing everywhere without touching a single component. */
+  --radius-xs: 7px;
+  --radius-sm: 7px;
+  --radius-md: 10px;
+  --radius-lg: 10px;
+  --radius-xl: 10px;
+  --radius-2xl: 16px;
+  --radius-3xl: 26px;
+  --radius-4xl: 26px;
+
+  /* --- Shadows: soft and warm-tinted, never flat grey -------------------
+     Every value carries a little orange in the hue so panels sit in the
+     same light as the ember glow instead of looking like drop-shadows. */
+  --shadow-soft: 0 1px 2px rgba(46, 24, 10, 0.16);
+  --shadow-card: 0 1px 2px rgba(46, 24, 10, 0.14), 0 4px 14px -6px rgba(58, 30, 12, 0.20);
+  --shadow-card-hover: 0 2px 4px rgba(46, 24, 10, 0.14), 0 12px 28px -10px rgba(70, 34, 12, 0.34);
+  --shadow-pop: 0 4px 10px rgba(46, 24, 10, 0.18), 0 24px 56px -16px rgba(70, 32, 10, 0.44);
 }
 
-html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+/* 3. Mode runtime ========================================================
+   These are plain custom properties (not @theme) so the global overrides
+   further down can switch on mode without a `dark:` variant on every rule. */
+:root {
+  --line: #E4E0EA;
+  --line-strong: #D2CCDA;
+  --ember-rgb: 255, 122, 41;
+
+  --shadow-soft: 0 1px 2px rgba(96, 62, 38, 0.05);
+  --shadow-card: 0 1px 2px rgba(96, 62, 38, 0.05), 0 4px 14px -6px rgba(120, 70, 30, 0.07);
+  --shadow-card-hover: 0 2px 4px rgba(96, 62, 38, 0.05), 0 12px 28px -10px rgba(130, 74, 30, 0.13);
+  --shadow-pop: 0 4px 10px rgba(96, 62, 38, 0.06), 0 24px 56px -16px rgba(130, 74, 30, 0.16);
+
+  --accent-gradient: linear-gradient(135deg, #FFB343, #FF7A29 55%, #C1400D);
+  --accent-gradient-soft: linear-gradient(135deg, rgba(255, 179, 67, 0.16), rgba(193, 64, 13, 0.06));
+  --accent-ink: #1A0D00;
+
+  /* Chart tooltip surface. Recharts takes these through an inline `style`
+     prop, which cannot express a `dark:` variant — but an inline value of
+     `var(--tooltip-bg)` still resolves at paint time against whichever mode
+     is active, so the tooltip follows the theme like everything else. */
+  --tooltip-bg: #FFFFFF;
+  --tooltip-ink: #17141C;
+  --tooltip-shadow: 0 4px 10px rgba(96, 62, 38, 0.06), 0 24px 56px -16px rgba(130, 74, 30, 0.16);
+}
+
+.dark {
+  --line: #2E2A36;
+  --line-strong: #3D3849;
+
+  --tooltip-bg: #221E28;
+  --tooltip-ink: #F3F1EC;
+  --tooltip-shadow: 0 4px 10px rgba(0, 0, 0, 0.40), 0 28px 64px -18px rgba(52, 22, 4, 0.62);
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.34);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.32), 0 6px 18px -8px rgba(0, 0, 0, 0.46);
+  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.34), 0 14px 32px -12px rgba(46, 20, 4, 0.55);
+  --shadow-pop: 0 4px 10px rgba(0, 0, 0, 0.40), 0 28px 64px -18px rgba(52, 22, 4, 0.62);
+}
+
+/* 4. Base ================================================================= */
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; scroll-behavior: smooth; }
+
 body {
   font-family: var(--font-sans);
   background: var(--color-canvas-light);
   color: var(--color-ink-light);
-  transition: background-color .25s ease, color .25s ease;
+  line-height: 1.55;
+  letter-spacing: -0.006em;
+  transition: background-color .2s ease, color .2s ease;
 }
 .dark body { background: var(--color-canvas-dark); color: var(--color-ink-dark); }
 
-* { scrollbar-width: thin; scrollbar-color: rgba(120,120,140,0.35) transparent; }
-*::-webkit-scrollbar { width: 8px; height: 8px; }
-*::-webkit-scrollbar-thumb { background: rgba(120,120,140,0.3); border-radius: 999px; }
-*::-webkit-scrollbar-thumb:hover { background: rgba(120,120,140,0.5); }
-
-.glass {
-  background: rgba(255,255,255,0.55);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(20,21,26,0.06);
+/* A single soft ember glow parked in the top-right corner. This is the only
+   ambient background treatment in the app — no dot grid, no blobs. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -22% -18% auto auto;
+  width: 74vw;
+  height: 74vw;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(var(--ember-rgb), 0.14), transparent 68%);
 }
-.dark .glass { background: rgba(20,21,27,0.55); border: 1px solid rgba(255,255,255,0.07); }
+.dark body::before { background: radial-gradient(circle, rgba(var(--ember-rgb), 0.16), transparent 68%); }
 
-.glass-solid { background: var(--color-surface-light); border: 1px solid var(--color-border-light); }
-.dark .glass-solid { background: var(--color-surface-dark); border: 1px solid var(--color-border-dark); }
+/* Scrollbars — thin, dusk, transparent track. */
+* { scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--color-dusk); background-clip: content-box; }
 
-.aurora-field { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-.aurora-blob { position: absolute; border-radius: 999px; filter: blur(80px); opacity: 0.35; animation: drift 22s ease-in-out infinite; will-change: transform; }
-.dark .aurora-blob { opacity: 0.28; }
-@media (prefers-reduced-motion: reduce) { .aurora-blob { animation: none; } }
-@keyframes drift {
-  0%   { transform: translate(0,0) scale(1); }
-  33%  { transform: translate(30px,-40px) scale(1.08); }
-  66%  { transform: translate(-25px,20px) scale(0.95); }
-  100% { transform: translate(0,0) scale(1); }
+::selection { background: rgba(var(--ember-rgb), 0.26); color: inherit; }
+
+:focus-visible { outline: 2px solid var(--color-ember-500); outline-offset: 2px; border-radius: var(--radius-xs); }
+
+/* 5. Surfaces ============================================================
+   `.glass` / `.glass-solid` are the two shared surface classes the whole app
+   already uses, so redefining them here restyles every card at once. In
+   Space+ they are flat, hairline-bordered panels — not frosted. */
+.glass, .glass-solid {
+  background: var(--color-surface-light);
+  border: 1px solid var(--color-line);
+  box-shadow: var(--shadow-card);
+}
+.dark .glass, .dark .glass-solid {
+  background: var(--color-surface-dark);
+  border-color: var(--line);
 }
 
-:focus-visible { outline: 2px solid var(--color-primary-500); outline-offset: 2px; border-radius: 6px; }
+/* Panels lift on hover with a warm, diffuse shadow and a barely-there rise.
+   No hard offset shadow, no 4px diagonal jump. */
+.card-hover {
+  transition: transform .18s cubic-bezier(.2, .7, .3, 1), box-shadow .18s ease, border-color .18s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--line-strong);
+}
+.card-hover:active { transform: translateY(0); }
 
-.animate-fade-in { animation: fadeIn .35s ease both; }
-@keyframes fadeIn { from { opacity:0; transform: translateY(6px);} to { opacity:1; transform:none; } }
-.animate-pop { animation: pop .18s cubic-bezier(.2,1.4,.4,1) both; }
-@keyframes pop { from { opacity:0; transform: scale(.96);} to { opacity:1; transform: scale(1);} }
+/* Press feedback for buttons, chips, nav rows: a small scale dip. The name
+   is kept because 20+ components already reference it. */
+.neo-press {
+  transition: transform .12s cubic-bezier(.2, .7, .3, 1), background-color .12s ease,
+    border-color .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.neo-press:active { transform: scale(.975) !important; }
+
+/* Numerals get the display face so a big statistic reads as a headline
+   rather than a large label. */
+.num, .stat-num { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+
+/* 6. Ember — the only three sanctioned uses of the gradient ================ */
+
+/* The gradient background, as a real rule.
+   This CANNOT be a Tailwind utility: `bg-*` colour utilities are generated
+   only from the `--color-*` namespace, and `--accent-gradient` is a plain
+   custom property whose value is a gradient function (invalid for
+   background-color). Declared here — unlayered, so it outranks anything in
+   @layer utilities — which makes `bg-accent-gradient` work everywhere. */
+.bg-accent-gradient { background-image: var(--accent-gradient); }
+
+/* Foreground/background colour that sits ON the accent. Also declared as real
+   rules for the same reason as above: Tailwind can only infer what a bare
+   `var()` means if the variable is registered in `@theme`, and `--accent-ink`
+   is set at runtime by applyTheme(). */
+.text-accent-ink { color: var(--accent-ink, #1A0D00); }
+.bg-accent-ink { background-color: var(--accent-ink, #1A0D00); }
+
+/* (a) Primary call to action. */
+.ember-cta {
+  background: var(--accent-gradient);
+  color: var(--accent-ink, #1A0D00);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.16) inset, var(--shadow-soft);
+}
+.ember-cta:hover { box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, var(--shadow-card-hover); }
+
+/* (b) Active nav state — a 3px ember rail plus a low-contrast fill. */
+.ember-rail { position: relative; }
+.ember-rail::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent-gradient);
+}
+
+/* (c) One hero number per screen. */
+.ember-num {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Panel with a single blurred gradient bleeding in from one corner. Use on at
+   most one panel per screen. The background is mode-paired — a hero panel that
+   only works on dark is not a hero panel. */
+.ember-panel {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-panel2-light);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-card);
+}
+.dark .ember-panel { background: var(--color-panel2-dark); }
+.ember-panel::after {
+  content: '';
+  position: absolute;
+  right: -42%;
+  top: -48%;
+  width: 104%;
+  height: 104%;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  opacity: .20;
+  filter: blur(34px);
+  pointer-events: none;
+}
+.ember-panel > * { position: relative; }
+
+/* 7. Components =========================================================== */
+
+/* Markdown (Notes) — sized for reading, links ember, rules hairlines. */
+.rich-note-editor:empty::before {
+  content: attr(data-placeholder);
+  opacity: .45;
+  pointer-events: none;
+}
+.rich-note-editor p { margin: 0 0 .65em; }
+.rich-note-editor p:last-child { margin-bottom: 0; }
+.rich-note-editor h1, .rich-note-editor h2, .rich-note-editor h3 { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; margin: 1.4em 0 .5em; }
+.rich-note-editor h1 { font-size: 1.5em; }
+.rich-note-editor h2 { font-size: 1.25em; }
+.rich-note-editor h3 { font-size: 1.1em; }
+.rich-note-editor ul, .rich-note-editor ol { margin: 0 0 .7em; padding-left: 1.35em; }
+.rich-note-editor ul { list-style: disc; }
+.rich-note-editor ol { list-style: decimal; }
+.rich-note-editor li { margin-bottom: .3em; }
+.rich-note-editor a { color: var(--color-ember-500); text-decoration: underline; text-underline-offset: 2px; }
+.rich-note-editor strong { font-weight: 600; }
+.rich-note-editor code {
+  font-family: var(--font-mono);
+  font-size: .88em;
+  background: rgba(127, 127, 127, 0.14);
+  padding: .12em .4em;
+  border-radius: var(--radius-xs);
+}
+.rich-note-editor pre {
+  background: var(--color-canvas-dark);
+  color: var(--color-ink-dark);
+  padding: 1em 1.1em;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.dark .rich-note-editor pre { background: var(--color-canvas-light); color: var(--color-ink-light); }
+.rich-note-editor pre code { background: none; padding: 0; }
+.rich-note-editor blockquote {
+  border-left: 2px solid var(--color-ember-500);
+  padding-left: 1em;
+  margin: 0 0 .7em;
+  color: var(--color-muted-dark);
+}
+.rich-note-editor hr { border: 0; border-top: 1px solid var(--line); margin: 1.4em 0; }
+.rich-note-editor img { border-radius: var(--radius-md); max-width: 100%; }
+.rich-note-editor table { width: 100%; border-collapse: collapse; margin-bottom: .8em; font-size: .95em; }
+.rich-note-editor th, .rich-note-editor td { border: 1px solid var(--line); padding: .45em .6em; text-align: left; }
+.rich-note-editor th { background: rgba(127, 127, 127, 0.09); font-weight: 600; }
+
+/* Kanban drop target — ember-tinted wash, hairline outline. */
+.kanban-drop-active {
+  outline: 1px dashed var(--color-ember-500);
+  outline-offset: -3px;
+  background: rgba(var(--ember-rgb), 0.07);
+}
+.kanban-dragging { opacity: .5; }
+
+/* Motion — unchanged from before, just the entry curves. */
+.animate-fade-in { animation: fadeIn .22s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.animate-pop { animation: pop .15s cubic-bezier(.2, 1.3, .4, 1) both; }
+@keyframes pop { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+.animate-pulse-slow { animation: pulseSlow 2.4s ease-in-out infinite; }
+@keyframes pulseSlow { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.012); } }
+.animate-shake { animation: shakeX .32s ease; }
+@keyframes shakeX { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-3px); } 40%, 60% { transform: translateX(3px); } }
+.animate-pop-strong { animation: popStrong .32s cubic-bezier(.2, 1.5, .3, 1) both; }
+@keyframes popStrong { 0% { opacity: 0; transform: scale(.6); } 60% { opacity: 1; transform: scale(1.06); } 100% { transform: scale(1); } }
+.animate-stagger-in { animation: fadeIn .25s ease both; animation-delay: calc(var(--stagger-index, 0) * 30ms); }
 
 .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in, .animate-pop, .animate-pop-strong, .animate-stagger-in, .animate-pulse-slow { animation: none; }
+  * { transition-duration: .01ms !important; }
+}
+
+/* 8. Neo-brutalism neutralizer ============================================
+   The app was previously neobrutalist: 2–3px solid borders in the ink colour
+   and hard un-blurred offset shadows. Rather than touch ~150 call sites, the
+   two surviving primitives are rewritten here at the cascade level:
+
+     (a) any thick border becomes a 1px hairline
+     (b) ink/surface-coloured borders become --line
+
+   `!important` + substring matching is required because these are Tailwind
+   utilities inside @layer utilities. Substring matching (rather than the
+   exact `~=` token match) is what lets `dark:border-ink-dark`,
+   `border-ink-light/10` and `border-t-2` all be caught by one rule.
+
+   Deliberately NOT matched: coloured borders (border-primary-500,
+   border-rose-500, …) and every text-* utility, so accents and semantic
+   colours survive untouched.
+
+   `:not(.arcade-scope)` excludes the Arcade subtree. That page is a separate
+   sub-brand with its own retro design language (2px borders, hard offset
+   shadows, scanlines, CRT overlay) defined in a local <style> block — its
+   thick borders are the point, not an oversight, and this rule would
+   otherwise quietly crush them to 1px. */
+:not(.arcade-scope) [class~="border-2"],
+:not(.arcade-scope) [class~="border-[2.5px]"],
+:not(.arcade-scope) [class~="border-[3px]"],
+:not(.arcade-scope) [class~="border-t-2"],
+:not(.arcade-scope) [class~="border-b-2"],
+:not(.arcade-scope) [class~="border-l-2"],
+:not(.arcade-scope) [class~="border-r-2"] {
+  border-width: 1px !important;
+}
+
+:not(.arcade-scope) [class*="border-ink-light"],
+:not(.arcade-scope) [class*="border-ink-dark"],
+:not(.arcade-scope) [class*="border-canvas-light"],
+:not(.arcade-scope) [class*="border-canvas-dark"],
+:not(.arcade-scope) [class*="border-surface-light"],
+:not(.arcade-scope) [class*="border-surface-dark"] {
+  border-color: var(--line) !important;
+}
+
+/* `--color-border-*` was repointed at the hairline token above, which is a
+   global change the cascade cannot scope. A few Arcade game surfaces still
+   write `border-border-light dark:border-border-dark` and relied on the old
+   high-contrast values, so restore them inside the scope and leave the Arcade
+   exactly as it was before the redesign. */
+.arcade-scope [class*="border-border-light"] { border-color: #17141C; }
+.dark .arcade-scope [class*="border-border-dark"] { border-color: #F3F1EC; }

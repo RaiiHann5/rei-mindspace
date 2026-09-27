@@ -48,20 +48,20 @@ export default function ProjectsPage() {
             return (
               <Card key={p.id} hover className="group relative flex flex-col">
                 <div className="flex items-start justify-between mb-2">
-                  <div className="h-9 w-9 rounded-xl bg-primary-500/15 flex items-center justify-center text-primary-500"><FolderKanban size={16} /></div>
+                  <div className="h-9 w-9 rounded-xl bg-primary-500/10 flex items-center justify-center text-primary-600 dark:text-primary-400"><FolderKanban size={16} /></div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => { setEditing(p); setModalOpen(true) }} className="h-7 w-7 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10"><Pencil size={13} /></button>
-                    <button onClick={() => del(p)} className="h-7 w-7 rounded-lg flex items-center justify-center hover:bg-rose-500/10 hover:text-rose-500"><Trash2 size={13} /></button>
+                    <button onClick={() => { setEditing(p); setModalOpen(true) }} aria-label="Edit project" className="h-7 w-7 rounded-lg flex items-center justify-center neo-press hover:bg-black/5 dark:hover:bg-white/[0.07]"><Pencil size={13} /></button>
+                    <button onClick={() => del(p)} className="h-7 w-7 rounded-lg flex items-center justify-center neo-press hover:bg-rose-500/10 hover:text-rose-500"><Trash2 size={13} /></button>
                   </div>
                 </div>
                 <Link to={`/projects/${p.id}`} className="flex-1">
-                  <h3 className="font-display font-semibold mb-1">{p.name}</h3>
+                  <h3 className="font-display font-semibold tracking-tight mb-1">{p.name}</h3>
                   <p className="text-xs text-muted-light dark:text-muted-dark line-clamp-2 mb-3">{p.description}</p>
                 </Link>
                 <Progress value={p.progress} tone={p.status === 'completed' ? 'teal' : 'primary'} className="mb-2" />
-                <div className="flex items-center justify-between text-xs text-muted-light dark:text-muted-dark">
+                <div className="flex items-center justify-between text-[11px] text-dusk">
                   <Badge tone={statusTone[p.status]}>{p.status.replace('_', ' ')}</Badge>
-                  <span>{dleft !== null ? (dleft >= 0 ? `${dleft}d left` : 'overdue') : 'no deadline'}</span>
+                  <span className="font-mono tabular-nums">{dleft !== null ? (dleft >= 0 ? `${dleft}d left` : 'overdue') : 'no deadline'}</span>
                 </div>
                 {p.tags?.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-3">

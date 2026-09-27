@@ -5,10 +5,10 @@ export default function FilterChip({ active, onClick, children }) {
     <button
       onClick={onClick}
       className={cn(
-        'h-8 px-3 rounded-full text-sm font-medium border transition-colors whitespace-nowrap',
+        'h-8 px-3 rounded-md text-[13px] font-semibold border transition-all duration-150 whitespace-nowrap neo-press',
         active
-          ? 'bg-primary-500 border-primary-500 text-white'
-          : 'border-border-light dark:border-border-dark hover:bg-black/[0.03] dark:hover:bg-white/[0.05]'
+          ? 'bg-accent-gradient text-accent-ink border-transparent'
+          : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:border-[color:var(--line-strong)]'
       )}
     >
       {children}

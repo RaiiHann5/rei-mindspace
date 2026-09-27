@@ -1,12 +1,15 @@
-import { useMemo, useRef, useState } from 'react'
-import { Upload, FileText, Image as ImageIcon, File as FileIcon, Trash2, FolderOpen } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Upload, FileText, Image as ImageIcon, File as FileIcon, Trash2, FolderOpen, Download } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useCollection } from '@/hooks/useCollection'
 import { PageHeader, Button, Card, EmptyState, Skeleton } from '@/components/ui'
-import { isFirebaseConfigured, storage } from '@/lib/firebase'
-import { formatDate } from '@/lib/utils'
+import { isSupabaseConfigured, supabase } from '@/lib/supabase'
+import { useAuthStore } from '@/store/useAuthStore'
+import { saveBlob, deleteBlob, getObjectUrl } from '@/lib/localFileStore'
+import { formatDate, cn } from '@/lib/utils'
 
 const TYPE_ICON = { image: ImageIcon, doc: FileText, pdf: FileText }
+const MAX_LOCAL_BYTES = 25 * 1024 * 1024 // 25MB per file when stored locally (IndexedDB)
 
 function humanSize(bytes) {
   if (!bytes) return ''
@@ -16,10 +19,55 @@ function humanSize(bytes) {
   return `${n.toFixed(n < 10 && i > 0 ? 1 : 0)} ${units[i]}`
 }
 
+function typeFor(name) {
+  const ext = name.split('.').pop()?.toLowerCase()
+  return ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext) ? 'image' : ext === 'pdf' ? 'pdf' : 'doc'
+}
+
+// Renders a thumbnail for locally-stored images by pulling the blob out of
+// IndexedDB and turning it into an object URL.
+function FileThumb({ file }) {
+  const [url, setUrl] = useState(file.url || null)
+
+  useEffect(() => {
+    let cancelled = false
+    if (!file.url && file.localKey) {
+      getObjectUrl(file.localKey).then((u) => { if (!cancelled) setUrl(u) })
+    }
+    return () => { cancelled = true }
+  }, [file.url, file.localKey])
+
+  if (file.type === 'image' && url) {
+    return <img src={url} alt={file.name} className="h-10 w-10 rounded-xl object-cover shrink-0" />
+  }
+  const Icon = TYPE_ICON[file.type] || FileIcon
+  return (
+    <div className="h-10 w-10 rounded-xl bg-primary-500/10 flex items-center justify-center shrink-0">
+      <Icon size={17} className="text-primary-600 dark:text-primary-400" />
+    </div>
+  )
+}
+
+function FileLink({ file, children, className }) {
+  const [url, setUrl] = useState(file.url || null)
+  useEffect(() => {
+    let cancelled = false
+    if (!file.url && file.localKey) {
+      getObjectUrl(file.localKey).then((u) => { if (!cancelled) setUrl(u) })
+    }
+    return () => { cancelled = true }
+  }, [file.url, file.localKey])
+  if (!url) return <p className={className}>{children}</p>
+  return <a href={url} download={file.name} target="_blank" rel="noreferrer" className={className}>{children}</a>
+}
+
 export default function FilesPage() {
   const { items, isLoading, createItem, removeItem } = useCollection('files')
   const inputRef = useRef()
   const [folder] = useState('General')
+  const [isDragging, setIsDragging] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const dragCounter = useRef(0)
 
   const grouped = useMemo(() => {
     const g = {}
@@ -27,63 +75,141 @@ export default function FilesPage() {
     return g
   }, [items])
 
-  const onPick = async (e) => {
-    const files = Array.from(e.target.files || [])
+  const handleFiles = async (fileList) => {
+    const files = Array.from(fileList || [])
+    if (files.length === 0) return
+    setUploading(true)
+    let added = 0
     for (const file of files) {
-      const ext = file.name.split('.').pop()?.toLowerCase()
-      const type = ['png','jpg','jpeg','gif','webp','svg'].includes(ext) ? 'image' : ext === 'pdf' ? 'pdf' : 'doc'
+      const type = typeFor(file.name)
       let url = null
-      if (isFirebaseConfigured && storage) {
+      let localKey = null
+
+      if (isSupabaseConfigured && supabase) {
         try {
-          const { ref, uploadBytes, getDownloadURL } = await import('firebase/storage')
-          const sref = ref(storage, `files/${Date.now()}_${file.name}`)
-          await uploadBytes(sref, file)
-          url = await getDownloadURL(sref)
-        } catch (err) {
-          toast.error('Upload failed, saving metadata only')
+          const uid = useAuthStore.getState().user?.uid || 'guest'
+          // Scoped under the signed-in user's own folder — matches the
+          // storage.objects policies in supabase.sql, so a user can only
+          // write inside their own {uid}/... prefix.
+          const path = `${uid}/files/${Date.now()}_${file.name}`
+          const { error } = await supabase.storage.from('uploads').upload(path, file)
+          if (error) throw error
+          url = supabase.storage.from('uploads').getPublicUrl(path).data.publicUrl
+        } catch {
+          toast.error(`Gagal upload "${file.name}" ke Supabase Storage`)
+          continue
+        }
+      } else {
+        // Local mode: actually persist the file bytes in IndexedDB so it
+        // can be previewed/downloaded later, instead of just saving a name.
+        if (file.size > MAX_LOCAL_BYTES) {
+          toast.error(`"${file.name}" terlalu besar untuk mode lokal (maks ${humanSize(MAX_LOCAL_BYTES)})`)
+          continue
+        }
+        localKey = `file_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
+        try {
+          await saveBlob(localKey, file)
+        } catch {
+          toast.error(`Gagal menyimpan "${file.name}" secara lokal`)
+          continue
         }
       }
-      await createItem({ name: file.name, type, size: file.size, folder, url })
+
+      await createItem({ name: file.name, type, size: file.size, folder, url, localKey })
+      added++
     }
-    toast.success(`${files.length} file${files.length > 1 ? 's' : ''} added`)
-    e.target.value = ''
+    setUploading(false)
+    if (added > 0) toast.success(`${added} file${added > 1 ? 's' : ''} ditambahkan`)
+    if (inputRef.current) inputRef.current.value = ''
   }
 
-  const del = async (f) => { if (confirm(`Delete "${f.name}"?`)) { await removeItem(f.id); toast.success('File removed') } }
+  const onPick = (e) => handleFiles(e.target.files)
+
+  const onDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+    dragCounter.current = 0
+    handleFiles(e.dataTransfer.files)
+  }
+
+  const onDragEnter = (e) => {
+    e.preventDefault()
+    dragCounter.current += 1
+    setIsDragging(true)
+  }
+  const onDragLeave = (e) => {
+    e.preventDefault()
+    dragCounter.current -= 1
+    if (dragCounter.current <= 0) setIsDragging(false)
+  }
+  const onDragOver = (e) => e.preventDefault()
+
+  const del = async (f) => {
+    if (!confirm(`Delete "${f.name}"?`)) return
+    if (f.localKey) await deleteBlob(f.localKey)
+    await removeItem(f.id)
+    toast.success('File removed')
+  }
 
   return (
-    <div>
+    <div
+      onDrop={onDrop}
+      onDragEnter={onDragEnter}
+      onDragLeave={onDragLeave}
+      onDragOver={onDragOver}
+      className="relative"
+    >
       <PageHeader
         title="Files"
-        description={isFirebaseConfigured ? 'Uploaded to Firebase Storage.' : 'Local mode — metadata only, connect Firebase Storage to upload real files.'}
+        description={isSupabaseConfigured ? 'Uploaded to Supabase Storage.' : 'Local mode — files are stored in your browser (IndexedDB). Connect Supabase Storage to sync across devices.'}
         actions={<>
           <input ref={inputRef} type="file" multiple className="hidden" onChange={onPick} />
-          <Button onClick={() => inputRef.current?.click()}><Upload size={16} /> Upload</Button>
+          <Button onClick={() => inputRef.current?.click()} loading={uploading}><Upload size={16} /> Upload</Button>
         </>}
       />
+
+      {/* Drag & drop overlay */}
+      {isDragging && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-primary-500/[0.12] backdrop-blur-[2px] pointer-events-none">
+          <div className="rounded-3xl border border-dashed border-[color:var(--line-strong)] bg-surface-light dark:bg-surface-dark px-10 py-8 flex flex-col items-center gap-2" style={{ boxShadow: "var(--shadow-pop)" }}>
+            <Upload size={28} className="text-primary-600 dark:text-primary-400" />
+            <p className="font-display font-semibold tracking-tight">Drop files to upload</p>
+            <p className="text-[11px] text-dusk">Images and documents supported</p>
+          </div>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14" />)}</div>
       ) : items.length === 0 ? (
-        <EmptyState icon={FolderOpen} title="No files yet" description="Upload documents and images to keep them organized." actionLabel="Upload" onAction={() => inputRef.current?.click()} />
+        <EmptyState icon={FolderOpen} title="No files yet" description="Upload documents and images to keep them organized, or drag & drop them anywhere on this page." actionLabel="Upload" onAction={() => inputRef.current?.click()} />
       ) : (
         Object.entries(grouped).map(([folderName, files]) => (
           <div key={folderName} className="mb-6">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-light dark:text-muted-dark mb-2">{folderName}</h3>
+            <h3 className="text-[11px] font-medium text-dusk mb-2">{folderName}</h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {files.map((f) => {
-                const Icon = TYPE_ICON[f.type] || FileIcon
-                return (
-                  <Card key={f.id} hover className="flex items-center gap-3 group">
-                    <div className="h-10 w-10 rounded-xl bg-primary-500/10 flex items-center justify-center shrink-0"><Icon size={17} className="text-primary-500" /></div>
-                    <div className="flex-1 min-w-0">
-                      {f.url ? <a href={f.url} target="_blank" rel="noreferrer" className="text-sm font-medium truncate block hover:text-primary-500">{f.name}</a> : <p className="text-sm font-medium truncate">{f.name}</p>}
-                      <p className="text-xs text-muted-light dark:text-muted-dark">{humanSize(f.size)} · {formatDate(f.createdAt)}</p>
-                    </div>
-                    <button onClick={() => del(f)} className="opacity-0 group-hover:opacity-100 hover:text-rose-500 shrink-0"><Trash2 size={14} /></button>
-                  </Card>
-                )
-              })}
+              {files.map((f) => (
+                <Card key={f.id} hover className="flex items-center gap-3 group">
+                  <FileThumb file={f} />
+                  <div className="flex-1 min-w-0">
+                    <FileLink file={f} className="text-sm font-medium truncate block hover:text-primary-600 dark:hover:text-primary-400">{f.name}</FileLink>
+                    {/* Meta values stack — no middle-dot joining. */}
+                    <p className="text-[11px] leading-snug">
+                      <span className="block font-mono tabular-nums text-dusk">{humanSize(f.size)}</span>
+                      <span className="block font-mono tabular-nums text-dusk">{formatDate(f.createdAt)}</span>
+                    </p>
+                  </div>
+                  <div className={cn('flex items-center gap-1 opacity-0 group-hover:opacity-100 shrink-0')}>
+                    {(f.url || f.localKey) && (
+                      <FileLink file={f} className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-light dark:text-muted-dark hover:text-primary-600 dark:hover:text-primary-400 hover:bg-black/5 dark:hover:bg-white/10 transition-colors neo-press">
+                        <Download size={14} />
+                      </FileLink>
+                    )}
+                    <button onClick={() => del(f)} aria-label={`Delete ${f.name}`} className="h-7 w-7 rounded-lg flex items-center justify-center text-muted-light dark:text-muted-dark hover:bg-black/5 dark:hover:bg-white/10 hover:text-rose-500 transition-colors neo-press"><Trash2 size={14} /></button>
+                  </div>
+                </Card>
+              ))}
             </div>
           </div>
         ))

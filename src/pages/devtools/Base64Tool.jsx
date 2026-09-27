@@ -33,7 +33,7 @@ export default function Base64Tool() {
         <div>
           <div className="flex items-center justify-between mb-1">
             <label className="text-xs font-medium text-muted-light dark:text-muted-dark">{mode === 'encode' ? 'Base64' : 'Text'}</label>
-            <button onClick={copy} className="text-xs text-primary-500 flex items-center gap-1"><Copy size={12} /> Copy</button>
+            <button onClick={copy} className="text-xs text-primary-600 dark:text-primary-400 flex items-center gap-1"><Copy size={12} /> Copy</button>
           </div>
           <Textarea rows={8} className="font-mono text-sm" value={output || 'Invalid input for decoding'} readOnly />
         </div>

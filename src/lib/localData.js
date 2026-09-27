@@ -28,7 +28,9 @@ export const localData = {
   async create(collection, item) {
     await delay(120)
     const items = readAll(collection)
-    const withId = { id: uid(), createdAt: new Date().toISOString(), ...item }
+    // `id: uid()` goes last on purpose so a caller passing `id: undefined`
+    // (e.g. when duplicating a record) can never clobber the fresh id.
+    const withId = { createdAt: new Date().toISOString(), ...item, id: uid() }
     items.unshift(withId)
     writeAll(collection, items)
     return withId

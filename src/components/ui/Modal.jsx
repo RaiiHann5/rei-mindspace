@@ -18,16 +18,34 @@ export default function Modal({ open, onClose, title, children, size = 'md', foo
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose} />
-      <div className={cn('relative w-full glass-solid rounded-3xl shadow-2xl animate-pop max-h-[85vh] flex flex-col', sizes[size])}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border-light dark:border-border-dark shrink-0">
-          <h2 className="font-display font-semibold text-lg">{title}</h2>
-          <button onClick={onClose} aria-label="Close" className="h-8 w-8 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10">
-            <X size={18} />
+      {/* Warm-tinted scrim — a flat black overlay would fight the ember glow. */}
+      <div
+        className="absolute inset-0 bg-ink-light/55 dark:bg-ink-dark/72 backdrop-blur-[3px] animate-fade-in"
+        onClick={onClose}
+      />
+      <div
+        className={cn(
+          'relative w-full rounded-3xl glass-solid animate-pop max-h-[85vh] flex flex-col overflow-hidden',
+          sizes[size]
+        )}
+        style={{ boxShadow: 'var(--shadow-pop)' }}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[color:var(--line)] shrink-0">
+          <h2 className="font-display font-semibold text-lg tracking-tight">{title}</h2>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:bg-black/[0.05] dark:hover:bg-white/[0.07] transition-colors neo-press"
+          >
+            <X size={17} strokeWidth={2.2} />
           </button>
         </div>
         <div className="px-6 py-5 overflow-y-auto">{children}</div>
-        {footer && <div className="px-6 py-4 border-t border-border-light dark:border-border-dark flex justify-end gap-2 shrink-0">{footer}</div>}
+        {footer && (
+          <div className="px-6 py-4 border-t border-[color:var(--line)] flex justify-end gap-2 shrink-0 bg-canvas-light dark:bg-canvas-dark">
+            {footer}
+          </div>
+        )}
       </div>
     </div>,
     document.body

@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { useCollection } from '@/hooks/useCollection'
 import { Card, Badge, Progress, Button, Textarea, Skeleton } from '@/components/ui'
 import ProjectFormModal from './ProjectFormModal'
-import { formatDate, daysUntil, uid } from '@/lib/utils'
+import { formatDate, daysUntil, uid, cn } from '@/lib/utils'
 
 const statusTone = { active: 'primary', on_hold: 'amber', completed: 'teal' }
 
@@ -22,7 +22,7 @@ export default function ProjectDetailPage() {
   if (!project) return (
     <div className="text-center py-16">
       <p className="text-muted-light dark:text-muted-dark mb-4">Project not found.</p>
-      <Link to="/projects"><Button size="sm">Back to projects</Button></Link>
+      <Link to="/projects"><Button variant="secondary" size="sm">Back to projects</Button></Link>
     </div>
   )
 
@@ -43,14 +43,14 @@ export default function ProjectDetailPage() {
 
   return (
     <div className="space-y-5">
-      <button onClick={() => navigate('/projects')} className="flex items-center gap-1.5 text-sm text-muted-light dark:text-muted-dark hover:text-inherit">
+      <button onClick={() => navigate('/projects')} className="flex items-center gap-1.5 text-sm font-medium text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark transition-colors neo-press">
         <ArrowLeft size={15} /> Back to projects
       </button>
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <h1 className="font-display text-2xl font-semibold">{project.name}</h1>
+            <h1 className="font-display text-2xl font-semibold tracking-tight">{project.name}</h1>
             <Badge tone={statusTone[project.status]}>{project.status.replace('_', ' ')}</Badge>
           </div>
           <p className="text-sm text-muted-light dark:text-muted-dark max-w-xl">{project.description}</p>
@@ -66,30 +66,43 @@ export default function ProjectDetailPage() {
           <div>
             <div className="flex justify-between text-sm mb-1.5">
               <span className="font-medium">Progress</span>
-              <span className="text-muted-light dark:text-muted-dark">{project.progress}%</span>
+              <span className="font-mono tabular-nums text-muted-light dark:text-muted-dark">{project.progress}%</span>
             </div>
             <Progress value={project.progress} tone={project.status === 'completed' ? 'teal' : 'primary'} className="h-2.5" />
           </div>
           <div className="grid grid-cols-2 gap-4 text-sm">
-            <div><p className="text-xs text-muted-light dark:text-muted-dark mb-0.5">Deadline</p><p className="font-medium">{project.deadline ? formatDate(project.deadline, { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}</p></div>
-            <div><p className="text-xs text-muted-light dark:text-muted-dark mb-0.5">Time left</p><p className="font-medium">{dleft !== null ? (dleft >= 0 ? `${dleft} days` : 'Overdue') : '—'}</p></div>
+            <div>
+              <p className="text-[11px] font-medium text-dusk mb-0.5">Deadline</p>
+              <p className="font-medium">{project.deadline ? formatDate(project.deadline, { month: 'long', day: 'numeric', year: 'numeric' }) : '—'}</p>
+            </div>
+            <div>
+              <p className="text-[11px] font-medium text-dusk mb-0.5">Time left</p>
+              <p className={cn('font-mono tabular-nums font-medium', dleft !== null && dleft < 0 && 'text-rose-500')}>
+                {dleft !== null ? (dleft >= 0 ? `${dleft} days` : 'Overdue') : '—'}
+              </p>
+            </div>
           </div>
           {project.tags?.length > 0 && <div className="flex flex-wrap gap-1.5">{project.tags.map((t) => <Badge key={t}>{t}</Badge>)}</div>}
         </Card>
 
         <Card>
-          <h3 className="font-display font-semibold mb-3 flex items-center gap-2"><FileText size={16} /> Files</h3>
+          <h3 className="font-display font-semibold tracking-tight mb-3 flex items-center gap-2"><FileText size={16} /> Files</h3>
           <div className="flex gap-2 mb-3">
-            <input value={fileName} onChange={(e) => setFileName(e.target.value)} placeholder="filename.pdf" className="flex-1 h-9 rounded-lg px-3 text-sm bg-black/[0.03] dark:bg-white/[0.05] outline-none" />
-            <Button size="icon" onClick={addFile}><Plus size={15} /></Button>
+            <input
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+              placeholder="filename.pdf"
+              className="flex-1 h-9 rounded-md px-3 text-sm border border-[color:var(--line)] bg-surface-light dark:bg-surface-dark placeholder:text-dusk placeholder:font-normal outline-none focus:border-ember-500/70 focus:ring-[3px] focus:ring-ember-500/15 transition-all"
+            />
+            <Button size="icon" onClick={addFile} aria-label="Tambah file"><Plus size={15} /></Button>
           </div>
           <div className="space-y-1.5 max-h-48 overflow-y-auto">
-            {(project.files || []).length === 0 && <p className="text-xs text-muted-light dark:text-muted-dark">No files attached yet.</p>}
+            {(project.files || []).length === 0 && <p className="text-xs text-dusk">No files attached yet.</p>}
             {(project.files || []).map((f) => (
               <div key={f.id} className="flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg bg-black/[0.03] dark:bg-white/[0.05]">
                 {f.type === 'image' ? <ImageIcon size={14} /> : <FileText size={14} />}
-                <span className="flex-1 truncate">{f.name}</span>
-                <button onClick={() => removeFile(f.id)}><X size={13} className="text-muted-light dark:text-muted-dark hover:text-rose-500" /></button>
+                <span className="flex-1 truncate font-mono text-[13px]">{f.name}</span>
+                <button onClick={() => removeFile(f.id)} aria-label="Hapus file" className="neo-press"><X size={13} className="text-muted-light dark:text-muted-dark hover:text-rose-500" /></button>
               </div>
             ))}
           </div>
@@ -97,7 +110,7 @@ export default function ProjectDetailPage() {
       </div>
 
       <Card>
-        <h3 className="font-display font-semibold mb-3">Notes</h3>
+        <h3 className="font-display font-semibold tracking-tight mb-3">Notes</h3>
         <Textarea rows={6} defaultValue={project.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="Project notes, decisions, links..." />
       </Card>
 

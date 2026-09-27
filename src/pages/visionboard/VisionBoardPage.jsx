@@ -39,10 +39,37 @@ export default function VisionBoardPage() {
 
   return (
     <div>
+      {/* Row 1 — identity and the primary action. Row 2 — the timeframe
+          filter, same two-bar split as the calendar. */}
       <PageHeader
-        title="Vision Board"
-        description="The life you're building, one intention at a time."
-        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Add to Board</Button>}
+        title="Vision board"
+        description="Intention, by timeframe."
+        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Add item</Button>}
+        tools={
+          <>
+            <button
+              onClick={() => setTimeframeFilter(null)}
+              className={cn('h-8 px-3 rounded-md text-[13px] font-semibold border shrink-0 transition-colors neo-press',
+                !timeframeFilter
+                  ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
+                  : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
+            >
+              All
+            </button>
+            {TIMEFRAME_OPTIONS.map((t) => (
+              <button
+                key={t.value}
+                onClick={() => setTimeframeFilter(timeframeFilter === t.value ? null : t.value)}
+                className={cn('h-8 px-3 rounded-md text-[13px] font-semibold border shrink-0 transition-colors neo-press',
+                  timeframeFilter === t.value
+                    ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
+                    : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
+              >
+                {t.label}
+              </button>
+            ))}
+          </>
+        }
       />
 
       <Card className="flex flex-wrap items-center justify-between gap-4 mb-5">
@@ -51,45 +78,20 @@ export default function VisionBoardPage() {
           <div>
             <p className="num text-lg leading-none">
               <span className="ember-num">{summary.achieved}</span>
-              <span className="text-muted-light dark:text-muted-dark"> of {summary.total} achieved</span>
+              <span className="text-muted-light dark:text-muted-dark"> of {summary.total} done</span>
             </p>
-            <p className="text-[11px] text-dusk mt-1">{summary.pending} still in progress</p>
+            <p className="text-[11px] text-dusk mt-1">{summary.pending} in progress</p>
           </div>
         </div>
       </Card>
-
-      <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
-        <button
-          onClick={() => setTimeframeFilter(null)}
-          className={cn('h-8 px-3 rounded-md text-[13px] font-semibold border shrink-0 transition-colors neo-press',
-            !timeframeFilter
-              ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
-              : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
-        >
-          All
-        </button>
-        {TIMEFRAME_OPTIONS.map((t) => (
-          <button
-            key={t.value}
-            onClick={() => setTimeframeFilter(timeframeFilter === t.value ? null : t.value)}
-            className={cn('h-8 px-3 rounded-md text-[13px] font-semibold border shrink-0 transition-colors neo-press',
-              timeframeFilter === t.value
-                ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
-                : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
 
       {isLoading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-40" />)}</div>
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={Sparkles}
-          title={timeframeFilter ? 'Nothing in this timeframe yet' : 'Your board is empty'}
-          description="Add the things you're working toward — big or small."
-          actionLabel="Add to Board"
+          title="Nothing here yet"
+          actionLabel="Add item"
           onAction={() => { setEditing(null); setModalOpen(true) }}
         />
       ) : (

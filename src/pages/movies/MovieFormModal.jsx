@@ -47,7 +47,7 @@ export default function MovieFormModal({ open, onClose, onSubmit, initial }) {
     <Modal
       open={open}
       onClose={onClose}
-      title={isEdit ? 'Edit film details' : 'Add a film'}
+      title={isEdit ? 'Edit film' : 'Add a film'}
       footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={submit}>{isEdit ? 'Save' : 'Add'}</Button></>}
     >
       <form onSubmit={submit} className="space-y-4">
@@ -63,12 +63,12 @@ export default function MovieFormModal({ open, onClose, onSubmit, initial }) {
         </div>
 
         <div>
-          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Genres <span className="opacity-60 font-normal">(comma separated)</span></label>
+          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Genres</label>
           <Input value={form.genresText} onChange={(e) => set('genresText', e.target.value)} placeholder="Thriller, Drama" />
         </div>
 
         <div>
-          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Poster URL <span className="opacity-60 font-normal">(optional)</span></label>
+          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Poster</label>
           <Input value={form.poster} onChange={(e) => set('poster', e.target.value)} placeholder="https://..." />
         </div>
 
@@ -81,7 +81,7 @@ export default function MovieFormModal({ open, onClose, onSubmit, initial }) {
           <>
             <label className="flex items-center gap-2 text-sm cursor-pointer border-t border-black/10 dark:border-white/10 pt-4">
               <input type="checkbox" checked={firstLog.watched} onChange={(e) => setLog('watched', e.target.checked)} className="h-4 w-4 accent-primary-500" />
-              I've already watched this
+              Already watched
             </label>
 
             {firstLog.watched ? (
@@ -95,12 +95,12 @@ export default function MovieFormModal({ open, onClose, onSubmit, initial }) {
                   <StarRating rating={firstLog.rating} onChange={(v) => setLog('rating', v)} size={22} />
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Review <span className="opacity-60 font-normal">(optional)</span></label>
+                  <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Review</label>
                   <Textarea rows={3} value={firstLog.review} onChange={(e) => setLog('review', e.target.value)} placeholder="What did you think..." />
                 </div>
               </>
             ) : (
-              <p className="text-xs text-muted-light dark:text-muted-dark">It'll be added to your watchlist instead.</p>
+              <p className="text-xs text-muted-light dark:text-muted-dark">Added to the watchlist instead.</p>
             )}
           </>
         )}

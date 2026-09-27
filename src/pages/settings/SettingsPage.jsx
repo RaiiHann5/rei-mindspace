@@ -754,7 +754,7 @@ export default function SettingsPage() {
     // marooned in an 768px column with half the viewport empty beside it),
     // collapsing to a horizontal strip on narrow screens.
     <div className="w-full">
-      <PageHeader title="Settings" description="Your profile, theme, notifications, and data." />
+      <PageHeader title="Settings" description="Profile, appearance, data." />
 
       <div className="grid lg:grid-cols-[212px_1fr] xl:grid-cols-[240px_1fr] gap-6 lg:gap-8 items-start">
         <div className="lg:sticky lg:top-24">
@@ -830,7 +830,7 @@ export default function SettingsPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium">Theme</p>
-            <p className="text-xs text-muted-light dark:text-muted-dark">Night console is the default. Light inverts it into a calm paper workspace.</p>
+            <p className="text-xs text-muted-light dark:text-muted-dark">Dark by default. Light is the paper variant.</p>
           </div>
           <div className="flex gap-1 p-1 rounded-lg bg-black/[0.04] dark:bg-white/[0.06]">
             {['dark', 'light', 'system'].map((t) => (
@@ -994,12 +994,12 @@ export default function SettingsPage() {
       </Card>
 
       <Card>
-        <h3 className="font-display font-semibold mb-3">Data management</h3>
+        <h3 className="font-display font-semibold mb-3">Data</h3>
         <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" size="sm" onClick={exportData}><Download size={14} /> Export backup</Button>
-          <Button variant="secondary" size="sm" onClick={() => fileRef.current?.click()}><Upload size={14} /> Import backup</Button>
+          <Button variant="secondary" size="sm" onClick={exportData}><Download size={14} /> Export</Button>
+          <Button variant="secondary" size="sm" onClick={() => fileRef.current?.click()}><Upload size={14} /> Import</Button>
           <input ref={fileRef} type="file" accept="application/json" className="hidden" onChange={importData} />
-          <Button variant="danger" size="sm" onClick={resetData}><Trash2 size={14} /> Reset all data</Button>
+          <Button variant="danger" size="sm" onClick={resetData}><Trash2 size={14} /> Erase everything</Button>
           {isSupabaseConfigured && <Button variant="secondary" size="sm" onClick={signOut}><LogOut size={14} /> Sign out</Button>}
         </div>
       </Card>

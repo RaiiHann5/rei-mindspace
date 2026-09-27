@@ -29,9 +29,9 @@ export default function VisionBoardDetailPage() {
   if (!vision) {
     return (
       <div className="text-center py-16">
-        <p className="text-muted-light dark:text-muted-dark mb-4">This vision wasn't found.</p>
+        <p className="text-muted-light dark:text-muted-dark mb-4">No such vision.</p>
         <Link to="/vision-board" className="inline-flex items-center gap-1.5 text-sm font-semibold hover:underline">
-          <ArrowLeft size={15} /> Back to Vision Board
+          <ArrowLeft size={15} /> Back to vision board
         </Link>
       </div>
     )
@@ -47,7 +47,7 @@ export default function VisionBoardDetailPage() {
   return (
     <div className="space-y-5">
       <button onClick={() => navigate('/vision-board')} className="flex items-center gap-1.5 text-sm font-medium text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark transition-colors">
-        <ArrowLeft size={15} /> Back to Vision Board
+        <ArrowLeft size={15} /> Back to vision board
       </button>
 
       <Card className="flex flex-wrap items-start justify-between gap-4">
@@ -76,12 +76,12 @@ export default function VisionBoardDetailPage() {
 
       <Card className="flex items-center justify-between gap-4">
         <div>
-          <p className="font-display font-semibold tracking-tight text-sm mb-0.5">{vision.achieved ? 'Marked as achieved' : 'Still in progress'}</p>
-          <p className="text-xs text-muted-light dark:text-muted-dark">{vision.achieved ? 'Nice work — you can undo this if it was a mistake.' : "Mark this once you've made it real."}</p>
+          <p className="font-display font-semibold tracking-tight text-sm mb-0.5">{vision.achieved ? 'Achieved' : 'In progress'}</p>
+          <p className="text-xs text-muted-light dark:text-muted-dark">{vision.achieved ? 'Undo any time.' : "Mark it once it's real."}</p>
         </div>
         <Button variant={vision.achieved ? 'secondary' : 'primary'} onClick={toggleAchieved}>
           {vision.achieved ? <Circle size={15} /> : <CheckCircle2 size={15} />}
-          {vision.achieved ? 'Mark Undone' : 'Mark Achieved'}
+          {vision.achieved ? 'Undo' : 'Achieve'}
         </Button>
       </Card>
 
@@ -94,7 +94,7 @@ export default function VisionBoardDetailPage() {
 
       <Card>
         <h3 className="font-display font-semibold tracking-tight text-sm mb-3 flex items-center gap-1.5"><StickyNote size={15} /> Reflections</h3>
-        <Textarea rows={5} defaultValue={vision.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="Why this matters to you, progress you've made, thoughts along the way..." />
+        <Textarea rows={5} defaultValue={vision.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="Why it matters, progress so far, thoughts along the way" />
       </Card>
 
       <VisionBoardFormModal open={modalOpen} onClose={() => setModalOpen(false)} onSubmit={save} initial={vision} />

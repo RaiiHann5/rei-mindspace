@@ -103,7 +103,7 @@ export default function MovieDetailPage() {
           </Card>
 
           <Button size="sm" className="self-start" onClick={() => { setEditingLog(null); setLogModalOpen(true) }}>
-            <Plus size={14} /> {watched ? 'Log Another Watch' : 'Log First Watch'}
+            <Plus size={14} /> {watched ? 'Log a rewatch' : 'Log first watch'}
           </Button>
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function MovieDetailPage() {
       <Card>
         <h3 className="font-display text-sm font-semibold tracking-tight mb-3 flex items-center gap-1.5"><BookOpen size={15} /> Diary</h3>
         {logs.length === 0 ? (
-          <p className="text-sm text-muted-light dark:text-muted-dark">No watches logged yet — still on the watchlist.</p>
+          <p className="text-sm text-muted-light dark:text-muted-dark">No watches logged. Still on the list.</p>
         ) : (
           <div className="space-y-3">
             {logs.map((log) => (

@@ -32,7 +32,7 @@ export default function HabitDetailPage() {
   if (!habit) {
     return (
       <div className="text-center py-16">
-        <p className="text-muted-light dark:text-muted-dark mb-4">Habit not found.</p>
+        <p className="text-muted-light dark:text-muted-dark mb-4">Not found.</p>
         <Link to="/habits" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark transition-colors">
           <ArrowLeft size={15} /> Back to habits
         </Link>
@@ -81,12 +81,12 @@ export default function HabitDetailPage() {
               {habit.reminderTime && <Badge><Bell size={10} className="inline mr-1 -mt-0.5" />{habit.reminderTime}</Badge>}
               {habit.archived && <Badge tone="default"><Archive size={10} className="inline mr-1 -mt-0.5" />Archived</Badge>}
             </div>
-            <p className="text-sm text-muted-light dark:text-muted-dark max-w-xl">{habit.description || 'No description yet — add one from Edit.'}</p>
+            <p className="text-sm text-muted-light dark:text-muted-dark max-w-xl">{habit.description || 'No description yet.'}</p>
           </div>
         </div>
         <div className="flex gap-2 shrink-0 flex-wrap">
           <Button variant={doneToday ? 'primary' : 'secondary'} size="sm" onClick={toggleToday}>
-            <Check size={14} /> {doneToday ? 'Done today' : 'Mark today done'}
+            <Check size={14} /> {doneToday ? 'Done' : 'Mark done'}
           </Button>
           <Button variant="secondary" size="sm" onClick={() => setModalOpen(true)}><Pencil size={14} /> Edit</Button>
           <Button variant="secondary" size="sm" onClick={toggleArchive}>
@@ -102,7 +102,7 @@ export default function HabitDetailPage() {
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Flame size={18} className="text-amber-500" />
           <p className="num ember-num text-3xl leading-none">{streak}</p>
-          <p className="text-[11px] font-medium text-dusk">Current streak</p>
+          <p className="text-[11px] font-medium text-dusk">Streak</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Trophy size={18} className="text-amber-500" />
@@ -117,14 +117,14 @@ export default function HabitDetailPage() {
         <Card className="flex flex-col items-center text-center gap-1.5">
           <CalendarCheck2 size={18} className="text-primary-600 dark:text-primary-400" />
           <p className="num text-3xl leading-none">{total}</p>
-          <p className="text-[11px] font-medium text-dusk">Total completions</p>
+          <p className="text-[11px] font-medium text-dusk">Completions</p>
         </Card>
       </div>
 
       <Card>
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-display font-semibold tracking-tight">History</h3>
-          <p className="text-[11px] text-dusk">Tap a day to toggle it</p>
+          <p className="text-[11px] text-dusk">Tap a day to toggle</p>
         </div>
         {/* Flat, data-only heatmap: no glow, no gradient. */}
         <div className="overflow-x-auto pb-1">
@@ -134,7 +134,7 @@ export default function HabitDetailPage() {
 
       <Card>
         <h3 className="font-display font-semibold tracking-tight mb-3">Notes</h3>
-        <Textarea rows={6} defaultValue={habit.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="Track what's working, setbacks, cues, or anything else about this habit..." />
+        <Textarea rows={6} defaultValue={habit.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="Cues, setbacks, what's working" />
       </Card>
 
       <HabitFormModal open={modalOpen} onClose={() => setModalOpen(false)} onSubmit={save} initial={habit} />

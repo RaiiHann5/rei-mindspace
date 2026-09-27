@@ -41,17 +41,17 @@ export default function TaskFormModal({ open, onClose, onSubmit, initial }) {
     <Modal open={open} onClose={onClose} title={initial ? 'Edit task' : 'New task'} size="lg"
       footer={<>
         <Button variant="secondary" onClick={onClose}>Cancel</Button>
-        <Button onClick={submit}>{initial ? 'Save changes' : 'Create task'}</Button>
+        <Button onClick={submit}>{initial ? 'Save' : 'Create'}</Button>
       </>}
     >
       <form onSubmit={submit} className="space-y-5">
         <div>
           <label className="text-[11px] font-medium text-dusk mb-1.5 block">Title</label>
-          <Input autoFocus value={form.title} onChange={(e) => set('title', e.target.value)} placeholder="What needs to get done?" required />
+          <Input autoFocus value={form.title} onChange={(e) => set('title', e.target.value)} placeholder="What needs doing?" required />
         </div>
         <div>
           <label className="text-[11px] font-medium text-dusk mb-1.5 block">Notes</label>
-          <Textarea rows={3} value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Add more detail..." />
+          <Textarea rows={3} value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Add detail" />
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <div>
@@ -84,13 +84,13 @@ export default function TaskFormModal({ open, onClose, onSubmit, initial }) {
             </Select>
           </div>
           <div>
-            <label className="text-[11px] font-medium text-dusk mb-1.5 block">Tags (comma separated)</label>
+            <label className="text-[11px] font-medium text-dusk mb-1.5 block">Tags</label>
             <Input value={form.tags} onChange={(e) => set('tags', e.target.value)} placeholder="design, urgent" />
           </div>
         </div>
         {form.repeat && (
           <p className="flex items-center gap-1.5 text-[11px] text-dusk -mt-2">
-            <Repeat size={12} /> When completed, a new <span className="capitalize">{form.repeat}</span> occurrence is scheduled automatically.
+            <Repeat size={12} /> Completing it schedules the next one.
           </p>
         )}
 
@@ -121,7 +121,7 @@ export default function TaskFormModal({ open, onClose, onSubmit, initial }) {
               </div>
             ))}
             {checklistTotal === 0 && (
-              <p className="text-xs text-dusk text-center py-3">No checklist items yet.</p>
+              <p className="text-xs text-dusk text-center py-3">Nothing yet.</p>
             )}
           </div>
         </div>

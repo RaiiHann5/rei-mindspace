@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Sparkles, Send, Loader2, Trash2, Settings as SettingsIcon, AlertCircle, Paperclip, Mic, MicOff, BrainCircuit, Zap, Volume2, VolumeX } from 'lucide-react'
+import { Send, Loader2, Trash2, Settings as SettingsIcon, AlertCircle, Paperclip, Mic, MicOff, BrainCircuit, Zap, Volume2, VolumeX } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { Card, Button, Textarea } from '@/components/ui'
+import { Card, Button, Textarea, PageHeader } from '@/components/ui'
 import { useAssistantChat } from '@/hooks/useAssistantChat'
 import { useVoiceInput } from '@/hooks/useVoiceInput'
 import { useVoiceOutput } from '@/hooks/useVoiceOutput'
@@ -69,92 +69,92 @@ export default function AssistantPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
-      <div className="flex items-center justify-between mb-3 animate-fade-in">
-        <h1 className="font-display text-xl font-semibold tracking-tight flex items-center gap-2">
-          <span className="h-8 w-8 rounded-full bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center">
-            <Sparkles size={16} />
-          </span>
-          AI Assistant
-        </h1>
-        <div className="flex items-center gap-2">
-          {enabledProviders.length > 0 && (
-            <div className="relative">
-              <select
-                value={activeProvider}
-                onChange={(e) => setActiveProvider(e.target.value)}
-                title="Pilih provider AI"
-                className="h-9 pl-3 pr-7 rounded-md text-xs font-medium bg-surface-light dark:bg-surface-dark border border-[color:var(--line)] outline-none appearance-none cursor-pointer focus:border-ember-500/70"
-              >
-                {enabledProviders.map((p) => (
-                  <option key={p.id} value={p.id}>{p.label}{!providers[p.id]?.apiKey ? ' (no key)' : ''}</option>
-                ))}
-              </select>
-            </div>
-          )}
-          <Button
-            variant="secondary"
-            size="icon"
-            onClick={() => setIncludeContext(!includeContext)}
-            title={includeContext ? 'Konteks produktivitas aktif — klik untuk matikan' : 'Konteks produktivitas mati — klik untuk aktifkan'}
-            aria-label={includeContext ? 'Matikan konteks produktivitas' : 'Aktifkan konteks produktivitas'}
-            className={cn(
-              'transition-all duration-200',
-              includeContext && '!bg-primary-500/10 !text-primary-700 dark:!text-ember-300'
-            )}
-          >
-            <BrainCircuit size={15} className={includeContext ? 'animate-pop' : ''} />
-          </Button>
-          {speechSupported && (
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={() => { setAutoSpeak(!autoSpeak); stopSpeaking() }}
-              title={autoSpeak ? 'AI bersuara aktif — klik untuk matikan' : 'AI bersuara mati — klik untuk aktifkan balasan otomatis diucapkan'}
-              aria-label={autoSpeak ? 'Matikan suara AI' : 'Aktifkan suara AI'}
-              className={cn(
-                'transition-all duration-200',
-                autoSpeak && '!bg-primary-500/10 !text-primary-700 dark:!text-ember-300'
+      <div className="animate-fade-in">
+        <PageHeader
+          title="AI Assistant"
+          description="Perintah dari chat atau suara."
+          actions={
+            <div className="flex items-center gap-2">
+              {enabledProviders.length > 0 && (
+                <div className="relative">
+                  <select
+                    value={activeProvider}
+                    onChange={(e) => setActiveProvider(e.target.value)}
+                    title="Provider AI"
+                    className="h-9 pl-3 pr-7 rounded-md text-xs font-medium bg-surface-light dark:bg-surface-dark border border-[color:var(--line)] outline-none appearance-none cursor-pointer focus:border-ember-500/70"
+                  >
+                    {enabledProviders.map((p) => (
+                      <option key={p.id} value={p.id}>{p.label}{!providers[p.id]?.apiKey ? ' (no key)' : ''}</option>
+                    ))}
+                  </select>
+                </div>
               )}
-            >
-              {autoSpeak ? <Volume2 size={15} className="animate-pop" /> : <VolumeX size={15} />}
-            </Button>
-          )}
-          {messages.length > 0 && (
-            <Button
-              variant="secondary"
-              size="icon"
-              onClick={() => { clearMessages(); stopSpeaking() }}
-              title="Bersihkan chat"
-              aria-label="Bersihkan chat"
-            >
-              <Trash2 size={15} />
-            </Button>
-          )}
-          <Link to="/settings">
-            <Button
-              variant="secondary"
-              size="icon"
-              title="Atur API key"
-              aria-label="Atur API key"
-            >
-              <SettingsIcon size={15} />
-            </Button>
-          </Link>
-        </div>
+              <Button
+                variant="secondary"
+                size="icon"
+                onClick={() => setIncludeContext(!includeContext)}
+                title={includeContext ? 'Matikan konteks' : 'Aktifkan konteks'}
+                aria-label={includeContext ? 'Matikan konteks produktivitas' : 'Aktifkan konteks produktivitas'}
+                className={cn(
+                  'transition-all duration-200',
+                  includeContext && '!bg-primary-500/10 !text-primary-700 dark:!text-ember-300'
+                )}
+              >
+                <BrainCircuit size={15} className={includeContext ? 'animate-pop' : ''} />
+              </Button>
+              {speechSupported && (
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  onClick={() => { setAutoSpeak(!autoSpeak); stopSpeaking() }}
+                  title={autoSpeak ? 'Matikan suara AI' : 'Aktifkan suara AI'}
+                  aria-label={autoSpeak ? 'Matikan suara AI' : 'Aktifkan suara AI'}
+                  className={cn(
+                    'transition-all duration-200',
+                    autoSpeak && '!bg-primary-500/10 !text-primary-700 dark:!text-ember-300'
+                  )}
+                >
+                  {autoSpeak ? <Volume2 size={15} className="animate-pop" /> : <VolumeX size={15} />}
+                </Button>
+              )}
+              {messages.length > 0 && (
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  onClick={() => { clearMessages(); stopSpeaking() }}
+                  title="Bersihkan chat"
+                  aria-label="Bersihkan chat"
+                >
+                  <Trash2 size={15} />
+                </Button>
+              )}
+              <Link to="/settings">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  title="Atur API key"
+                  aria-label="Atur API key"
+                >
+                  <SettingsIcon size={15} />
+                </Button>
+              </Link>
+            </div>
+          }
+        />
       </div>
 
       {enabledProviders.length === 0 ? (
         <Card className="mb-3 flex items-center gap-3 border-amber-500/30 animate-fade-in">
           <AlertCircle size={18} className="text-amber-500 shrink-0" />
           <p className="text-sm">
-            Belum ada provider AI yang aktif. Buka <Link to="/settings" className="text-primary-600 dark:text-primary-400 font-medium">Settings → AI Assistant</Link>, isi API key salah satu provider (semuanya ada free tier), lalu aktifkan.
+            Belum ada provider AI aktif. Buka <Link to="/settings" className="text-primary-600 dark:text-primary-400 font-medium">Settings → AI Assistant</Link>, isi satu API key, lalu nyalakan.
           </p>
         </Card>
       ) : !hasKey ? (
         <Card className="mb-3 flex items-center gap-3 border-amber-500/30 animate-fade-in">
           <AlertCircle size={18} className="text-amber-500 shrink-0" />
           <p className="text-sm">
-            Belum ada API key untuk <strong>{providerConfig.label}</strong>. Buka <Link to="/settings" className="text-primary-600 dark:text-primary-400 font-medium">Settings → AI Assistant</Link> untuk menambahkannya, atau pilih provider lain di pojok kanan atas.
+            Belum ada API key untuk <strong>{providerConfig.label}</strong>. Buka <Link to="/settings" className="text-primary-600 dark:text-primary-400 font-medium">Settings → AI Assistant</Link>, atau pilih provider lain di pojok kanan atas.
           </p>
         </Card>
       ) : null}
@@ -166,8 +166,8 @@ export default function AssistantPage() {
               <div className="h-12 w-12 rounded-2xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-3">
                 <Zap size={22} />
               </div>
-              <h3 className="font-display font-semibold mb-1">Tanya, atau langsung suruh gue kerjain</h3>
-              <p className="text-sm text-muted-light dark:text-muted-dark max-w-sm mb-5">Bisa bikin/nyelesain task, ngatur timer Pomodoro, nandain habit, nyimpen ide, bookmark, catatan — semua fitur bisa lo perintah langsung dari chat atau suara. Coba salah satu di bawah ini.</p>
+              <h3 className="font-display font-semibold mb-1">Tanya, atau langsung kerjakan.</h3>
+              <p className="text-sm text-muted-light dark:text-muted-dark max-w-sm mb-5">Task, timer Pomodoro, habit, ide, bookmark, catatan — semuanya bisa dipanggil dari chat atau suara. Coba salah satu di bawah.</p>
               <div className="flex flex-wrap justify-center gap-2 max-w-lg">
                 {QUICK_ACTIONS.map((q) => (
                   <button key={q} onClick={() => doSend(q)} className="text-xs px-3 py-2 rounded-lg bg-panel2-light dark:bg-panel2-dark border border-[color:var(--line)] hover:border-[color:var(--line-strong)] hover:text-primary-600 dark:hover:text-primary-400 neo-press transition-colors text-left">{q}</button>
@@ -207,7 +207,7 @@ export default function AssistantPage() {
           )}
           {isRecording && (
             <div className="flex items-center gap-1.5 mb-2 text-xs text-rose-500">
-              <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" /> Mendengarkan... bicara sekarang
+              <span className="h-1.5 w-1.5 rounded-full bg-rose-500 animate-pulse" /> Mendengarkan...
             </div>
           )}
           <div className="flex items-end gap-2">
@@ -231,7 +231,7 @@ export default function AssistantPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder="Tulis atau ucapkan perintah... (Enter untuk kirim)"
+              placeholder="Tulis atau ucapkan perintah (Enter untuk kirim)"
               className="flex-1 max-h-32"
             />
             <Button size="icon" onClick={() => doSend()} aria-label="Kirim pesan" disabled={loading || (!input.trim() && pending.length === 0)}><Send size={16} /></Button>

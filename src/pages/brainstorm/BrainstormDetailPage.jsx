@@ -250,7 +250,7 @@ export default function BrainstormDetailPage() {
                       <input
                         value={newCategoryInput}
                         onChange={(e) => setNewCategoryInput(e.target.value)}
-                        placeholder="Kategori baru"
+                        placeholder="Nama"
                         className="flex-1 min-w-0 h-7 rounded-lg px-2 text-xs bg-black/[0.04] dark:bg-white/[0.06] outline-none placeholder:text-dusk"
                       />
                       {newCategoryInput.trim() && (
@@ -342,7 +342,7 @@ export default function BrainstormDetailPage() {
               rows={5}
               defaultValue={item.notes}
               onBlur={(e) => updateItem(item.id, { notes: e.target.value })}
-              placeholder="Jelaskan idenya lebih detail: masalah apa yang diselesaikan, siapa penggunanya, kenapa ini penting..."
+              placeholder="Masalah apa yang diselesaikan, untuk siapa, kenapa penting."
             />
           </div>
 
@@ -363,7 +363,7 @@ export default function BrainstormDetailPage() {
                 <input
                   value={proInput}
                   onChange={(e) => setProInput(e.target.value)}
-                  placeholder="Tambah kelebihan..."
+                  placeholder="Tambah kelebihan"
                   className="flex-1 h-9 rounded-lg px-3 text-sm bg-black/[0.03] dark:bg-white/[0.05] border border-[color:var(--line)] outline-none placeholder:text-dusk"
                 />
                 <button type="submit" aria-label="Tambah poin kelebihan" className="h-9 w-9 rounded-lg grid place-items-center bg-teal-500/12 text-teal-600 dark:text-teal-300 hover:bg-teal-500/20 shrink-0 neo-press"><Plus size={15} /></button>
@@ -384,7 +384,7 @@ export default function BrainstormDetailPage() {
                 <input
                   value={conInput}
                   onChange={(e) => setConInput(e.target.value)}
-                  placeholder="Tambah kekurangan..."
+                  placeholder="Tambah kekurangan"
                   className="flex-1 h-9 rounded-lg px-3 text-sm bg-black/[0.03] dark:bg-white/[0.05] border border-[color:var(--line)] outline-none placeholder:text-dusk"
                 />
                 <button type="submit" aria-label="Tambah poin kekurangan" className="h-9 w-9 rounded-lg grid place-items-center bg-rose-500/12 text-rose-600 dark:text-rose-300 hover:bg-rose-500/20 shrink-0 neo-press"><Plus size={15} /></button>
@@ -400,7 +400,7 @@ export default function BrainstormDetailPage() {
             </div>
             {steps.length > 0 && <Progress value={stepProgress} tone="primary" className="h-2 mb-3" />}
             <div className="space-y-1.5 mb-2">
-              {steps.length === 0 && <p className="text-xs text-dusk">Pecah ide ini jadi langkah-langkah kecil yang bisa dikerjakan.</p>}
+              {steps.length === 0 && <p className="text-xs text-dusk">Pecah jadi langkah kecil.</p>}
               {steps.map((s) => (
                 <div key={s.id} className="flex items-center gap-2.5 text-sm px-3 py-2 rounded-lg bg-black/[0.03] dark:bg-white/[0.05]">
                   <Checkbox checked={s.done} onChange={() => toggleStep(s.id)} />
@@ -413,7 +413,7 @@ export default function BrainstormDetailPage() {
               <input
                 value={stepInput}
                 onChange={(e) => setStepInput(e.target.value)}
-                placeholder="Tambah langkah..."
+                placeholder="Tambah langkah"
                 className="flex-1 h-9 rounded-lg px-3 text-sm bg-black/[0.03] dark:bg-white/[0.05] border border-[color:var(--line)] outline-none placeholder:text-dusk"
               />
               <button type="submit" aria-label="Tambah langkah" className="h-9 w-9 rounded-lg grid place-items-center bg-primary-500/10 text-primary-600 dark:text-primary-400 hover:bg-primary-500/20 shrink-0 neo-press"><Plus size={15} /></button>
@@ -454,7 +454,7 @@ export default function BrainstormDetailPage() {
           <div className="flex items-center justify-between gap-3 rounded-xl px-4 py-3.5 bg-primary-500/[0.07] border border-[color:var(--line)]">
             <div className="flex items-center gap-2.5 min-w-0">
               <CheckSquare size={16} className="text-primary-600 dark:text-primary-400 shrink-0" />
-              <p className="text-xs text-muted-light dark:text-muted-dark">Sudah yakin dengan ide ini? Ubah jadi task supaya bisa langsung dikerjakan.</p>
+              <p className="text-xs text-muted-light dark:text-muted-dark">Sudah yakin? Ubah jadi task.</p>
             </div>
             <button
               onClick={convertToTask}

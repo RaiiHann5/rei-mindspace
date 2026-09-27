@@ -15,12 +15,12 @@ export default function DeleteJournalModal({ entry, onCancel, onConfirm, isDelet
           <span className="font-semibold text-ink-light dark:text-ink-dark capitalize">
             {entry ? format(new Date(entry.date), 'EEEE, d MMMM yyyy', { locale: idLocale }) : ''}
           </span>{' '}
-          akan dihapus secara permanen dan tidak bisa dikembalikan.
+          akan dihapus permanen dan tidak bisa dikembalikan.
         </p>
       </div>
       <div className="flex justify-end gap-2 mt-5">
         <Button variant="secondary" size="sm" onClick={onCancel}>Batal</Button>
-        <Button variant="danger" size="sm" onClick={onConfirm} loading={isDeleting}>Hapus Entri</Button>
+        <Button variant="danger" size="sm" onClick={onConfirm} loading={isDeleting}>Hapus</Button>
       </div>
     </Modal>
   )

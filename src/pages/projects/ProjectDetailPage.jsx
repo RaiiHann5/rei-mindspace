@@ -21,7 +21,7 @@ export default function ProjectDetailPage() {
   if (isLoading) return <Skeleton className="h-64" />
   if (!project) return (
     <div className="text-center py-16">
-      <p className="text-muted-light dark:text-muted-dark mb-4">Project not found.</p>
+      <p className="text-muted-light dark:text-muted-dark mb-4">Not found.</p>
       <Link to="/projects"><Button variant="secondary" size="sm">Back to projects</Button></Link>
     </div>
   )
@@ -97,7 +97,7 @@ export default function ProjectDetailPage() {
             <Button size="icon" onClick={addFile} aria-label="Tambah file"><Plus size={15} /></Button>
           </div>
           <div className="space-y-1.5 max-h-48 overflow-y-auto">
-            {(project.files || []).length === 0 && <p className="text-xs text-dusk">No files attached yet.</p>}
+            {(project.files || []).length === 0 && <p className="text-xs text-dusk">Nothing attached.</p>}
             {(project.files || []).map((f) => (
               <div key={f.id} className="flex items-center gap-2 text-sm px-2 py-1.5 rounded-lg bg-black/[0.03] dark:bg-white/[0.05]">
                 {f.type === 'image' ? <ImageIcon size={14} /> : <FileText size={14} />}
@@ -111,7 +111,7 @@ export default function ProjectDetailPage() {
 
       <Card>
         <h3 className="font-display font-semibold tracking-tight mb-3">Notes</h3>
-        <Textarea rows={6} defaultValue={project.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="Project notes, decisions, links..." />
+        <Textarea rows={6} defaultValue={project.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="Decisions, links, open questions" />
       </Card>
 
       <ProjectFormModal open={modalOpen} onClose={() => setModalOpen(false)} onSubmit={save} initial={project} />

@@ -70,70 +70,73 @@ export default function NotesPage() {
 
   return (
     <div>
+      {/* Row 1 — identity and the primary action. Row 2 — search, the archive
+          toggle and the folder chips, same two-bar split as the calendar. */}
       <PageHeader
         title="Notes"
-        description="Rich-text notes, organized by category."
+        description="Notes, by folder."
         actions={<Button onClick={createNote}><Plus size={16} /> New note</Button>}
-      />
+        tools={
+          <>
+            <div className="relative w-full sm:w-64">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-dusk" />
+              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search" className="pl-9" />
+            </div>
 
-      <div className="flex flex-wrap items-center gap-3 mb-3">
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-dusk" />
-          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search notes..." className="pl-9" />
-        </div>
-
-        <button
-          onClick={() => setShowArchived((v) => !v)}
-          className={cn(
-            'h-8 px-3 rounded-full text-xs font-semibold border flex items-center gap-1.5 transition-colors neo-press',
-            showArchived
-              ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
-              : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'
-          )}
-        >
-          <Archive size={12} /> {showArchived ? 'Viewing archived' : `Archived${archivedCount ? ` (${archivedCount})` : ''}`}
-        </button>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-1.5 mb-5">
-        {categories.map((f) => (
-          <button
-            key={f}
-            onClick={() => setCategory(f)}
-            className={cn(
-              'h-8 px-3 rounded-md text-[13px] font-semibold border transition-colors neo-press',
-              category === f
-                ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
-                : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'
-            )}
-          >
-            {f}
-          </button>
-        ))}
-
-        {addingCategory ? (
-          <form onSubmit={submitNewCategory} className="inline-flex items-center gap-1">
-            <input
-              autoFocus
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              onBlur={() => { if (!newCategory.trim()) setAddingCategory(false) }}
-              placeholder="Category name"
-              className="h-8 w-32 rounded-md px-3 text-xs font-medium bg-surface-light dark:bg-surface-dark outline-none border border-[color:var(--line)] placeholder:text-dusk"
-            />
-            <button type="button" onClick={() => { setAddingCategory(false); setNewCategory('') }} className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-light dark:text-muted-dark hover:bg-black/[0.05] dark:hover:bg-white/[0.07] hover:text-ink-light dark:hover:text-ink-dark neo-press">
-              <X size={13} />
+            <button
+              onClick={() => setShowArchived((v) => !v)}
+              className={cn(
+                'h-8 px-3 rounded-full text-xs font-semibold border flex items-center gap-1.5 transition-colors neo-press shrink-0',
+                showArchived
+                  ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
+                  : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'
+              )}
+            >
+              <Archive size={12} /> Archived{archivedCount ? ` ${archivedCount}` : ''}
             </button>
-          </form>
-        ) : (
-          <button
-            onClick={() => setAddingCategory(true)}
-            className="h-8 px-3 rounded-md text-xs font-semibold border border-dashed border-[color:var(--line-strong)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark flex items-center gap-1 transition-colors neo-press"
-          >
-            <Plus size={12} /> Category
-          </button>
-        )}
-      </div>
+
+            <div className="flex flex-wrap items-center gap-1.5">
+              {categories.map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setCategory(f)}
+                  className={cn(
+                    'h-8 px-3 rounded-md text-[13px] font-semibold border transition-colors neo-press',
+                    category === f
+                      ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
+                      : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'
+                  )}
+                >
+                  {f}
+                </button>
+              ))}
+
+              {addingCategory ? (
+                <form onSubmit={submitNewCategory} className="inline-flex items-center gap-1">
+                  <input
+                    autoFocus
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    onBlur={() => { if (!newCategory.trim()) setAddingCategory(false) }}
+                    placeholder="Name"
+                    className="h-8 w-32 rounded-md px-3 text-xs font-medium bg-surface-light dark:bg-surface-dark outline-none border border-[color:var(--line)] placeholder:text-dusk"
+                  />
+                  <button type="button" onClick={() => { setAddingCategory(false); setNewCategory('') }} className="h-8 w-8 rounded-lg flex items-center justify-center text-muted-light dark:text-muted-dark hover:bg-black/[0.05] dark:hover:bg-white/[0.07] hover:text-ink-light dark:hover:text-ink-dark neo-press">
+                    <X size={13} />
+                  </button>
+                </form>
+              ) : (
+                <button
+                  onClick={() => setAddingCategory(true)}
+                  className="h-8 px-3 rounded-md text-xs font-semibold border border-dashed border-[color:var(--line-strong)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark flex items-center gap-1 transition-colors neo-press"
+                >
+                  <Plus size={12} /> New category
+                </button>
+              )}
+            </div>
+          </>
+        }
+      />
 
       {isLoading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -142,8 +145,7 @@ export default function NotesPage() {
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={showArchived ? Archive : StickyNote}
-          title={showArchived ? 'No archived notes' : 'No notes found'}
-          description={showArchived ? 'Notes you archive will show up here.' : 'Create a note or try a different search.'}
+          title={showArchived ? 'Nothing archived' : 'Nothing here yet'}
           actionLabel={showArchived ? undefined : 'New note'}
           onAction={showArchived ? undefined : createNote}
         />

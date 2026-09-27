@@ -41,13 +41,13 @@ export default function LearningFormModal({ open, onClose, onSubmit, initial }) 
     <Modal
       open={open}
       onClose={onClose}
-      title={initial ? 'Edit skill' : 'Track a new skill'}
-      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={submit}>{initial ? 'Save' : 'Add Skill'}</Button></>}
+      title={initial ? 'Edit skill' : 'New skill'}
+      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={submit}>{initial ? 'Save' : 'Add'}</Button></>}
     >
       <form onSubmit={submit} className="space-y-4">
         <div>
           <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Title</label>
-          <Input autoFocus value={form.title} onChange={(e) => set('title', e.target.value)} placeholder="e.g. Advanced React Patterns" required />
+          <Input autoFocus value={form.title} onChange={(e) => set('title', e.target.value)} placeholder="e.g. Advanced React patterns" required />
         </div>
 
         <div>
@@ -88,13 +88,13 @@ export default function LearningFormModal({ open, onClose, onSubmit, initial }) 
         </div>
 
         <div>
-          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Progress %</label>
+          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Progress</label>
           <Input type="number" min="0" max="100" value={form.progress} onChange={(e) => set('progress', e.target.value)} />
         </div>
 
         <div>
           <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Notes <span className="opacity-60 font-normal">(optional)</span></label>
-          <Textarea rows={2} value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Why this skill, what you want to be able to do..." />
+          <Textarea rows={2} value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Why it matters, what to be able to do" />
         </div>
       </form>
     </Modal>

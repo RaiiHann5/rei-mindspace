@@ -49,11 +49,11 @@ export default function WorkoutPage() {
     <div>
       <PageHeader
         title="Workout"
-        description="Catat sesi latihan, pantau progres, dan bangun konsistensi."
+        description="Catat sesi, pantau progres."
         actions={
           <>
             <Button variant="secondary" onClick={() => navigate('/workout/schedule')}><CalendarClock size={16} /> Jadwal</Button>
-            <Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Catat Workout</Button>
+            <Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Catat workout</Button>
           </>
         }
       />
@@ -62,22 +62,22 @@ export default function WorkoutPage() {
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Flame size={18} className="text-amber-500" />
           <p className="num text-xl">{streak}</p>
-          <p className="text-[11px] font-medium text-dusk">Hari beruntun</p>
+          <p className="text-[11px] font-medium text-dusk">Beruntun</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Dumbbell size={18} className="text-primary-600 dark:text-primary-400" />
           <p className="num text-xl">{week.count}</p>
-          <p className="text-[11px] font-medium text-dusk">Sesi minggu ini</p>
+          <p className="text-[11px] font-medium text-dusk">Sesi</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Timer size={18} className="text-teal-500" />
           <p className="num text-xl">{week.minutes}</p>
-          <p className="text-[11px] font-medium text-dusk">Menit minggu ini</p>
+          <p className="text-[11px] font-medium text-dusk">Menit</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Zap size={18} className="text-rose-500" />
           <p className="num text-xl">{week.calories || 0}</p>
-          <p className="text-[11px] font-medium text-dusk">Kalori minggu ini</p>
+          <p className="text-[11px] font-medium text-dusk">Kalori</p>
         </Card>
       </div>
 
@@ -86,7 +86,7 @@ export default function WorkoutPage() {
           <div className="h-10 w-10 rounded-xl flex items-center justify-center shrink-0 bg-primary-500/10 text-primary-600 dark:text-primary-400">
             <CalendarRange size={18} />
           </div>
-          <p className="text-[11px] font-medium text-dusk">Total Sepanjang Waktu</p>
+          <p className="text-[11px] font-medium text-dusk">Total</p>
         </div>
         <div className="flex items-center gap-4 text-xs text-dusk">
           <span>Sesi <span className="font-mono tabular-nums text-ink-light dark:text-ink-dark">{allTime.count}</span></span>
@@ -96,7 +96,7 @@ export default function WorkoutPage() {
       </Card>
 
       <Card className="mb-5">
-        <h3 className="font-display text-sm font-semibold tracking-tight">Durasi Latihan</h3>
+        <h3 className="font-display text-sm font-semibold tracking-tight">Durasi latihan</h3>
         <p className="text-[11px] font-medium text-dusk mb-2">7 hari terakhir</p>
         <WorkoutWeeklyChart data={chartData} />
       </Card>
@@ -130,9 +130,9 @@ export default function WorkoutPage() {
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={Dumbbell}
-          title={typeFilter ? 'Tidak ada workout jenis ini' : 'Belum ada workout tercatat'}
-          description={typeFilter ? 'Coba pilih jenis lain atau catat sesi baru.' : 'Mulai catat sesi latihan pertamamu untuk membangun konsistensi.'}
-          actionLabel="Catat Workout"
+          title={typeFilter ? 'Tidak ada workout jenis ini.' : 'Belum ada workout.'}
+          description={typeFilter ? 'Coba jenis lain, atau catat sesi baru.' : 'Mulai dari satu sesi.'}
+          actionLabel="Catat workout"
           onAction={() => { setEditing(null); setModalOpen(true) }}
         />
       ) : (

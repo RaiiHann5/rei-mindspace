@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Plus, Folder, Lightbulb } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useCollection } from '@/hooks/useCollection'
-import { EmptyState, Skeleton } from '@/components/ui'
+import { EmptyState, Skeleton, PageHeader, Button } from '@/components/ui'
 import { CardBrainstorm } from '@/components/ui'
 import BrainstormFormModal from './BrainstormFormModal'
 
@@ -96,24 +96,36 @@ export default function BrainstormPage() {
 
   return (
     <div>
-      {/* header ala "MY NOTES": judul besar + tombol utama */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Brainstorm</h1>
-          <p className="text-sm text-muted-light dark:text-muted-dark mt-0.5">Tangkap ide sebelum lupa.</p>
-        </div>
-        {/* The single gradient CTA on this screen. */}
-        <button
-          onClick={openNew}
-          className="ember-cta neo-press inline-flex items-center gap-2 rounded-md text-sm font-semibold px-4 py-2.5 hover:brightness-[1.06] active:brightness-100 transition-all"
-        >
-          <Plus size={16} /> Ide baru
-        </button>
-      </div>
+      {/* Row 1 — identity and the primary action. Row 2 — the status filter
+          that narrows the idea grid, same two-bar split as the calendar. */}
+      <PageHeader
+        title="Brainstorm"
+        description="Tangkap ide sebelum lupa."
+        actions={<Button onClick={openNew}><Plus size={16} /> Ide baru</Button>}
+        tools={
+          <>
+            <div className="flex items-center gap-4">
+              {TABS.map((t) => (
+                <button
+                  key={t.key}
+                  onClick={() => setTab(t.key)}
+                  className={`text-sm pb-1 border-b transition-colors neo-press ${
+                    tab === t.key
+                      ? 'border-ember-500 text-ink-light dark:text-ink-dark font-semibold'
+                      : 'border-transparent text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </>
+        }
+      />
 
-      {/* section "Recent Folders" -> kategori teratas */}
+      {/* top categories, as a scan target before the grid */}
       <div className="mb-8">
-        <h2 className="font-display font-semibold tracking-tight mb-3">Kategori Teratas</h2>
+        <h2 className="font-display font-semibold tracking-tight mb-3">Kategori teratas</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {topCategories.map((c, idx) => (
             <FolderCard key={c.label} label={c.label} count={c.count} tone={FOLDER_TONES[idx % FOLDER_TONES.length]} />
@@ -122,33 +134,16 @@ export default function BrainstormPage() {
         </div>
       </div>
 
-      {/* section "My Notes" -> daftar ide, tab dengan underline hairline */}
+      {/* the idea grid */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display font-semibold tracking-tight">Semua Ide</h2>
-          <div className="flex items-center gap-5">
-            {TABS.map((t) => (
-              <button
-                key={t.key}
-                onClick={() => setTab(t.key)}
-                className={`text-sm pb-1 border-b transition-colors neo-press ${
-                  tab === t.key
-                    ? 'border-ember-500 text-ink-light dark:text-ink-dark font-semibold'
-                    : 'border-transparent text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        <h2 className="font-display font-semibold tracking-tight mb-4">Semua ide</h2>
 
         {isLoading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-[190px] rounded-2xl" />)}
           </div>
         ) : filtered.length === 0 ? (
-          <EmptyState icon={Lightbulb} title="Belum ada ide" description="Catat apa pun yang layak dieksplor nanti." actionLabel="Ide baru" onAction={openNew} />
+          <EmptyState icon={Lightbulb} title="Belum ada ide" description="Catat yang layak dieksplor nanti." actionLabel="Ide baru" onAction={openNew} />
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((item, idx) => (

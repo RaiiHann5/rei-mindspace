@@ -365,7 +365,7 @@ export default function WhiteboardPage() {
   }, [getActiveLayer, pushHistory, compositeLayers, persist])
 
   const clearBoard = useCallback(() => {
-    if (!confirm('Clear the whole board? This cannot be undone.')) return
+    if (!confirm('Clear the board? Cannot be undone.')) return
     pushHistory()
     layers.forEach((l, idx) => {
       const c = layerCanvasesRef.current[l.id]
@@ -780,7 +780,7 @@ export default function WhiteboardPage() {
     <div className="space-y-4 max-w-6xl mx-auto">
       <PageHeader
         title="Whiteboard"
-        description="Sketch ideas, diagrams, or full illustrations across layers. Autosaves in your browser."
+        description="Draw across layers. Autosaves in the browser."
         actions={
           <>
             <Button variant="secondary" size="icon" onClick={undo} disabled={undoStack.length === 0} title="Undo">
@@ -792,7 +792,7 @@ export default function WhiteboardPage() {
             <Button variant="secondary" size="icon" onClick={clearBoard} title="Clear board">
               <Trash2 size={16} />
             </Button>
-            <Button onClick={download}><Download size={16} /> Download PNG</Button>
+            <Button onClick={download}><Download size={16} /> Export</Button>
           </>
         }
       />
@@ -817,7 +817,7 @@ export default function WhiteboardPage() {
           ))}
           <button
             onClick={() => setSymmetry((s) => !s)}
-            title="Mirror drawing (vertical symmetry)"
+            title="Vertical mirror"
             className={cn(
               'flex items-center gap-1.5 text-xs px-2 py-1.5 rounded border transition-colors ml-1',
               symmetry
@@ -842,7 +842,7 @@ export default function WhiteboardPage() {
                 title={c}
               />
             ))}
-            <label className="relative h-6 w-6 rounded-full overflow-hidden border border-[color:var(--line-strong)] cursor-pointer" title="Custom color">
+            <label className="relative h-6 w-6 rounded-full overflow-hidden border border-[color:var(--line-strong)] cursor-pointer" title="Color">
               <input type="color" value={color} onChange={(e) => setColor(e.target.value)} className="absolute -inset-1 cursor-pointer" />
             </label>
           </div>
@@ -889,7 +889,7 @@ export default function WhiteboardPage() {
         {/* Canvas size + layers toggles */}
         <div className="flex flex-wrap items-center gap-2 mb-2 px-1">
           <button onClick={() => setShowCanvasSettings((s) => !s)} className="flex items-center gap-1.5 text-xs text-muted-light dark:text-muted-dark hover:text-primary">
-            <Settings2 size={14} /> Canvas size ({canvasSize.width}×{canvasSize.height}px)
+            <Settings2 size={14} /> Canvas {canvasSize.width}×{canvasSize.height}
           </button>
           <button onClick={() => setIsLayersExpanded((p) => !p)} className="ml-auto flex items-center gap-1.5 text-xs text-muted-light dark:text-muted-dark hover:text-primary">
             <Menu size={14} /> Layers ({layers.length})
@@ -912,10 +912,10 @@ export default function WhiteboardPage() {
                 className="w-20 text-xs px-2 py-1 rounded border border-border-light dark:border-border-dark bg-transparent"
               />
               <button onClick={() => applyCanvasSize(sizeInputs.width, sizeInputs.height, 'scale')} className="text-xs px-2 py-1 rounded border border-primary-500/40 text-primary-600 dark:text-primary-300 hover:bg-primary-500/10">
-                Resize (scale content)
+                Resize
               </button>
               <button
-                onClick={() => { if (confirm('Start a new blank canvas at this size? This discards current artwork.')) applyCanvasSize(sizeInputs.width, sizeInputs.height, 'blank') }}
+                onClick={() => { if (confirm('Start a blank canvas at this size? Current artwork is discarded.')) applyCanvasSize(sizeInputs.width, sizeInputs.height, 'blank') }}
                 className="text-xs px-2 py-1 rounded border border-border-light dark:border-border-dark hover:bg-black/[0.03] dark:hover:bg-white/[0.05]"
               >
                 New blank canvas
@@ -979,7 +979,7 @@ export default function WhiteboardPage() {
             })}
             <div className="flex gap-2 pt-1">
               <button onClick={addLayer} className="flex-1 text-xs text-primary text-center hover:underline py-1"><Plus size={12} className="inline mr-1" />Add layer</button>
-              <button onClick={clearActiveLayer} className="flex-1 text-xs text-destructive text-center hover:underline py-1">Clear active layer</button>
+              <button onClick={clearActiveLayer} className="flex-1 text-xs text-destructive text-center hover:underline py-1">Clear layer</button>
             </div>
           </div>
         )}
@@ -1017,9 +1017,12 @@ export default function WhiteboardPage() {
             }}
           />
         </div>
-        <p className="text-center pt-2 text-xs text-muted-light dark:text-muted-dark">
-          Right-click / middle-click drag to pan &middot; scroll to zoom &middot; drawing on layer: <strong>{activeLayer?.name}</strong>
-        </p>
+        {/* Hints stack as separate values — no middot joining them. */}
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-2 text-xs text-muted-light dark:text-muted-dark">
+          <span>Right-click or middle-drag to pan</span>
+          <span>Scroll to zoom</span>
+          <span>Layer: <strong>{activeLayer?.name}</strong></span>
+        </div>
       </Card>
     </div>
   )

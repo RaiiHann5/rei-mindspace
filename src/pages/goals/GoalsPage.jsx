@@ -22,12 +22,12 @@ export default function GoalsPage() {
 
   return (
     <div>
-      <PageHeader title="Goals" description="The bigger picture, broken into progress." actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> New goal</Button>} />
+      <PageHeader title="Goals" description="Outcomes, with progress attached." actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> New goal</Button>} />
 
       {isLoading ? (
         <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-28" />)}</div>
       ) : items.length === 0 ? (
-        <EmptyState icon={Target} title="No goals set" description="Set a goal and track it to the finish line." actionLabel="New goal" onAction={() => setModalOpen(true)} />
+        <EmptyState icon={Target} title="Nothing set" description="Add one, then track progress." actionLabel="New goal" onAction={() => setModalOpen(true)} />
       ) : (
         <div className="space-y-3">
           {items.map((g) => {

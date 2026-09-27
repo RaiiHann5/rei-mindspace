@@ -66,7 +66,7 @@ export default function TaskBoard({ tasks, onToggleDone, onEdit, onArchive, onDe
             ))}
             {grouped[status].length === 0 && (
               <div className="text-center text-xs text-dusk py-8 border border-dashed border-[color:var(--line-strong)] rounded-lg">
-                Drop a task here
+                Drop here
               </div>
             )}
           </div>

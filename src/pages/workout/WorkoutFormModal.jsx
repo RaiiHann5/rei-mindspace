@@ -56,7 +56,7 @@ export default function WorkoutFormModal({ open, onClose, onSubmit, initial }) {
       onClose={onClose}
       title={initial ? 'Edit workout' : 'Catat workout baru'}
       size="lg"
-      footer={<><Button variant="secondary" onClick={onClose}>Batal</Button><Button onClick={submit}>{initial ? 'Simpan' : 'Tambah Workout'}</Button></>}
+      footer={<><Button variant="secondary" onClick={onClose}>Batal</Button><Button onClick={submit}>{initial ? 'Simpan' : 'Tambah workout'}</Button></>}
     >
       <form onSubmit={submit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
@@ -158,7 +158,7 @@ export default function WorkoutFormModal({ open, onClose, onSubmit, initial }) {
 
         <div>
           <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Catatan <span className="opacity-60 font-normal">(opsional)</span></label>
-          <Textarea rows={2} value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Bagaimana rasanya, apa yang perlu ditingkatkan..." />
+          <Textarea rows={2} value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Yang perlu dicatat..." />
         </div>
       </form>
     </Modal>

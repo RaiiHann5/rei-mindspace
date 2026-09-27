@@ -12,7 +12,9 @@ export function DueBadge({ dueDate, done }) {
   let tone = 'default'
   let label = formatDate(dueDate)
   if (!done) {
-    if (d < 0) { tone = 'rose'; label = `Overdue · ${formatDate(dueDate)}` }
+    // Urgency rides on the badge tone, not on a second value joined with a
+    // middot — one chip, one thing to read.
+    if (d < 0) tone = 'rose'
     else if (d === 0) { tone = 'amber'; label = 'Due today' }
     else if (d === 1) { tone = 'amber'; label = 'Due tomorrow' }
   }
@@ -96,7 +98,7 @@ export default function TaskCard({
         <div className="flex items-center gap-2 flex-wrap mt-2">
           <DueBadge dueDate={t.dueDate} done={t.status === 'done'} />
           {t.repeat && (
-            <Badge tone="amber" className="gap-1" title="Recurring task">
+            <Badge tone="amber" className="gap-1" title="Repeats">
               <Repeat size={11} /> {REPEAT_LABELS[t.repeat] || t.repeat}
             </Badge>
           )}

@@ -40,19 +40,19 @@ export default function MoviesPage() {
     <div>
       <PageHeader
         title="My Letterboxd"
-        description="Every film you've watched, rated, and want to watch."
-        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Log a Film</Button>}
+        description="Watched, rated, queued."
+        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Log a film</Button>}
       />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Film size={18} className="text-primary-600 dark:text-primary-400" />
           <p className="num text-xl">{summary.watchedCount}</p>
-          <p className="text-[11px] font-medium text-dusk">Films Watched</p>
+          <p className="text-[11px] font-medium text-dusk">Watched</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <p className="num text-xl">{summary.avgRating ? summary.avgRating.toFixed(1) : '—'}</p>
-          <p className="text-[11px] font-medium text-dusk">Avg Rating</p>
+          <p className="text-[11px] font-medium text-dusk">Rating</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Heart size={18} className="text-rose-500" />
@@ -61,7 +61,7 @@ export default function MoviesPage() {
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <p className="num text-xl">{summary.thisYear}</p>
-          <p className="text-[11px] font-medium text-dusk">Diary Entries This Year</p>
+          <p className="text-[11px] font-medium text-dusk">This year</p>
         </Card>
       </div>
 
@@ -76,9 +76,9 @@ export default function MoviesPage() {
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={Clapperboard}
-          title={filter === 'watchlist' ? 'Watchlist is empty' : 'Nothing here yet'}
-          description="Log a film you've watched or add one to your watchlist."
-          actionLabel="Log a Film"
+          title={filter === 'watchlist' ? 'Nothing on the list.' : 'Nothing here yet.'}
+          description="Log a film, or save one for later."
+          actionLabel="Log a film"
           onAction={() => { setEditing(null); setModalOpen(true) }}
         />
       ) : (

@@ -162,7 +162,7 @@ export default function FilesPage() {
     >
       <PageHeader
         title="Files"
-        description={isSupabaseConfigured ? 'Uploaded to Supabase Storage.' : 'Local mode — files are stored in your browser (IndexedDB). Connect Supabase Storage to sync across devices.'}
+        description={isSupabaseConfigured ? 'Stored in Supabase Storage.' : 'Stored in this browser (IndexedDB).'}
         actions={<>
           <input ref={inputRef} type="file" multiple className="hidden" onChange={onPick} />
           <Button onClick={() => inputRef.current?.click()} loading={uploading}><Upload size={16} /> Upload</Button>
@@ -174,8 +174,8 @@ export default function FilesPage() {
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-primary-500/[0.12] backdrop-blur-[2px] pointer-events-none">
           <div className="rounded-3xl border border-dashed border-[color:var(--line-strong)] bg-surface-light dark:bg-surface-dark px-10 py-8 flex flex-col items-center gap-2" style={{ boxShadow: "var(--shadow-pop)" }}>
             <Upload size={28} className="text-primary-600 dark:text-primary-400" />
-            <p className="font-display font-semibold tracking-tight">Drop files to upload</p>
-            <p className="text-[11px] text-dusk">Images and documents supported</p>
+            <p className="font-display font-semibold tracking-tight">Drop to upload</p>
+            <p className="text-[11px] text-dusk">Images and documents</p>
           </div>
         </div>
       )}
@@ -183,7 +183,7 @@ export default function FilesPage() {
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14" />)}</div>
       ) : items.length === 0 ? (
-        <EmptyState icon={FolderOpen} title="No files yet" description="Upload documents and images to keep them organized, or drag & drop them anywhere on this page." actionLabel="Upload" onAction={() => inputRef.current?.click()} />
+        <EmptyState icon={FolderOpen} title="Nothing here yet" description="Drop files anywhere on this page." actionLabel="Upload" onAction={() => inputRef.current?.click()} />
       ) : (
         Object.entries(grouped).map(([folderName, files]) => (
           <div key={folderName} className="mb-6">

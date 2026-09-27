@@ -105,7 +105,7 @@ export default function JournalPage() {
           !isToday ? (
             <Button variant="secondary" onClick={goToday}><CalendarDays size={16} /> Hari ini</Button>
           ) : !activeEntry ? (
-            <Button onClick={() => createEntryForDate(today)}><Plus size={16} /> Tulis entri hari ini</Button>
+            <Button onClick={() => createEntryForDate(today)}><Plus size={16} /> Tulis entri</Button>
           ) : null
         }
       />
@@ -175,10 +175,10 @@ export default function JournalPage() {
               title={isToday ? 'Belum ada entri hari ini' : 'Belum ada entri untuk tanggal ini'}
               description={
                 isToday
-                  ? 'Mulai tulis jurnal hari ini untuk merekam mood, rasa syukur, dan pelajaran yang kamu dapat.'
-                  : `Kamu belum menulis apa pun untuk ${format(selectedDate, 'EEEE, d MMMM yyyy', { locale: idLocale })}.`
+                  ? 'Catat mood, rasa syukur, pelajaran.'
+                  : `Belum ada entri untuk ${format(selectedDate, 'EEEE, d MMMM yyyy', { locale: idLocale })}.`
               }
-              actionLabel="Tulis entri untuk tanggal ini"
+              actionLabel="Tulis entri"
               onAction={() => createEntryForDate(selectedDate)}
             />
           ) : (

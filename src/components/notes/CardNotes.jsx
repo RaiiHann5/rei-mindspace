@@ -232,12 +232,12 @@ export default function CardNotes({
 
       {/* title */}
       <h3 className={cn('font-display font-semibold tracking-tight text-[17px] leading-snug line-clamp-2', palette.title)}>
-        {note.title || 'Untitled note'}
+        {note.title || 'Untitled'}
       </h3>
 
       {/* content preview */}
       <div className={cn('text-[13px] leading-relaxed flex-1', palette.body)}>
-        {preview.type === 'empty' && <p className="italic text-dusk">No content yet</p>}
+        {preview.type === 'empty' && <p className="italic text-dusk">Empty</p>}
 
         {preview.type === 'text' && (
           <>

@@ -2,9 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Play, Pause, RotateCcw, SkipForward, Timer as TimerIcon, Settings2,
-  Volume2, VolumeX, Target, X, Check, Sparkles,
+  Volume2, VolumeX, Target, X, Check,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { PageHeader } from '@/components/ui'
 import { usePomodoroStore } from '@/store/usePomodoroStore'
 import { useCollection } from '@/hooks/useCollection'
 import { formatDate, isSameDay, cn } from '@/lib/utils'
@@ -181,7 +182,7 @@ export default function PomodoroPage() {
         })
         const finishedFocus = prevMode === 'focus'
         if (usePomodoroStore.getState().soundEnabled) playChime(finishedFocus ? 'focus-done' : 'break-done')
-        const msg = finishedFocus ? 'Focus session complete — take a break' : 'Break over — back to it'
+        const msg = finishedFocus ? 'Sprint done — take a break' : 'Break over — back to it'
         toast.success(msg)
         notify('Meridian Pomodoro', msg)
         setJustFinished(true)
@@ -269,22 +270,16 @@ export default function PomodoroPage() {
   const handleSkip = () => {
     const nextMode = mode === 'focus' ? 'short_break' : 'focus'
     skipTo(nextMode)
-    toast('Skipped to ' + MODE_LABEL[nextMode], { icon: '⏭️' })
+    toast('Skipped to ' + MODE_LABEL[nextMode])
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="font-display text-2xl font-semibold tracking-tight flex items-center gap-2">
-            Pomodoro <Sparkles size={18} style={{ color: accent }} />
-          </h1>
-          <p className="text-sm text-muted-light dark:text-muted-dark mt-0.5">Focused sprints, on your own clock.</p>
-        </div>
-        <IconBtn onClick={() => setSettingsOpen(true)} title="Timer settings">
-          <Settings2 size={16} />
-        </IconBtn>
-      </div>
+      <PageHeader
+        title="Pomodoro"
+        description="Distraction-free timer."
+        actions={<IconBtn onClick={() => setSettingsOpen(true)} title="Timer settings"><Settings2 size={16} /></IconBtn>}
+      />
 
       <div className="grid lg:grid-cols-3 gap-4">
         <Panel className="lg:col-span-2 flex flex-col items-center py-10 px-6">
@@ -340,7 +335,7 @@ export default function PomodoroPage() {
           {!isRunning && (
             <div className="w-full max-w-sm mb-6 relative">
               <p className="text-[11px] font-medium text-dusk mb-2 text-center">
-                set duration — <span className="font-mono tabular-nums">{currentMinutes} min</span>
+                duration <span className="font-mono tabular-nums">{currentMinutes} min</span>
               </p>
               <div className="flex flex-wrap justify-center gap-1.5 mb-3">
                 {QUICK_PRESETS.map((p) => (
@@ -362,7 +357,7 @@ export default function PomodoroPage() {
                   onChange={(e) => applyMinutes(Number(e.target.value) || 1)}
                   className="w-16 h-8 text-center text-sm font-semibold font-mono tabular-nums rounded-md border border-[color:var(--line)] bg-surface-light dark:bg-surface-dark outline-none focus:border-ember-500/70 focus:ring-[3px] focus:ring-ember-500/15 transition-all"
                 />
-                <span className="text-[11px] text-dusk">min, any number 1–180</span>
+                <span className="text-[11px] text-dusk">1–180</span>
               </div>
             </div>
           )}
@@ -372,7 +367,7 @@ export default function PomodoroPage() {
               {openTasks.length > 0 && (
                 <div>
                   <p className="text-[11px] font-medium text-dusk mb-2 text-center">
-                    focus on a task
+                    task
                   </p>
                   <div className="flex flex-wrap justify-center gap-1.5">
                     {openTasks.map((t) => {
@@ -402,7 +397,7 @@ export default function PomodoroPage() {
                   const active = tasks.find((t) => t.id === taskId)
                   if (active && e.target.value !== active.title) setTaskId(null)
                 }}
-                placeholder="What are you focusing on?"
+                placeholder="name this sprint"
                 className="w-full h-11 px-4 text-center text-sm rounded-md border border-[color:var(--line)] bg-surface-light dark:bg-surface-dark outline-none placeholder:text-dusk placeholder:font-normal focus:border-ember-500/70 focus:ring-[3px] focus:ring-ember-500/15 transition-all"
               />
               {recentLabels.length > 0 && (
@@ -439,13 +434,13 @@ export default function PomodoroPage() {
             <Bar pct={goalPct} accent={goalPct >= 100 ? MODE_COLOR.short_break : MODE_COLOR.focus} />
           </div>
           <p className="text-[11px] text-dusk mt-3 relative">
-            <span className="font-mono tabular-nums">{cyclesCompleted}</span> focus sessions completed this session
+            <span className="font-mono tabular-nums">{cyclesCompleted}</span> this session
           </p>
         </Panel>
 
         <Panel className="p-5">
-          <h3 className="font-display font-semibold tracking-tight mb-1">This week</h3>
-          <p className="text-[11px] text-dusk mb-3">Focus minutes</p>
+          <h3 className="font-display font-semibold tracking-tight mb-1">Focus minutes</h3>
+          <p className="text-[11px] text-dusk mb-3">last 7 days</p>
           <WeeklyFocusChart data={focusData} />
 
           {focusByTask.length > 0 && (
@@ -468,11 +463,11 @@ export default function PomodoroPage() {
       </div>
 
       <Panel className="p-5">
-        <h3 className="font-display font-semibold tracking-tight mb-3 flex items-center gap-2"><TimerIcon size={16} /> Session history</h3>
+        <h3 className="font-display font-semibold tracking-tight mb-3 flex items-center gap-2"><TimerIcon size={16} /> Sessions</h3>
         {isLoading ? (
           <div className="h-24 rounded-2xl bg-black/[0.05] dark:bg-white/[0.05] animate-pulse" />
         ) : sessions.length === 0 ? (
-          <p className="text-sm text-muted-light dark:text-muted-dark text-center py-6">No sessions logged yet.</p>
+          <p className="text-sm text-muted-light dark:text-muted-dark text-center py-6">No sessions yet.</p>
         ) : (
           <div className="space-y-1.5 max-h-80 overflow-y-auto">
             {sessions.slice(0, 20).map((s) => (
@@ -511,7 +506,7 @@ export default function PomodoroPage() {
                 className="w-full max-w-sm rounded-3xl border border-[color:var(--line)] bg-surface-light dark:bg-surface-dark p-6"
               >
                 <div className="flex items-center justify-between mb-5">
-                  <h3 className="font-display text-lg font-semibold tracking-tight">Timer settings</h3>
+                  <h3 className="font-display text-lg font-semibold tracking-tight">Settings</h3>
                   <IconBtn onClick={() => setSettingsOpen(false)}><X size={16} /></IconBtn>
                 </div>
 
@@ -519,23 +514,23 @@ export default function PomodoroPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium flex items-center gap-1.5">
-                        {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />} Sound on completion
+                        {soundEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />} Chime
                       </p>
-                      <p className="text-[11px] text-dusk">Play a chime when a session ends</p>
+                      <p className="text-[11px] text-dusk">plays when a session ends</p>
                     </div>
                     <ToggleSwitch checked={soundEnabled} onChange={setSoundEnabled} />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium">Auto-start next session</p>
-                      <p className="text-[11px] text-dusk">Skip the manual "Start" between sessions</p>
+                      <p className="text-sm font-medium">Auto-start</p>
+                      <p className="text-[11px] text-dusk">next session starts on its own</p>
                     </div>
                     <ToggleSwitch checked={autoStart} onChange={setAutoStart} />
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium flex items-center gap-1.5 mb-1.5"><Target size={14} /> Daily goal (focus sessions)</label>
+                    <label className="text-sm font-medium flex items-center gap-1.5 mb-1.5"><Target size={14} /> Daily goal (sessions)</label>
                     <input
                       type="number" min={1} max={20} value={dailyGoal}
                       onChange={(e) => setDailyGoal(Number(e.target.value) || 1)}

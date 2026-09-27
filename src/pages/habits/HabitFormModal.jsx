@@ -74,7 +74,7 @@ export default function HabitFormModal({ open, onClose, onSubmit, initial }) {
 
         {form.cadence === 'custom' && (
           <div>
-            <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Which days?</label>
+            <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Days</label>
             <div className="flex flex-wrap gap-1.5">
               {WEEKDAYS.map((d) => (
                 <button
@@ -93,14 +93,14 @@ export default function HabitFormModal({ open, onClose, onSubmit, initial }) {
                 </button>
               ))}
             </div>
-            {form.weekDays.length === 0 && <p className="text-[11px] text-rose-500 mt-1.5">Pick at least one day.</p>}
+            {form.weekDays.length === 0 && <p className="text-[11px] text-rose-500 mt-1.5">Pick one day.</p>}
           </div>
         )}
 
         {(form.cadence === 'weekly' || form.cadence === 'monthly') && (
           <div>
             <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">
-              Target {form.cadence === 'weekly' ? '/ week' : '/ month'}
+              Target per {form.cadence === 'weekly' ? 'week' : 'month'}
             </label>
             <Input type="number" min="1" max={form.cadence === 'weekly' ? 7 : 31} value={form.target} onChange={(e) => set('target', e.target.value)} />
           </div>
@@ -113,7 +113,7 @@ export default function HabitFormModal({ open, onClose, onSubmit, initial }) {
 
         <div>
           <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Description <span className="opacity-60 font-normal">(optional)</span></label>
-          <Textarea rows={2} value={form.description} onChange={(e) => set('description', e.target.value)} placeholder="Why this habit matters, a reminder, a cue..." />
+          <Textarea rows={2} value={form.description} onChange={(e) => set('description', e.target.value)} placeholder="What it is for, and the cue" />
         </div>
       </form>
     </Modal>

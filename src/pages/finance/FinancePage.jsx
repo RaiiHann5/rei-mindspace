@@ -97,31 +97,35 @@ export default function FinancePage() {
     <div>
       <PageHeader
         title="Finance"
-        description="Pantau pemasukan, pengeluaran, dan anggaran bulananmu."
+        description="Pemasukan, pengeluaran, anggaran."
         actions={
           <>
-            <Button variant="secondary" onClick={() => setBudgetModalOpen(true)}><Settings2 size={16} /> Atur Anggaran</Button>
-            <Button onClick={() => { setEditing(null); setTxModalOpen(true) }}><Plus size={16} /> Tambah Transaksi</Button>
+            <Button variant="secondary" onClick={() => setBudgetModalOpen(true)}><Settings2 size={16} /> Atur anggaran</Button>
+            <Button onClick={() => { setEditing(null); setTxModalOpen(true) }}><Plus size={16} /> Tambah transaksi</Button>
           </>
         }
-      />
-
-      <Card padding className="flex items-center justify-between mb-4">
-        <button onClick={prevMonth} aria-label="Bulan sebelumnya" className="h-9 w-9 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 neo-press">
-          <ChevronLeft size={17} />
-        </button>
-        <div className="text-center">
-          <p className="font-display text-sm font-semibold tracking-tight capitalize">{monthLabel(month)}</p>
-          {!isCurrentMonth && (
-            <button onClick={goCurrentMonth} className="text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:underline">
-              Kembali ke bulan ini
+        tools={
+          /* Row 2 — the period navigator. The whole page (tiles, charts, budgets,
+             list) reads from one month, so the navigator belongs to the header,
+             not to a floating card of its own. */
+          <div className="flex items-center gap-1">
+            <button onClick={prevMonth} aria-label="Bulan sebelumnya" className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 neo-press">
+              <ChevronLeft size={17} />
             </button>
-          )}
-        </div>
-        <button onClick={nextMonth} disabled={isCurrentMonth} aria-label="Bulan berikutnya" className="h-9 w-9 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-30 disabled:pointer-events-none neo-press">
-          <ChevronRight size={17} />
-        </button>
-      </Card>
+            <div className="text-center px-2 min-w-[190px]">
+              <p className="font-display text-[15px] font-semibold tracking-tight capitalize">{monthLabel(month)}</p>
+              {!isCurrentMonth && (
+                <button onClick={goCurrentMonth} className="text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:underline">
+                  Kembali ke bulan ini
+                </button>
+              )}
+            </div>
+            <button onClick={nextMonth} disabled={isCurrentMonth} aria-label="Bulan berikutnya" className="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 disabled:opacity-30 disabled:pointer-events-none neo-press">
+              <ChevronRight size={17} />
+            </button>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
         <Card className="flex flex-col items-center text-center gap-1.5">
@@ -137,12 +141,12 @@ export default function FinancePage() {
         <Card className="flex flex-col items-center text-center gap-1.5">
           <Wallet size={18} className={summary.net >= 0 ? 'text-primary-600 dark:text-primary-400' : 'text-rose-500'} />
           <p className={cn('font-mono tabular-nums text-lg', summary.net < 0 && 'text-rose-500')}>{formatCurrency(summary.net)}</p>
-          <p className="text-[11px] font-medium text-dusk">Saldo Bersih</p>
+          <p className="text-[11px] font-medium text-dusk">Saldo</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <PiggyBank size={18} className="text-amber-500" />
           <p className="num text-lg">{summary.savingsRate}%</p>
-          <p className="text-[11px] font-medium text-dusk">Tingkat Tabungan</p>
+          <p className="text-[11px] font-medium text-dusk">Tabungan</p>
         </Card>
       </div>
 
@@ -152,21 +156,21 @@ export default function FinancePage() {
             <Landmark size={18} />
           </div>
           <div>
-            <p className="text-[11px] font-medium text-dusk">Total Saldo Keseluruhan</p>
+            <p className="text-[11px] font-medium text-dusk">Saldo total</p>
             <p className={cn('num text-2xl leading-tight', allTime.net < 0 ? 'text-rose-500' : 'ember-num')}>{formatCurrency(allTime.net)}</p>
           </div>
         </div>
         <div className="flex flex-col items-end gap-0.5 text-xs">
-          <span className="text-dusk">Total Pemasukan <span className="font-mono tabular-nums text-teal-600 dark:text-teal-400">{formatCurrency(allTime.income)}</span></span>
-          <span className="text-dusk">Total Pengeluaran <span className="font-mono tabular-nums text-rose-500">{formatCurrency(allTime.expense)}</span></span>
-          <span className="text-dusk"><span className="font-mono tabular-nums">{allTime.count}</span> transaksi tercatat</span>
+          <span className="text-dusk">Pemasukan <span className="font-mono tabular-nums text-teal-600 dark:text-teal-400">{formatCurrency(allTime.income)}</span></span>
+          <span className="text-dusk">Pengeluaran <span className="font-mono tabular-nums text-rose-500">{formatCurrency(allTime.expense)}</span></span>
+          <span className="text-dusk"><span className="font-mono tabular-nums">{allTime.count}</span> transaksi</span>
         </div>
       </Card>
 
       <div className="grid lg:grid-cols-2 gap-4 mb-5">
         <Card>
           <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-            <h3 className="font-display text-sm font-semibold tracking-tight">{breakdownType === 'income' ? 'Pemasukan per Kategori' : 'Pengeluaran per Kategori'}</h3>
+            <h3 className="font-display text-sm font-semibold tracking-tight">Per kategori</h3>
             <Tabs
               tabs={[{ value: 'expense', label: 'Pengeluaran' }, { value: 'income', label: 'Pemasukan' }]}
               active={breakdownType}
@@ -199,12 +203,12 @@ export default function FinancePage() {
 
         <Card>
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-display text-sm font-semibold tracking-tight">Anggaran Bulanan</h3>
+            <h3 className="font-display text-sm font-semibold tracking-tight">Anggaran</h3>
           </div>
           {budgets.length === 0 ? (
             <div className="flex flex-col items-center justify-center text-center py-8 gap-2">
-              <p className="text-sm text-muted-light dark:text-muted-dark">Belum ada anggaran diatur.</p>
-              <Button size="sm" variant="secondary" onClick={() => setBudgetModalOpen(true)}><Settings2 size={13} /> Atur Anggaran</Button>
+              <p className="text-sm text-muted-light dark:text-muted-dark">Belum ada anggaran.</p>
+              <Button size="sm" variant="secondary" onClick={() => setBudgetModalOpen(true)}><Settings2 size={13} /> Atur anggaran</Button>
             </div>
           ) : (
             <div className="space-y-2.5">
@@ -231,7 +235,7 @@ export default function FinancePage() {
       </div>
 
       <Card className="mb-5">
-        <h3 className="font-display text-sm font-semibold tracking-tight mb-2">Tren 6 Bulan Terakhir</h3>
+        <h3 className="font-display text-sm font-semibold tracking-tight mb-2">Tren 6 bulan</h3>
         <FinanceTrendChart data={trend} />
       </Card>
 
@@ -270,9 +274,9 @@ export default function FinancePage() {
       ) : filteredTx.length === 0 ? (
         <EmptyState
           icon={Wallet}
-          title={monthTx.length === 0 ? 'Belum ada transaksi bulan ini' : 'Tidak ada transaksi yang cocok'}
-          description={monthTx.length === 0 ? 'Catat pemasukan atau pengeluaran pertamamu bulan ini.' : 'Coba ubah filter atau kata kunci pencarian.'}
-          actionLabel={monthTx.length === 0 ? 'Tambah Transaksi' : undefined}
+          title={monthTx.length === 0 ? 'Belum ada transaksi bulan ini.' : 'Tidak ada transaksi yang cocok.'}
+          description={monthTx.length === 0 ? 'Catat pemasukan atau pengeluaran pertama.' : 'Coba ubah filter atau kata kunci pencarian.'}
+          actionLabel={monthTx.length === 0 ? 'Tambah transaksi' : undefined}
           onAction={() => { setEditing(null); setTxModalOpen(true) }}
           /* The header already carries the screen's single gradient CTA, so the
              empty-state duplicate is demoted to a flat panel button. */

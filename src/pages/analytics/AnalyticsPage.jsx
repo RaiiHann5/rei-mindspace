@@ -38,15 +38,15 @@ export default function AnalyticsPage() {
   }, [tasks, pomodoros])
 
   const summary = [
-    { label: 'Total tasks completed', value: completedTasks, icon: CheckSquare, bg: 'bg-primary-500/10', color: 'text-primary-600 dark:text-primary-400' },
-    { label: 'Total focus minutes', value: totalFocusMinutes, icon: Clock, bg: 'bg-teal-500/10', color: 'text-teal-500' },
-    { label: 'Longest active streak', value: `${Math.max(0, ...habitData.map((h) => h.streak))}d`, icon: Flame, bg: 'bg-amber-500/10', color: 'text-amber-500' },
-    { label: 'Goals tracked', value: goals.length, icon: Target, bg: 'bg-rose-500/10', color: 'text-rose-500' },
+    { label: 'Tasks done', value: completedTasks, icon: CheckSquare, bg: 'bg-primary-500/10', color: 'text-primary-600 dark:text-primary-400' },
+    { label: 'Focus minutes', value: totalFocusMinutes, icon: Clock, bg: 'bg-teal-500/10', color: 'text-teal-500' },
+    { label: 'Longest streak', value: `${Math.max(0, ...habitData.map((h) => h.streak))}d`, icon: Flame, bg: 'bg-amber-500/10', color: 'text-amber-500' },
+    { label: 'Goals', value: goals.length, icon: Target, bg: 'bg-rose-500/10', color: 'text-rose-500' },
   ]
 
   return (
     <div className="space-y-4">
-      <PageHeader title="Analytics" description="Your productivity, quantified." />
+      <PageHeader title="Analytics" description="The numbers." />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {summary.map((s) => (
@@ -61,16 +61,16 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4">
-        <Card><h3 className="font-display text-sm font-semibold tracking-tight mb-1">Focus time</h3><p className="text-[11px] font-medium text-dusk mb-2">Last 7 days</p><WeeklyFocusChart data={focusData} /></Card>
-        <Card><h3 className="font-display text-sm font-semibold tracking-tight mb-1">Tasks completed</h3><p className="text-[11px] font-medium text-dusk mb-2">Last 7 days</p><TasksTrendChart data={tasksTrend} /></Card>
+        <Card><h3 className="font-display text-sm font-semibold tracking-tight mb-1">Focus minutes</h3><p className="text-[11px] font-medium text-dusk mb-2">last 7 days</p><WeeklyFocusChart data={focusData} /></Card>
+        <Card><h3 className="font-display text-sm font-semibold tracking-tight mb-1">Tasks done</h3><p className="text-[11px] font-medium text-dusk mb-2">last 7 days</p><TasksTrendChart data={tasksTrend} /></Card>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4">
         <Card>
-          <h3 className="font-display text-sm font-semibold tracking-tight mb-1">Focus time by task</h3>
-          <p className="text-[11px] font-medium text-dusk mb-3">Linked focus sessions, all time</p>
+          <h3 className="font-display text-sm font-semibold tracking-tight mb-1">Focus by task</h3>
+          <p className="text-[11px] font-medium text-dusk mb-3">linked sessions, all time</p>
           {taskFocus.length === 0 ? (
-            <p className="text-sm text-muted-light dark:text-muted-dark py-10 text-center">No linked sessions yet — pick a task on the Pomodoro page before starting a focus session.</p>
+            <p className="text-sm text-muted-light dark:text-muted-dark py-10 text-center">No linked sessions. Pick a task in Pomodoro first.</p>
           ) : (
             <div className="space-y-3">
               {taskFocus.map((t) => (
@@ -88,8 +88,8 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4">
-        <Card><h3 className="font-display text-sm font-semibold tracking-tight mb-1">Habit streaks</h3><p className="text-[11px] font-medium text-dusk mb-2">Current streak per habit</p>{habitData.length ? <HabitStreakChart data={habitData} /> : <p className="text-sm text-muted-light dark:text-muted-dark py-10 text-center">No habits yet.</p>}</Card>
-        <Card><h3 className="font-display text-sm font-semibold tracking-tight mb-1">Goal progress</h3><p className="text-[11px] font-medium text-dusk mb-2">Completion by goal</p>{goalData.length ? <GoalsBarChart data={goalData} /> : <p className="text-sm text-muted-light dark:text-muted-dark py-10 text-center">No goals yet.</p>}</Card>
+        <Card><h3 className="font-display text-sm font-semibold tracking-tight mb-1">Streaks</h3><p className="text-[11px] font-medium text-dusk mb-2">per habit</p>{habitData.length ? <HabitStreakChart data={habitData} /> : <p className="text-sm text-muted-light dark:text-muted-dark py-10 text-center">No habits yet.</p>}</Card>
+        <Card><h3 className="font-display text-sm font-semibold tracking-tight mb-1">Progress</h3><p className="text-[11px] font-medium text-dusk mb-2">per goal</p>{goalData.length ? <GoalsBarChart data={goalData} /> : <p className="text-sm text-muted-light dark:text-muted-dark py-10 text-center">No goals yet.</p>}</Card>
       </div>
     </div>
   )

@@ -19,7 +19,7 @@ export default function JournalHistoryList({
         <input
           value={search}
           onChange={(e) => onSearch(e.target.value)}
-          placeholder="Cari entri jurnal..."
+          placeholder="Cari entri"
           className="w-full h-9 rounded-xl pl-8 pr-7 text-sm bg-surface-light dark:bg-surface-dark border border-[color:var(--line)] outline-none placeholder:text-dusk focus:border-[color:var(--line-strong)] transition-colors"
         />
         {search && (
@@ -68,7 +68,7 @@ export default function JournalHistoryList({
           Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-16" />)
         ) : entries.length === 0 ? (
           <p className="text-xs text-center text-muted-light dark:text-muted-dark py-8 px-2">
-            {hasFilters ? 'Tidak ada entri yang cocok dengan filter.' : 'Belum ada entri jurnal.'}
+            {hasFilters ? 'Tidak ada yang cocok.' : 'Belum ada entri.'}
           </p>
         ) : (
           entries.map((j) => {

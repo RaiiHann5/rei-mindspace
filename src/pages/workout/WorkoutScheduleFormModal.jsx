@@ -52,9 +52,9 @@ export default function WorkoutScheduleFormModal({ open, onClose, onSubmit, init
     <Modal
       open={open}
       onClose={onClose}
-      title={initial ? 'Edit jadwal workout' : 'Buat jadwal workout baru'}
+      title={initial ? 'Edit jadwal' : 'Jadwal baru'}
       size="lg"
-      footer={<><Button variant="secondary" onClick={onClose}>Batal</Button><Button onClick={submit}>{initial ? 'Simpan' : 'Tambah Jadwal'}</Button></>}
+      footer={<><Button variant="secondary" onClick={onClose}>Batal</Button><Button onClick={submit}>{initial ? 'Simpan' : 'Tambah jadwal'}</Button></>}
     >
       <form onSubmit={submit} className="space-y-4">
         <div>
@@ -84,7 +84,7 @@ export default function WorkoutScheduleFormModal({ open, onClose, onSubmit, init
         </div>
 
         <div>
-          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1.5 block">Hari pengulangan</label>
+          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1.5 block">Hari berulang</label>
           <div className="flex flex-wrap gap-1.5">
             {SCHEDULE_WEEKDAYS.map((d) => (
               <button
@@ -110,7 +110,7 @@ export default function WorkoutScheduleFormModal({ open, onClose, onSubmit, init
             <Input type="time" value={form.time} onChange={(e) => set('time', e.target.value)} />
           </div>
           <div>
-            <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Durasi rencana (menit)</label>
+            <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Durasi (menit)</label>
             <Input type="number" min="1" value={form.durationMin} onChange={(e) => set('durationMin', e.target.value)} required />
           </div>
         </div>
@@ -148,7 +148,7 @@ export default function WorkoutScheduleFormModal({ open, onClose, onSubmit, init
 
         <div>
           <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Catatan <span className="opacity-60 font-normal">(opsional)</span></label>
-          <Textarea rows={2} value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Fokus, target, atau pengingat lain untuk sesi ini..." />
+          <Textarea rows={2} value={form.notes} onChange={(e) => set('notes', e.target.value)} placeholder="Fokus, target, atau pengingat." />
         </div>
       </form>
     </Modal>

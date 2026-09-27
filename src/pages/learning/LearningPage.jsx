@@ -19,7 +19,7 @@ const iconTone = {
 const FILTERS = [
   { value: null, label: 'All' },
   { value: 'planned', label: 'Planned' },
-  { value: 'in_progress', label: 'In Progress' },
+  { value: 'in_progress', label: 'In progress' },
   { value: 'completed', label: 'Completed' },
 ]
 
@@ -45,21 +45,38 @@ export default function LearningPage() {
 
   return (
     <div>
+      {/* Row 1 — identity and the primary action. Row 2 — the status filter. */}
       <PageHeader
         title="Skills & Learning"
-        description="Track what you're learning and how far you've come."
-        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Track Skill</Button>}
+        description="Skills, courses, and progress."
+        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> New skill</Button>}
+        tools={
+          <div className="flex items-center gap-1.5 overflow-x-auto">
+            {FILTERS.map((f) => (
+              <button
+                key={f.label}
+                onClick={() => setStatusFilter(f.value)}
+                className={cn('h-8 px-3 rounded-md text-[13px] font-semibold border shrink-0 transition-colors neo-press',
+                  statusFilter === f.value
+                    ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
+                    : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        }
       />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
         <Card className="flex flex-col items-center text-center gap-1.5">
           <GraduationCap size={18} className="text-primary-600 dark:text-primary-400" />
           <p className="num text-xl">{summary.total}</p>
-          <p className="text-[11px] font-medium text-dusk">Total Skills</p>
+          <p className="text-[11px] font-medium text-dusk">Skills</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <p className="num text-xl">{summary.inProgress}</p>
-          <p className="text-[11px] font-medium text-dusk">In Progress</p>
+          <p className="text-[11px] font-medium text-dusk">In progress</p>
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <p className="num text-xl text-teal-600 dark:text-teal-300">{summary.completed}</p>
@@ -67,23 +84,8 @@ export default function LearningPage() {
         </Card>
         <Card className="flex flex-col items-center text-center gap-1.5">
           <p className="num text-xl">{summary.avgProgress}%</p>
-          <p className="text-[11px] font-medium text-dusk">Avg Progress</p>
+          <p className="text-[11px] font-medium text-dusk">Avg progress</p>
         </Card>
-      </div>
-
-      <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
-        {FILTERS.map((f) => (
-          <button
-            key={f.label}
-            onClick={() => setStatusFilter(f.value)}
-            className={cn('h-8 px-3 rounded-md text-[13px] font-semibold border shrink-0 transition-colors neo-press',
-              statusFilter === f.value
-                ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30'
-                : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
-          >
-            {f.label}
-          </button>
-        ))}
       </div>
 
       {isLoading ? (
@@ -91,9 +93,9 @@ export default function LearningPage() {
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={GraduationCap}
-          title={statusFilter ? 'No skills in this status' : 'No skills tracked yet'}
-          description="Add a skill or course you're working on to track your progress."
-          actionLabel="Track Skill"
+          title={statusFilter ? 'Nothing here' : 'Nothing tracked'}
+          description="Add a skill or a course."
+          actionLabel="New skill"
           onAction={() => { setEditing(null); setModalOpen(true) }}
         />
       ) : (

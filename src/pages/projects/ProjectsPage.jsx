@@ -27,20 +27,25 @@ export default function ProjectsPage() {
 
   return (
     <div>
-      <PageHeader title="Projects" description="Bigger efforts, tracked to completion."
-        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> New project</Button>} />
-
-      <div className="flex flex-wrap gap-2 mb-4">
-        <FilterChip active={status === 'all'} onClick={() => setStatus('all')}>All</FilterChip>
-        <FilterChip active={status === 'active'} onClick={() => setStatus('active')}>Active</FilterChip>
-        <FilterChip active={status === 'on_hold'} onClick={() => setStatus('on_hold')}>On hold</FilterChip>
-        <FilterChip active={status === 'completed'} onClick={() => setStatus('completed')}>Completed</FilterChip>
-      </div>
+      {/* Row 1 — identity and the primary action. Row 2 — the status filter. */}
+      <PageHeader
+        title="Projects"
+        description="Longer efforts, with a deadline."
+        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> New project</Button>}
+        tools={
+          <>
+            <FilterChip active={status === 'all'} onClick={() => setStatus('all')}>All</FilterChip>
+            <FilterChip active={status === 'active'} onClick={() => setStatus('active')}>Active</FilterChip>
+            <FilterChip active={status === 'on_hold'} onClick={() => setStatus('on_hold')}>On hold</FilterChip>
+            <FilterChip active={status === 'completed'} onClick={() => setStatus('completed')}>Completed</FilterChip>
+          </>
+        }
+      />
 
       {isLoading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-40" />)}</div>
       ) : filtered.length === 0 ? (
-        <EmptyState icon={FolderKanban} title="No projects yet" description="Create your first project to start tracking progress." actionLabel="New project" onAction={() => setModalOpen(true)} />
+        <EmptyState icon={FolderKanban} title="Nothing yet" description="Add one to start tracking." actionLabel="New project" onAction={() => setModalOpen(true)} />
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((p) => {

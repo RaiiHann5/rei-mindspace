@@ -26,18 +26,25 @@ export default function BookmarksPage() {
 
   return (
     <div>
-      <PageHeader title="Bookmarks" description="Links worth keeping." actions={<Button onClick={() => setModalOpen(true)}><Plus size={16} /> Add bookmark</Button>} />
-
-      <div className="flex flex-wrap gap-1.5 mb-5">
-        {folders.map((f) => (
-          <button key={f} onClick={() => setFolder(f)} className={`h-7 px-2.5 rounded-md text-[13px] font-semibold border transition-colors neo-press ${folder === f ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30' : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'}`}>{f}</button>
-        ))}
-      </div>
+      {/* Row 1 — identity and the primary action. Row 2 — the folder filter,
+          same two-bar split as the calendar. */}
+      <PageHeader
+        title="Bookmarks"
+        description="Links, by folder."
+        actions={<Button onClick={() => setModalOpen(true)}><Plus size={16} /> Add bookmark</Button>}
+        tools={
+          <>
+            {folders.map((f) => (
+              <button key={f} onClick={() => setFolder(f)} className={`h-8 px-3 rounded-md text-[13px] font-semibold border transition-colors neo-press ${folder === f ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border-primary-500/30' : 'border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark'}`}>{f}</button>
+            ))}
+          </>
+        }
+      />
 
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14" />)}</div>
       ) : filtered.length === 0 ? (
-        <EmptyState icon={BookmarkIcon} title="No bookmarks saved" description="Save links you want to find again quickly." actionLabel="Add bookmark" onAction={() => setModalOpen(true)} />
+        <EmptyState icon={BookmarkIcon} title="Nothing here yet" actionLabel="Add bookmark" onAction={() => setModalOpen(true)} />
       ) : (
         <div className="grid sm:grid-cols-2 gap-3">
           {filtered.map((b) => (
@@ -57,7 +64,7 @@ export default function BookmarksPage() {
         </div>
       )}
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="Add bookmark" footer={<><Button variant="secondary" onClick={() => setModalOpen(false)}>Cancel</Button><Button onClick={submit}>Save</Button></>}>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="New bookmark" footer={<><Button variant="secondary" onClick={() => setModalOpen(false)}>Cancel</Button><Button onClick={submit}>Save</Button></>}>
         <form onSubmit={submit} className="space-y-4">
           <div><label className="text-[11px] font-medium text-dusk mb-1.5 block">Title</label><Input autoFocus value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} required /></div>
           <div><label className="text-[11px] font-medium text-dusk mb-1.5 block">URL</label><Input value={form.url} onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))} placeholder="https://" required /></div>

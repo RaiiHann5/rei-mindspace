@@ -349,8 +349,8 @@ function JournalTextField({ label, placeholder, value, editing, words, onChange 
 
 function SaveStatusLabel({ status }) {
   const map = {
-    saving: { text: 'Menyimpan...', className: 'text-amber-600 dark:text-amber-300', icon: <Loader2 size={11} className="animate-spin" /> },
-    unsaved: { text: 'Perubahan belum disimpan', className: 'text-dusk', icon: <span className="h-1.5 w-1.5 rounded-full bg-dusk" /> },
+    saving: { text: 'Menyimpan', className: 'text-amber-600 dark:text-amber-300', icon: <Loader2 size={11} className="animate-spin" /> },
+    unsaved: { text: 'Belum disimpan', className: 'text-dusk', icon: <span className="h-1.5 w-1.5 rounded-full bg-dusk" /> },
     saved: { text: 'Tersimpan', className: 'text-teal-600 dark:text-teal-300', icon: <Check size={11} /> },
   }
   const s = map[status] || map.saved
@@ -371,7 +371,7 @@ function SaveButton({ state, onClick }) {
           </motion.span>
         ) : state === 'success' ? (
           <motion.span key="success" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5">
-            <Check size={13} /> Tersimpan!
+            <Check size={13} /> Tersimpan
           </motion.span>
         ) : (
           <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5">

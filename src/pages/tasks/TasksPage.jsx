@@ -117,15 +117,58 @@ export default function TasksPage() {
 
   return (
     <div>
+      {/* Row 1 — identity and the primary action. Row 2 — search, filters, sort
+          and the view switch, the same two-bar split the calendar uses. */}
       <PageHeader
         title="Tasks"
-        description="Everything on your plate, prioritized."
+        description="The day's work, ranked."
         actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> New task</Button>}
+        tools={
+          <>
+            <div className="relative flex-1 min-w-[180px] max-w-xs">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-dusk pointer-events-none" />
+              <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search tasks" className="pl-9" />
+            </div>
+            <FilterChip active={status === 'all'} onClick={() => setStatus('all')}>All</FilterChip>
+            <FilterChip active={status === 'todo'} onClick={() => setStatus('todo')}>To do</FilterChip>
+            <FilterChip active={status === 'in_progress'} onClick={() => setStatus('in_progress')}>In progress</FilterChip>
+            <FilterChip active={status === 'done'} onClick={() => setStatus('done')}>Done</FilterChip>
+            <FilterChip active={showArchived} onClick={() => setShowArchived(!showArchived)}>
+              <Archive size={13} className="inline mr-1 -mt-0.5" /> Archived
+            </FilterChip>
+
+            <div className="ml-auto flex items-center gap-2">
+              <span className="text-[13px] text-dusk">Sort</span>
+              <Select value={sort} onChange={(e) => setSort(e.target.value)} className="w-auto min-w-[8.5rem] h-9">
+                <option value="priority">Priority</option>
+                <option value="due">Due date</option>
+                <option value="newest">Newest</option>
+                <option value="alpha">A–Z</option>
+              </Select>
+              <div className="inline-flex p-1 rounded-xl bg-black/[0.04] dark:bg-white/[0.05] border border-[color:var(--line)] shrink-0">
+                <button
+                  onClick={() => setView('list')}
+                  aria-label="List view"
+                  className={cn('h-8 w-8 rounded-lg flex items-center justify-center transition-all neo-press', view === 'list' ? 'bg-surface-light dark:bg-panel2-dark text-ink-light dark:text-ink-dark shadow-soft' : 'text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
+                >
+                  <List size={15} />
+                </button>
+                <button
+                  onClick={() => setView('board')}
+                  aria-label="Board view"
+                  className={cn('h-8 w-8 rounded-lg flex items-center justify-center transition-all neo-press', view === 'board' ? 'bg-surface-light dark:bg-panel2-dark text-ink-light dark:text-ink-dark shadow-soft' : 'text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
+                >
+                  <LayoutGrid size={15} />
+                </button>
+              </div>
+            </div>
+          </>
+        }
       />
 
       {!isLoading && (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
-          <StatPill icon={CheckSquare} label="Active tasks" value={stats.total} tone="default" />
+          <StatPill icon={CheckSquare} label="Active" value={stats.total} tone="default" />
           <StatPill icon={CircleDot} label="To do" value={stats.todo} tone="primary" />
           <StatPill icon={ArrowUpDown} label="In progress" value={stats.inProgress} tone="amber" />
           <StatPill icon={CheckCircle2} label="Done" value={stats.done} tone="teal" />
@@ -139,55 +182,16 @@ export default function TasksPage() {
           <Input
             value={quickTitle}
             onChange={(e) => setQuickTitle(e.target.value)}
-            placeholder="Quick add a task and press Enter..."
+            placeholder="Add a task, then press Enter"
             className="pl-9 h-11"
           />
         </div>
       </form>
 
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <div className="relative flex-1 min-w-[180px] max-w-xs">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-dusk pointer-events-none" />
-          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search tasks..." className="pl-9" />
-        </div>
-        <FilterChip active={status === 'all'} onClick={() => setStatus('all')}>All</FilterChip>
-        <FilterChip active={status === 'todo'} onClick={() => setStatus('todo')}>To do</FilterChip>
-        <FilterChip active={status === 'in_progress'} onClick={() => setStatus('in_progress')}>In progress</FilterChip>
-        <FilterChip active={status === 'done'} onClick={() => setStatus('done')}>Done</FilterChip>
-        <FilterChip active={showArchived} onClick={() => setShowArchived(!showArchived)}>
-          <Archive size={13} className="inline mr-1 -mt-0.5" /> Archived
-        </FilterChip>
-
-        <div className="ml-auto flex items-center gap-2">
-          <Select value={sort} onChange={(e) => setSort(e.target.value)} className="w-auto min-w-[9.5rem] h-9">
-            <option value="priority">Sort: Priority</option>
-            <option value="due">Sort: Due date</option>
-            <option value="newest">Sort: Newest</option>
-            <option value="alpha">Sort: A–Z</option>
-          </Select>
-          <div className="inline-flex p-1 rounded-xl bg-black/[0.04] dark:bg-white/[0.05] border border-[color:var(--line)] shrink-0">
-            <button
-              onClick={() => setView('list')}
-              aria-label="List view"
-              className={cn('h-8 w-8 rounded-lg flex items-center justify-center transition-all neo-press', view === 'list' ? 'bg-surface-light dark:bg-panel2-dark text-ink-light dark:text-ink-dark shadow-soft' : 'text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
-            >
-              <List size={15} />
-            </button>
-            <button
-              onClick={() => setView('board')}
-              aria-label="Board view"
-              className={cn('h-8 w-8 rounded-lg flex items-center justify-center transition-all neo-press', view === 'board' ? 'bg-surface-light dark:bg-panel2-dark text-ink-light dark:text-ink-dark shadow-soft' : 'text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark')}
-            >
-              <LayoutGrid size={15} />
-            </button>
-          </div>
-        </div>
-      </div>
-
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-16" />)}</div>
       ) : filtered.length === 0 ? (
-        <EmptyState icon={CheckSquare} title="No tasks here" description="Try a different filter, or create a new task to get started." actionLabel="New task" onAction={() => setModalOpen(true)} />
+        <EmptyState icon={CheckSquare} title="Nothing here" description="Loosen the filter, or add a task." actionLabel="New task" onAction={() => setModalOpen(true)} />
       ) : view === 'board' ? (
         <TaskBoard
           tasks={filtered}

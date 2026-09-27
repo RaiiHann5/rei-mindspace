@@ -30,9 +30,9 @@ export default function LearningDetailPage() {
   if (!skill) {
     return (
       <div className="text-center py-16">
-        <p className="text-muted-light dark:text-muted-dark mb-4">Skill not found.</p>
+        <p className="text-muted-light dark:text-muted-dark mb-4">Not found.</p>
         <Link to="/learning" className="inline-flex items-center gap-1.5 text-sm font-semibold hover:underline">
-          <ArrowLeft size={15} /> Back to Skills & Learning
+          <ArrowLeft size={15} /> Back to skills
         </Link>
       </div>
     )
@@ -66,7 +66,7 @@ export default function LearningDetailPage() {
   return (
     <div className="space-y-5">
       <button onClick={() => navigate('/learning')} className="flex items-center gap-1.5 text-sm font-medium text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark transition-colors">
-        <ArrowLeft size={15} /> Back to Skills & Learning
+        <ArrowLeft size={15} /> Back to skills
       </button>
 
       <Card className="flex flex-wrap items-start justify-between gap-4">
@@ -131,7 +131,7 @@ export default function LearningDetailPage() {
             value={milestoneText}
             onChange={(e) => setMilestoneText(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addMilestone() } }}
-            placeholder="Add a milestone..."
+            placeholder="Add a milestone"
             className="flex-1 h-9 rounded-lg px-3 text-sm bg-surface-light dark:bg-surface-dark border border-[color:var(--line)] outline-none placeholder:text-dusk"
           />
           <Button size="sm" variant="secondary" onClick={addMilestone} aria-label="Tambah milestone"><Plus size={14} /></Button>
@@ -140,7 +140,7 @@ export default function LearningDetailPage() {
 
       <Card>
         <h3 className="font-display font-semibold tracking-tight text-sm mb-3 flex items-center gap-1.5"><StickyNote size={15} /> Notes</h3>
-        <Textarea rows={5} defaultValue={skill.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="What you've learned so far, resources that helped, next steps..." />
+        <Textarea rows={5} defaultValue={skill.notes} onBlur={(e) => saveNotes(e.target.value)} placeholder="Learned so far, resources, next steps" />
       </Card>
 
       <LearningFormModal open={modalOpen} onClose={() => setModalOpen(false)} onSubmit={save} initial={skill} />

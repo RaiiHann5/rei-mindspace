@@ -10,13 +10,13 @@ export default function SettingsGuide() {
   return (
     <div className="space-y-4">
       <Card>
-        <h3 className="font-display font-semibold mb-1">Panduan Penggunaan</h3>
+        <h3 className="font-display font-semibold mb-1">Panduan penggunaan</h3>
         <p className="text-xs text-muted-light dark:text-muted-dark mb-2">
-          Ringkasan singkat tiap fitur di Space+. Klik bagian di bawah untuk buka detailnya.
+          Ringkasan tiap fitur di Space+. Buka detail di bawah.
         </p>
         <div className="flex items-center gap-2 text-xs px-3 py-2 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-300 mb-2">
           <Command size={14} className="shrink-0" />
-          Tekan <kbd className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 mx-1">⌘K</kbd> (atau Ctrl+K) kapan saja untuk pencarian cepat ke semua data — task, project, note, goal, habit, dan koleksi buku/film di Library.
+          <kbd className="px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 mx-1">⌘K</kbd> (atau Ctrl+K) untuk pencarian cepat ke semua data.
         </div>
       </Card>
 
@@ -52,7 +52,7 @@ export default function SettingsGuide() {
           <AccordionItem title="Goals" icon={Target}>
             <p>Target jangka menengah/panjang dengan progress % dan milestone. Cocok untuk hal yang butuh beberapa minggu/bulan, sementara Tasks lebih untuk hal-hal harian.</p>
           </AccordionItem>
-          <AccordionItem title="Media Library" icon={Library}>
+          <AccordionItem title="Media library" icon={Library}>
             <p>Koleksi pribadi: buku, film, game, musik, dan course. Tambahkan cover/poster (upload gambar dari perangkat atau tempel URL gambar), beri rating bintang 1–5, status (planned/in progress/completed/dropped), dan review singkat.</p>
           </AccordionItem>
           <AccordionItem title="Bookmarks" icon={Bookmark}>
@@ -61,7 +61,7 @@ export default function SettingsGuide() {
           <AccordionItem title="Files" icon={FolderOpen}>
             <p>Manajer file sederhana. Dalam mode lokal, file yang di-upload hanya tersimpan sebagai metadata di browser ini. Kalau Supabase sudah disambungkan (lihat tab Koneksi), file betulan ter-upload ke Supabase Storage.</p>
           </AccordionItem>
-          <AccordionItem title="Dev Tools" icon={Wrench}>
+          <AccordionItem title="Dev tools" icon={Wrench}>
             <p>Kumpulan utilitas: simpan snippet kode, buat palet warna, generator gradient CSS, JSON formatter (prettify/minify), generator UUID, dan encoder/decoder Base64. Semua berjalan langsung di browser, tidak butuh internet.</p>
           </AccordionItem>
           <AccordionItem title="Analytics" icon={BarChart3}>
@@ -70,7 +70,7 @@ export default function SettingsGuide() {
           <AccordionItem title="Notifications" icon={Bell}>
             <p>Space+ memberi notifikasi untuk: acara dengan reminder aktif (±15 menit sebelumnya), ringkasan task yang jatuh tempo hari ini, dan pengingat habit yang belum dicentang di malam hari. Nyalakan izin notifikasi browser di tab "Notifikasi" supaya juga muncul sebagai notifikasi sistem, bukan cuma di lonceng atas. Catatan: pengecekan hanya berjalan selagi tab aplikasi ini terbuka.</p>
           </AccordionItem>
-          <AccordionItem title="AI Assistant (11 provider + custom)" icon={Sparkles}>
+          <AccordionItem title="AI assistant" icon={Sparkles}>
             <p className="mb-2">Chat assistant yang bisa "lihat" ringkasan task, project, habit, dan goal kamu saat itu juga — jadi sarannya nyambung sama kondisi kamu, bukan generik. Bisa juga dipakai buat pertanyaan apa saja di luar produktivitas, dan bisa langsung bertindak di app (bikin task, mulai Pomodoro, centang habit).</p>
             <p className="font-medium text-inherit mb-1">Pilih provider — semuanya gratis:</p>
             <ul className="list-disc list-inside space-y-1 mb-2">
@@ -98,7 +98,7 @@ export default function SettingsGuide() {
             </ol>
             <p className="text-xs">⚠️ Semua API key hanya tersimpan di browser kamu (localStorage), tidak pernah ikut ter-upload ke GitHub atau ke build aplikasi. Tapi tetap jangan share API key ke orang lain, dan jangan taruh di file <code>.env</code> kalau aplikasi ini di-deploy publik — karena isi <code>.env</code> ikut terbundle ke kode yang bisa dilihat siapa saja.</p>
           </AccordionItem>
-          <AccordionItem title="Setup Supabase (opsional, buat sinkron ke cloud)" icon={CloudCog}>
+          <AccordionItem title="Setup Supabase (opsional)" icon={CloudCog}>
             <p className="mb-2">Secara default aplikasi ini jalan 100% lokal di browser kamu (mode "Local mode") — tidak wajib pakai Supabase sama sekali. Kalau nanti mau data kamu tersimpan online dan bisa diakses dari HP/laptop lain, ikuti langkah ini:</p>
             <ol className="list-decimal list-inside space-y-1.5">
               <li>Buka <a href="https://supabase.com/dashboard" target="_blank" rel="noreferrer" className="text-primary-600 dark:text-primary-400">supabase.com/dashboard</a>, login/daftar, klik "New project", pilih organisasi, kasih nama + password database bebas, pilih region terdekat.</li>

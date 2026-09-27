@@ -22,8 +22,8 @@ export default function LogEntryModal({ open, onClose, onSubmit, initial, isFirs
     <Modal
       open={open}
       onClose={onClose}
-      title={initial ? 'Edit diary entry' : 'Log a watch'}
-      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={submit}>{initial ? 'Save' : 'Add Entry'}</Button></>}
+      title={initial ? 'Edit entry' : 'Log a watch'}
+      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={submit}>{initial ? 'Save' : 'Add entry'}</Button></>}
     >
       <form onSubmit={submit} className="space-y-4">
         <div>
@@ -35,13 +35,13 @@ export default function LogEntryModal({ open, onClose, onSubmit, initial, isFirs
           <StarRating rating={form.rating} onChange={(v) => set('rating', v)} size={22} />
         </div>
         <div>
-          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Review <span className="opacity-60 font-normal">(optional)</span></label>
+          <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Review</label>
           <Textarea rows={3} value={form.review} onChange={(e) => set('review', e.target.value)} placeholder="What did you think this time..." />
         </div>
         {!isFirstWatch && (
           <label className="flex items-center gap-2 text-sm cursor-pointer">
             <input type="checkbox" checked={form.rewatch} onChange={(e) => set('rewatch', e.target.checked)} className="h-4 w-4 accent-primary-500" />
-            This was a rewatch
+            Rewatch
           </label>
         )}
       </form>

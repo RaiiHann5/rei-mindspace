@@ -103,15 +103,15 @@ export default function WorkoutScheduleDetailPage() {
           {schedule.time && (
             <span className="flex items-center gap-1.5"><Clock size={15} className="text-primary-600 dark:text-primary-400" /> <span className="font-mono tabular-nums">{schedule.time}</span></span>
           )}
-          <span className="flex items-center gap-1.5"><Timer size={15} className="text-teal-500" /> <span className="font-mono tabular-nums">{schedule.durationMin}</span> menit rencana</span>
+          <span className="flex items-center gap-1.5"><Timer size={15} className="text-teal-500" /> <span className="font-mono tabular-nums">{schedule.durationMin}</span> menit</span>
           <span className="flex items-center gap-1.5"><ListChecks size={15} className="text-amber-500" /> <span className="font-mono tabular-nums">{(schedule.exercises || []).length}</span> exercise</span>
         </div>
-        <Button size="sm" onClick={logFromSchedule}><CheckCircle2 size={14} /> Catat Workout dari Jadwal Ini</Button>
+        <Button size="sm" onClick={logFromSchedule}><CheckCircle2 size={14} /> Catat dari jadwal ini</Button>
       </Card>
 
       {(schedule.exercises || []).length > 0 && (
         <Card>
-          <h3 className="font-display text-sm font-semibold tracking-tight mb-3">Daftar Exercise</h3>
+          <h3 className="font-display text-sm font-semibold tracking-tight mb-3">Exercise</h3>
           <div className="space-y-1.5">
             {schedule.exercises.map((ex, i) => (
               <div key={ex.id || i} className="flex items-start justify-between gap-3 text-sm rounded-xl bg-panel2-light dark:bg-panel2-dark px-3 py-2">
@@ -130,7 +130,7 @@ export default function WorkoutScheduleDetailPage() {
 
       <Card>
         <h3 className="font-display text-sm font-semibold tracking-tight mb-2 flex items-center gap-1.5"><StickyNote size={15} /> Catatan</h3>
-        <p className="text-sm text-muted-light dark:text-muted-dark whitespace-pre-wrap">{schedule.notes || 'Belum ada catatan untuk jadwal ini.'}</p>
+        <p className="text-sm text-muted-light dark:text-muted-dark whitespace-pre-wrap">{schedule.notes || 'Belum ada catatan.'}</p>
       </Card>
 
       <WorkoutScheduleFormModal open={modalOpen} onClose={() => setModalOpen(false)} onSubmit={save} initial={schedule} />

@@ -102,9 +102,9 @@ export default function Dashboard() {
   const habitPct = bestHabit ? habitCompletionRate(bestHabit.history, 30) : 0
 
   const shortcuts = [
-    { label: 'Stay organized', desc: 'Plan your week at a glance', icon: CalendarCheck2, to: '/calendar', tone: 'teal' },
-    { label: 'Sync your focus', desc: 'Run a distraction-free timer', icon: Timer, to: '/pomodoro', tone: 'amber' },
-    { label: 'Track your goals', desc: 'See progress on what matters', icon: Target, to: '/goals', tone: 'rose' },
+    { label: 'Week', desc: 'Plan the week', icon: CalendarCheck2, to: '/calendar', tone: 'teal' },
+    { label: 'Focus', desc: 'Run a timer', icon: Timer, to: '/pomodoro', tone: 'amber' },
+    { label: 'Goals', desc: 'Track progress', icon: Target, to: '/goals', tone: 'rose' },
   ]
 
   const toneClasses = {
@@ -123,10 +123,10 @@ export default function Dashboard() {
             {formatDate(new Date(), { weekday: 'long', month: 'long', day: 'numeric' })} <Sparkles size={14} className="text-primary-600 dark:text-primary-400" />
           </p>
           <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight leading-[1.1]">
-            Hi, {firstName}!<br />What are your plans for today?
+            {firstName}.<br />Here's the day.
           </h1>
           <p className="text-sm text-muted-light dark:text-muted-dark mt-3 max-w-sm">
-            This is your workspace to organize tasks, keep focus and stay on top of everything — all in one place.
+            Tasks, focus, and money in one place.
           </p>
         </div>
 
@@ -137,7 +137,7 @@ export default function Dashboard() {
             className="ember-cta rounded-2xl flex flex-col items-center justify-center gap-2 font-semibold hover:brightness-[1.06] transition-all min-h-[128px]"
           >
             <Plus size={26} strokeWidth={2.2} />
-            <span className="text-xs font-medium opacity-90">Quick add task</span>
+            <span className="text-xs font-medium opacity-90">New task</span>
           </Link>
           {shortcuts.map((s) => (
             <Link key={s.label} to={s.to} className="glass rounded-2xl p-4 flex flex-col justify-between min-h-[128px] card-hover">
@@ -161,7 +161,7 @@ export default function Dashboard() {
             {notifItems.length > 0 && <button onClick={() => useNotificationStore.getState().clearAll()} className="text-xs text-primary-600 dark:text-primary-400">Clear</button>}
           </div>
           {notifItems.length === 0 ? (
-            <p className="text-sm text-muted-light dark:text-muted-dark py-8 text-center">You're all caught up.</p>
+            <p className="text-sm text-dusk py-8 text-center">Nothing new.</p>
           ) : (
             <ul className="space-y-1">
               {notifItems.slice(0, 4).map((n) => {
@@ -185,7 +185,7 @@ export default function Dashboard() {
 
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display font-semibold">Priority focus</h2>
+            <h2 className="font-display font-semibold">Up next</h2>
             <Link to="/tasks" className="text-xs text-primary-600 dark:text-primary-400">Edit</Link>
           </div>
           {featuredTask ? (
@@ -203,12 +203,12 @@ export default function Dashboard() {
               <div className="flex items-center justify-between">
                 <Avatar name={user?.displayName || 'You'} src={user?.photoURL} size={30} />
                 <Link to="/tasks" className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg bg-primary-500/10 text-primary-600 dark:text-primary-300 text-xs font-medium hover:bg-primary-500/15 transition-colors">
-                  <Plus size={13} /> Add new task
+                  <Plus size={13} /> New task
                 </Link>
               </div>
             </>
           ) : (
-            <p className="text-sm text-muted-light dark:text-muted-dark py-8 text-center">Nothing pending — add a task to get started.</p>
+            <p className="text-sm text-dusk py-8 text-center">Nothing pending.</p>
           )}
         </Card>
 
@@ -270,7 +270,7 @@ export default function Dashboard() {
           {loadingTasks ? (
             <div className="space-y-2">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14" />)}</div>
           ) : todayTasks.length === 0 ? (
-            <p className="text-sm text-muted-light dark:text-muted-dark py-6 text-center">Nothing due today — enjoy the clear runway.</p>
+            <p className="text-sm text-dusk py-6 text-center">Clear day.</p>
           ) : (
             <ul className="space-y-1.5">
               {todayTasks.slice(0, 6).map((t) => (
@@ -294,9 +294,9 @@ export default function Dashboard() {
           )}
 
           <div className="mt-4 pt-4 border-t border-border-light dark:border-border-dark flex-1 flex flex-col">
-            <p className="text-xs font-semibold text-muted-light dark:text-muted-dark mb-2">Coming up this week</p>
+            <p className="text-xs font-semibold text-dusk mb-2">Later this week</p>
             {weekTasks.length === 0 ? (
-              <p className="text-sm text-muted-light dark:text-muted-dark py-4 text-center flex-1 flex items-center justify-center">Nothing else on the calendar this week.</p>
+              <p className="text-sm text-dusk py-4 text-center flex-1 flex items-center justify-center">Nothing else this week.</p>
             ) : (
               <ul className="space-y-1">
                 {weekTasks.slice(0, 5).map((t) => (
@@ -320,18 +320,18 @@ export default function Dashboard() {
           <Card className="relative overflow-hidden">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
-                <p className="text-[11px] text-muted-light dark:text-muted-dark mb-1">Best streak</p>
+                <p className="text-[11px] text-dusk mb-1">Best streak</p>
                 {bestHabit ? (
                   <>
                     <p className="ember-num font-display text-[42px] leading-none tracking-tight">
                       {habitStreak(bestHabit.history)}
                     </p>
                     <p className="text-sm text-muted-light dark:text-muted-dark mt-1.5 line-clamp-1">
-                      days on {bestHabit.name}
+                      on {bestHabit.name}
                     </p>
                   </>
                 ) : (
-                  <p className="font-display text-xl leading-snug">Build your first streak</p>
+                  <p className="font-display text-xl leading-snug">No streak yet</p>
                 )}
               </div>
               <span className="h-10 w-10 rounded-lg shrink-0 flex items-center justify-center text-amber-500" style={{ background: 'var(--accent-gradient-soft)' }}>
@@ -340,11 +340,11 @@ export default function Dashboard() {
             </div>
             <p className="text-sm text-muted-light dark:text-muted-dark mt-4 mb-5">
               {doneToday > 0
-                ? `You've completed ${doneToday} task${doneToday === 1 ? '' : 's'} today. Keep the momentum going.`
-                : 'Start a focus session and knock out your top task.'}
+                ? `${doneToday} task${doneToday === 1 ? '' : 's'} done today.`
+                : 'Pick a task, then start a timer.'}
             </p>
-            <Link to="/pomodoro" className="inline-flex items-center h-9 px-3.5 rounded-md text-sm font-semibold border border-[color:var(--line-strong)] hover:border-ember-500/60 hover:text-ember-500 transition-colors">
-              Start a focus session
+            <Link to="/pomodoro" className="inline-flex items-center h-9 px-3.5 rounded-lg text-sm font-semibold border border-[color:var(--line-strong)] hover:border-ember-500/60 hover:text-ember-500 transition-colors">
+              Start a session
             </Link>
           </Card>
 
@@ -352,7 +352,7 @@ export default function Dashboard() {
             <Card className="flex flex-col items-center text-center gap-2">
               <CircularProgress value={weekCompletionPct} tone="teal" size={54} />
               <div>
-                <p className="text-xs font-medium">Tasks this week</p>
+                <p className="text-xs font-medium">This week</p>
                 <p className="text-[11px] text-muted-light dark:text-muted-dark">{weekTasksDone}/{weekTasksTotal} done</p>
               </div>
             </Card>
@@ -360,14 +360,14 @@ export default function Dashboard() {
               <CircularProgress value={habitPct} tone="rose" size={54} />
               <div>
                 <p className="text-xs font-medium">{bestHabit ? bestHabit.name : 'Habit'}</p>
-                <p className="text-[11px] text-muted-light dark:text-muted-dark">30-day consistency</p>
+                <p className="text-[11px] text-dusk">30-day rate</p>
               </div>
             </Card>
           </div>
 
           <Card>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-display font-semibold text-sm">Next up</h2>
+              <h2 className="font-display font-semibold text-sm">Coming up</h2>
               <Link to="/calendar" className="text-primary-600 dark:text-primary-400"><CalendarDays size={15} /></Link>
             </div>
             {nextEvent ? (
@@ -385,7 +385,7 @@ export default function Dashboard() {
                 </div>
               </>
             ) : (
-              <p className="text-sm text-muted-light dark:text-muted-dark py-4 text-center">Nothing on the horizon.</p>
+              <p className="text-sm text-muted-light dark:text-muted-dark py-4 text-center">Nothing scheduled.</p>
             )}
           </Card>
         </div>
@@ -395,11 +395,11 @@ export default function Dashboard() {
       <div className="grid lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-display font-semibold">Active projects</h2>
+            <h2 className="font-display font-semibold">Projects</h2>
             <Link to="/projects" className="text-sm text-primary-600 dark:text-ember-300 hover:opacity-80 transition-opacity">View all</Link>
           </div>
           {activeProjects.length === 0 ? (
-            <p className="text-sm text-muted-light dark:text-muted-dark py-8 text-center">No active projects yet.</p>
+            <p className="text-sm text-muted-light dark:text-muted-dark py-8 text-center">No active projects.</p>
           ) : (
             <div className="grid sm:grid-cols-3 gap-3">
               {activeProjects.map((p, idx) => {
@@ -430,10 +430,10 @@ export default function Dashboard() {
 
         <Card>
           <div className="flex items-center justify-between mb-1">
-            <h2 className="font-display font-semibold text-sm">Focus time</h2>
+            <h2 className="font-display font-semibold text-sm">Focus</h2>
             <Link to="/pomodoro" className="text-primary-600 dark:text-primary-400"><Timer size={15} /></Link>
           </div>
-          <p className="text-xs text-muted-light dark:text-muted-dark mb-2">Minutes, last 7 days</p>
+          <p className="text-xs text-dusk mb-2">Minutes, 7 days</p>
           <WeeklyFocusChart data={focusData} />
         </Card>
       </div>

@@ -9,6 +9,15 @@ import { cn } from '@/lib/utils'
 
 const TYPE_ICON = { book: Book, movie: Film, game: Gamepad2, music: Music, course: GraduationCap }
 const statusTone = { planned: 'default', in_progress: 'primary', completed: 'teal', dropped: 'rose' }
+// Chip labels are written out rather than pluralised from the key — "Musics".
+const TYPE_FILTERS = [
+  { value: 'all', label: 'All' },
+  { value: 'book', label: 'Books' },
+  { value: 'movie', label: 'Films' },
+  { value: 'game', label: 'Games' },
+  { value: 'music', label: 'Music' },
+  { value: 'course', label: 'Courses' },
+]
 
 function Stars({ rating }) {
   return (
@@ -37,18 +46,18 @@ export default function LibraryPage() {
 
   return (
     <div>
-      <PageHeader title="Media Library" description="Books, movies, games, music, and courses." actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Add item</Button>} />
+      <PageHeader title="Media Library" description="Books, films, games, music, courses." actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Add item</Button>} />
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {['all', 'book', 'movie', 'game', 'music', 'course'].map((t) => (
-          <FilterChip key={t} active={type === t} onClick={() => setType(t)}>{t === 'all' ? 'All' : t[0].toUpperCase() + t.slice(1) + 's'}</FilterChip>
+        {TYPE_FILTERS.map((t) => (
+          <FilterChip key={t.value} active={type === t.value} onClick={() => setType(t.value)}>{t.label}</FilterChip>
         ))}
       </div>
 
       {isLoading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-44" />)}</div>
       ) : filtered.length === 0 ? (
-        <EmptyState icon={LibraryIcon} title="Nothing here yet" description="Add a book, movie, game, album, or course to track." actionLabel="Add item" onAction={() => setModalOpen(true)} />
+        <EmptyState icon={LibraryIcon} title="Nothing here yet." description="Add a book, film, album, or course." actionLabel="Add item" onAction={() => setModalOpen(true)} />
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {filtered.map((i) => {

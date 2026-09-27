@@ -45,8 +45,8 @@ export default function WorkoutSchedulePage() {
 
       <PageHeader
         title="Jadwal Workout"
-        description="Atur rutinitas latihan mingguanmu supaya tetap konsisten."
-        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Tambah Jadwal</Button>}
+        description="Rutinitas mingguan, tetap jalan."
+        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Tambah jadwal</Button>}
       />
 
       <Card className="flex items-center gap-2.5 mb-5">
@@ -55,7 +55,7 @@ export default function WorkoutSchedulePage() {
         </div>
         <p className="text-sm">
           <span className="num text-base">{todayCount}</span>{' '}
-          <span className="text-muted-light dark:text-muted-dark">jadwal untuk hari ini</span>
+          <span className="text-muted-light dark:text-muted-dark">jadwal hari ini</span>
         </p>
       </Card>
 
@@ -64,9 +64,9 @@ export default function WorkoutSchedulePage() {
       ) : sorted.length === 0 ? (
         <EmptyState
           icon={CalendarClock}
-          title="Belum ada jadwal workout"
-          description="Buat jadwal rutin supaya kamu tahu kapan harus latihan apa."
-          actionLabel="Tambah Jadwal"
+          title="Belum ada jadwal."
+          description="Rutinitas butuh jadwal."
+          actionLabel="Tambah jadwal"
           onAction={() => { setEditing(null); setModalOpen(true) }}
         />
       ) : (
@@ -103,7 +103,7 @@ export default function WorkoutSchedulePage() {
 
                 <div className="flex items-center gap-2 flex-wrap">
                   {s.time && <Badge><Clock size={11} className="inline mr-1 -mt-0.5" /><span className="font-mono tabular-nums">{s.time}</span></Badge>}
-                  <Badge><Timer size={11} className="inline mr-1 -mt-0.5" /><span className="font-mono tabular-nums">{s.durationMin}</span> mnt rencana</Badge>
+                  <Badge><Timer size={11} className="inline mr-1 -mt-0.5" /><span className="font-mono tabular-nums">{s.durationMin}</span> mnt</Badge>
                   {(s.exercises || []).length > 0 && <Badge><ListChecks size={11} className="inline mr-1 -mt-0.5" /><span className="font-mono tabular-nums">{s.exercises.length}</span> exercise</Badge>}
                 </div>
               </Card>

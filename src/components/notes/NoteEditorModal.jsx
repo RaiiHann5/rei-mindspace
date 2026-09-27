@@ -35,14 +35,14 @@ export default function NoteEditorModal({ open, onClose, note, onSave, onDelete 
           </Button>
         )}
         <Button variant="secondary" onClick={onClose}>Cancel</Button>
-        <Button onClick={save}>Save note</Button>
+        <Button onClick={save}>Save</Button>
       </>
     }>
       <div className="space-y-4">
         <Input
           value={draft.title}
           onChange={(e) => set({ title: e.target.value })}
-          placeholder="Note title"
+          placeholder="Title"
           className="text-base font-medium"
           autoFocus
         />
@@ -78,7 +78,7 @@ export default function NoteEditorModal({ open, onClose, note, onSave, onDelete 
         </div>
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[11px] font-medium text-dusk mr-1">Card color</span>
+          <span className="text-[11px] font-medium text-dusk mr-1">Color</span>
           {Object.keys(NOTE_COLORS).map((key) => (
             <button
               key={key}
@@ -94,7 +94,7 @@ export default function NoteEditorModal({ open, onClose, note, onSave, onDelete 
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-medium text-dusk">Content (Markdown supported)</span>
+          <span className="text-[11px] font-medium text-dusk">Content</span>
           <button
             onClick={() => setPreview((v) => !v)}
             className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-md border border-[color:var(--line)] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:border-[color:var(--line-strong)] transition-colors neo-press"

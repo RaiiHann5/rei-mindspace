@@ -21,10 +21,16 @@ export default function DevToolsPage() {
   const [tab, setTab] = useState('snippets')
   return (
     <div>
-      <PageHeader title="Dev Tools" description="Small utilities for everyday development work." />
-      {/* Everything on this screen is functional data, so the tool names read as
-          literals (JSON, UUID, Base64) rather than as chrome. */}
-      <Tabs tabs={TABS} active={tab} onChange={setTab} className="mb-5 flex-wrap h-auto font-mono" />
+      <PageHeader
+        title="Dev Tools"
+        description="Small utilities for day-to-day work."
+        tools={
+          /* Row 2 — the tool switcher. Same split as the calendar: the page owns
+             its own chrome instead of a toolbar floating under the title. Tool
+             names read as literals (JSON, UUID, Base64) rather than as chrome. */
+          <Tabs tabs={TABS} active={tab} onChange={setTab} className="flex-wrap h-auto font-mono" />
+        }
+      />
       {tab === 'snippets' && <SnippetsTool />}
       {tab === 'colors' && <ColorPaletteTool />}
       {tab === 'gradient' && <GradientTool />}

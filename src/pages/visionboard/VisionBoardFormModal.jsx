@@ -30,8 +30,8 @@ export default function VisionBoardFormModal({ open, onClose, onSubmit, initial 
     <Modal
       open={open}
       onClose={onClose}
-      title={initial ? 'Edit vision' : 'Add to vision board'}
-      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={submit}>{initial ? 'Save' : 'Add to Board'}</Button></>}
+      title={initial ? 'Edit vision' : 'New vision'}
+      footer={<><Button variant="secondary" onClick={onClose}>Cancel</Button><Button onClick={submit}>{initial ? 'Save' : 'Add'}</Button></>}
     >
       <form onSubmit={submit} className="space-y-4">
         <div>
@@ -83,7 +83,7 @@ export default function VisionBoardFormModal({ open, onClose, onSubmit, initial 
 
         <div>
           <label className="text-xs font-medium text-muted-light dark:text-muted-dark mb-1 block">Description <span className="opacity-60 font-normal">(optional)</span></label>
-          <Textarea rows={3} value={form.description} onChange={(e) => set('description', e.target.value)} placeholder="What does this look like when it's real..." />
+          <Textarea rows={3} value={form.description} onChange={(e) => set('description', e.target.value)} placeholder="What it looks like when it's real" />
         </div>
       </form>
     </Modal>

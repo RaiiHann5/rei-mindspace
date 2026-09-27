@@ -49,29 +49,33 @@ export default function HabitsPage() {
 
   return (
     <div>
-      <PageHeader title="Habits" description="Small daily wins, compounding over time." actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> New habit</Button>} />
-
-      <div className="flex items-center gap-2 mb-5">
-        <button
-          onClick={() => setShowArchived((v) => !v)}
-          className={cn(
-            'h-8 px-3 rounded-md text-[13px] font-semibold border inline-flex items-center gap-1.5 neo-press transition-colors',
-            showArchived
-              ? 'bg-primary-500/10 border-primary-500/30 text-primary-600 dark:text-primary-400'
-              : 'border-[color:var(--line)] bg-black/[0.03] dark:bg-white/[0.05] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:border-[color:var(--line-strong)]'
-          )}
-        >
-          <Archive size={12} /> {showArchived ? 'Viewing archived' : `Archived${archivedCount ? ` (${archivedCount})` : ''}`}
-        </button>
-      </div>
+      {/* Row 1 — identity and the primary action. Row 2 — the archive switch. */}
+      <PageHeader
+        title="Habits"
+        description="Small things, every day."
+        actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> New habit</Button>}
+        tools={
+          <button
+            onClick={() => setShowArchived((v) => !v)}
+            className={cn(
+              'h-8 px-3 rounded-md text-[13px] font-semibold border inline-flex items-center gap-1.5 neo-press transition-colors',
+              showArchived
+                ? 'bg-primary-500/10 border-primary-500/30 text-primary-600 dark:text-primary-400'
+                : 'border-[color:var(--line)] bg-black/[0.03] dark:bg-white/[0.05] text-muted-light dark:text-muted-dark hover:text-ink-light dark:hover:text-ink-dark hover:border-[color:var(--line-strong)]'
+            )}
+          >
+            <Archive size={12} /> {showArchived ? 'Archived' : `Archived${archivedCount ? ` (${archivedCount})` : ''}`}
+          </button>
+        }
+      />
 
       {isLoading ? (
         <div className="grid md:grid-cols-2 gap-4">{Array.from({ length: 2 }).map((_, i) => <Skeleton key={i} className="h-40" />)}</div>
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={showArchived ? Archive : Flame}
-          title={showArchived ? 'No archived habits' : 'No habits tracked yet'}
-          description={showArchived ? 'Habits you archive will show up here.' : 'Add a habit to start building your streak.'}
+          title={showArchived ? 'Nothing archived' : 'Nothing tracked'}
+          description={showArchived ? 'Archived habits land here.' : 'Add one to start a streak.'}
           actionLabel={showArchived ? undefined : 'New habit'}
           onAction={() => setModalOpen(true)}
         />
@@ -108,8 +112,8 @@ export default function HabitsPage() {
                 {/* The heatmap is data, not decoration: it stays flat and unlit. */}
                 <div className="overflow-x-auto pb-1 mb-3"><HabitHeatmap history={h.history} color={h.color} cellSize="h-3 w-3" /></div>
                 <div className="flex items-center gap-2">
-                  <Badge tone="amber"><Flame size={11} className="inline mr-1 -mt-0.5" />{streak} day streak</Badge>
-                  <Badge>{rate}% last 30d</Badge>
+                  <Badge tone="amber"><Flame size={11} className="inline mr-1 -mt-0.5" />{streak}d streak</Badge>
+                  <Badge>{rate}% last 30 days</Badge>
                 </div>
               </Card>
             )

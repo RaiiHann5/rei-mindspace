@@ -36,7 +36,7 @@ export default function BudgetModal({ open, onClose, budgets, onSave }) {
     >
       <form onSubmit={submit} className="space-y-3">
         <p className="text-xs text-muted-light dark:text-muted-dark -mt-1 mb-2">
-          Kosongkan kategori yang tidak ingin dibatasi.
+          Kategori kosong tidak dibatasi.
         </p>
         {EXPENSE_CATEGORIES.map((c) => (
           <div key={c.value} className="flex items-center gap-3">

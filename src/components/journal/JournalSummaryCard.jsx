@@ -13,7 +13,7 @@ export default function JournalSummaryCard({ entry, isToday }) {
   return (
     <Card padding className="space-y-3.5">
       <p className="text-[11px] font-medium text-dusk">
-        {isToday ? 'Ringkasan Hari Ini' : 'Ringkasan Entri'}
+        {isToday ? 'Ringkasan hari ini' : 'Ringkasan entri'}
       </p>
 
       <div className="flex items-center gap-3">

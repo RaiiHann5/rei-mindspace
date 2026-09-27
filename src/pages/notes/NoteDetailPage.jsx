@@ -92,7 +92,7 @@ export default function NoteDetailPage() {
   if (!note) {
     return (
       <div className="text-center py-16">
-        <p className="text-muted-light dark:text-muted-dark mb-4">Note not found.</p>
+        <p className="text-muted-light dark:text-muted-dark mb-4">No such note.</p>
         <Link to="/notes" className="inline-flex items-center gap-1.5 text-sm font-semibold hover:underline">
           <ArrowLeft size={15} /> Back to notes
         </Link>
@@ -184,7 +184,7 @@ export default function NoteDetailPage() {
                       <input
                         value={newCategoryInput}
                         onChange={(e) => setNewCategoryInput(e.target.value)}
-                        placeholder="New category"
+                        placeholder="Name"
                         className="flex-1 min-w-0 h-7 rounded-lg px-2 text-xs bg-black/[0.04] dark:bg-white/[0.06] outline-none placeholder:text-dusk"
                       />
                       {newCategoryInput.trim() && (
@@ -265,7 +265,7 @@ export default function NoteDetailPage() {
             value={titleDraft}
             onChange={(e) => { setTitleDraft(e.target.value); scheduleTitleSave(e.target.value) }}
             onBlur={() => { if (titleDirtyRef.current) persistTitle(titleLatestRef.current) }}
-            placeholder="Untitled note"
+            placeholder="Untitled"
             className={cn('w-full bg-transparent outline-none placeholder:text-dusk font-display text-2xl md:text-3xl font-semibold tracking-tight leading-tight', palette.title)}
           />
 
@@ -302,7 +302,7 @@ export default function NoteDetailPage() {
             value={initialContentHtml}
             onChange={() => {}}
             onBlur={(html) => updateItem(note.id, { content: html })}
-            placeholder="Write your note..."
+            placeholder="Write"
             className="mx-auto w-full max-w-[68ch]"
           />
         </div>

@@ -30,7 +30,7 @@ export default function VaultPage() {
   return (
     <div className="animate-fade-in space-y-5">
       <PageHeader
-        title="Private Vault"
+        title="Private vault"
         description="Catatan pribadi terenkripsi end-to-end di browser."
         actions={
           status === 'unlocked' ? (
@@ -44,7 +44,7 @@ export default function VaultPage() {
         const now = new Date().toISOString()
         const created = await createItem({ ...envelope, createdAt: now, updatedAt: now })
         await v.unlock(envelope, pw, created?.id)
-        toast.success('Vault berhasil dibuat 🔐')
+        toast.success('Vault berhasil dibuat')
       }} /> : null}
 
       {record && status === 'locked' && (

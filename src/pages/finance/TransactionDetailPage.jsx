@@ -98,17 +98,17 @@ export default function TransactionDetailPage() {
           <Card className="flex flex-col items-center text-center gap-1.5">
             <Hash size={16} className="text-primary-600 dark:text-primary-400" />
             <p className="num text-lg">{rank.rank}<span className="text-dusk">/{rank.of}</span></p>
-            <p className="text-[11px] font-medium text-dusk">Peringkat di kategori bulan ini</p>
+            <p className="text-[11px] font-medium text-dusk">Peringkat</p>
           </Card>
           <Card className="flex flex-col items-center text-center gap-1.5">
             <Trophy size={16} className="text-amber-500" />
             <p className="font-mono tabular-nums text-lg">{formatCurrency(rank.categoryAvg)}</p>
-            <p className="text-[11px] font-medium text-dusk">Rata-rata kategori bulan ini</p>
+            <p className="text-[11px] font-medium text-dusk">Rata-rata kategori</p>
           </Card>
           <Card className="flex flex-col items-center text-center gap-1.5">
             <Layers size={16} className="text-teal-500" />
             <p className="font-mono tabular-nums text-lg">{formatCurrency(rank.categoryTotal)}</p>
-            <p className="text-[11px] font-medium text-dusk">Total kategori bulan ini</p>
+            <p className="text-[11px] font-medium text-dusk">Total kategori</p>
           </Card>
         </div>
       )}

@@ -18,8 +18,8 @@ export default function GoalsBarChart({ data }) {
         <CartesianGrid horizontal={false} stroke="var(--line)" />
         <XAxis type="number" domain={[0, 100]} tick={TICK} axisLine={false} tickLine={false} />
         <YAxis type="category" dataKey="title" width={140} tick={{ ...TICK, fontSize: 11 }} axisLine={false} tickLine={false} />
-        <Tooltip contentStyle={TOOLTIP} />
-        <Bar dataKey="progress" radius={[0, 4, 4, 0]} fill="#6E8C88" maxBarSize={14} />
+        <Tooltip contentStyle={TOOLTIP} formatter={(v) => [`${v}%`, 'progress']} />
+        <Bar name="progress" dataKey="progress" radius={[0, 4, 4, 0]} fill="#6E8C88" maxBarSize={14} />
       </BarChart>
     </ResponsiveContainer>
   )

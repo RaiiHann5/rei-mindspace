@@ -28,8 +28,8 @@ export default function HabitStreakChart({ data }) {
         <CartesianGrid vertical={false} stroke="var(--line)" />
         <XAxis dataKey="name" tick={TICK} axisLine={false} tickLine={false} />
         <YAxis hide />
-        <Tooltip contentStyle={TOOLTIP} />
-        <Bar dataKey="streak" radius={[4, 4, 0, 0]} maxBarSize={32}>
+        <Tooltip contentStyle={TOOLTIP} formatter={(v) => [`${v} days`, 'streak']} />
+        <Bar name="streak" dataKey="streak" radius={[4, 4, 0, 0]} maxBarSize={32}>
           {data.map((d, i) => <Cell key={i} fill={TONES[d.color] || TONES.primary} />)}
         </Bar>
       </BarChart>

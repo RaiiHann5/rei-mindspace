@@ -39,7 +39,7 @@ export default function MoviesPage() {
   return (
     <div>
       <PageHeader
-        title="My Letterboxd"
+        title="Movies"
         description="Watched, rated, queued."
         actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Log a film</Button>}
       />

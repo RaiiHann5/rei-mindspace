@@ -29,7 +29,7 @@ export default function TasksTrendChart({ data }) {
         <XAxis dataKey="label" tick={TICK} axisLine={false} tickLine={false} />
         <YAxis hide />
         <Tooltip contentStyle={TOOLTIP} />
-        <Area type="monotone" dataKey="completed" stroke={TEAL} strokeWidth={2} fill="url(#tasksFill)" />
+        <Area name="done" type="monotone" dataKey="completed" stroke={TEAL} strokeWidth={2} fill="url(#tasksFill)" />
       </AreaChart>
     </ResponsiveContainer>
   )

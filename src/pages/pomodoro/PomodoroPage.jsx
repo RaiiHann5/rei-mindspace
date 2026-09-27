@@ -32,7 +32,7 @@ function notify(title, body) {
   }
 }
 
-/* ---------- tiny local primitives (replaces @/components/ui) ---------- */
+/* ---------- tiny local primitives (the timer uses its own, not @/components/ui) ---------- */
 
 function Panel({ className, ...props }) {
   return (

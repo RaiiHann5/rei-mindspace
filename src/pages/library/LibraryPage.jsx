@@ -46,7 +46,7 @@ export default function LibraryPage() {
 
   return (
     <div>
-      <PageHeader title="Media Library" description="Books, films, games, music, courses." actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Add item</Button>} />
+      <PageHeader title="Media" description="Books, films, games, music, courses." actions={<Button onClick={() => { setEditing(null); setModalOpen(true) }}><Plus size={16} /> Add item</Button>} />
 
       <div className="flex flex-wrap gap-2 mb-4">
         {TYPE_FILTERS.map((t) => (

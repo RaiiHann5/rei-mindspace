@@ -20,7 +20,7 @@ export const NAV_SECTIONS = [
     ],
   },
   {
-    label: 'Break Room',
+    label: 'Break',
     items: [
       { to: '/arcade', label: 'Arcade', icon: Gamepad2 },
       { to: '/whiteboard', label: 'Whiteboard', icon: PenTool },
@@ -32,7 +32,7 @@ export const NAV_SECTIONS = [
       { to: '/notes', label: 'Notes', icon: StickyNote },
       { to: '/journal', label: 'Journal', icon: BookOpen },
       { to: '/brainstorm', label: 'Brainstorm', icon: Lightbulb },
-      { to: '/vault', label: 'Private Vault', icon: Lock },
+      { to: '/vault', label: 'Private vault', icon: Lock },
     ],
   },
   {
@@ -48,21 +48,21 @@ export const NAV_SECTIONS = [
     items: [
       { to: '/habits', label: 'Habits', icon: Flame },
       { to: '/goals', label: 'Goals', icon: Target },
-      { to: '/learning', label: 'Skills & Learning', icon: GraduationCap },
-      { to: '/vision-board', label: 'Vision Board', icon: Telescope },
+      { to: '/learning', label: 'Skills', icon: GraduationCap },
+      { to: '/vision-board', label: 'Vision board', icon: Telescope },
     ],
   },
   {
     label: 'Library',
     items: [
-      { to: '/library', label: 'Media Library', icon: Library },
-      { to: '/movies', label: 'My Letterboxd', icon: Clapperboard },
+      { to: '/library', label: 'Media', icon: Library },
+      { to: '/movies', label: 'Movies', icon: Clapperboard },
     ],
   },
   {
     label: 'Utilities',
     items: [
-      { to: '/assistant', label: 'AI Assistant', icon: Sparkles },
+      { to: '/assistant', label: 'Assistant', icon: Sparkles },
       { to: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
       { to: '/files', label: 'Files', icon: FolderOpen },
       { to: '/devtools', label: 'Dev Tools', icon: Wrench },

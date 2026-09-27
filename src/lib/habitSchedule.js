@@ -25,13 +25,13 @@ export function describeCadence(habit) {
   if (!habit) return ''
   switch (habit.cadence) {
     case 'daily':
-      return 'Every day'
+      return 'Daily'
     case 'monthly':
       return `${habit.target || 1}× per month`
     case 'custom': {
       const days = habit.weekDays || []
-      if (days.length === 0) return 'No days selected'
-      if (days.length === 7) return 'Every day'
+      if (days.length === 0) return 'No days picked'
+      if (days.length === 7) return 'Daily'
       return WEEKDAYS.filter((w) => days.includes(w.key)).map((w) => w.label.slice(0, 3)).join(', ')
     }
     case 'weekly':

@@ -24,8 +24,9 @@ export default function WeeklyFocusChart({ data }) {
         <Tooltip
           cursor={{ fill: 'var(--color-dusk)', opacity: 0.12 }}
           contentStyle={TOOLTIP}
+          formatter={(v) => [`${v} min`, 'minutes']}
         />
-        <Bar dataKey="minutes" radius={[4, 4, 4, 4]} fill={EMBER} maxBarSize={22} />
+        <Bar name="minutes" dataKey="minutes" radius={[4, 4, 4, 4]} fill={EMBER} maxBarSize={22} />
       </BarChart>
     </ResponsiveContainer>
   )

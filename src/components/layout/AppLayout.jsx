@@ -5,19 +5,12 @@ import Topbar from './Topbar'
 import CommandPalette from '@/components/command/CommandPalette'
 import FloatingAssistant from '@/components/assistant/FloatingAssistant'
 import QuickCapture from '@/components/capture/QuickCapture'
-import { NAV_SECTIONS, SETTINGS_ITEM } from './navConfig'
 import { startNotificationScheduler, stopNotificationScheduler } from '@/lib/notificationScheduler'
 
-function currentTitle(pathname) {
-  const all = NAV_SECTIONS.flatMap((s) => s.items).concat(SETTINGS_ITEM)
-  const match = all.find((i) => (i.end ? pathname === i.to : pathname.startsWith(i.to) && i.to !== '/'))
-  return match?.label || 'Dashboard'
-}
-
-// Two-column console shell: a full-height sidebar and a scrolling content
-// column. The column is `h-screen overflow-hidden` with only <main> scrolling,
-// which is what lets pages opt into filling the viewport height instead of
-// leaving a dead band below short content.
+// The console is a floating card inset from the viewport rather than an
+// edge-to-edge split — on a dark canvas the card reads as a lit panel sitting
+// on a desk, and the single ember glow lives behind it in the top-right corner
+// so the card edge has something to sit against.
 export default function AppLayout() {
   const { pathname } = useLocation()
 
@@ -27,19 +20,24 @@ export default function AppLayout() {
   }, [])
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas-light dark:bg-canvas-dark">
-      <Sidebar />
+    // The outer padding is what makes the console a floating card — it is the
+    // strip of canvas (and the ember glow behind it) that the card sits on.
+    // At mobile the padding goes to zero and the card goes full-bleed.
+    <div className="h-screen flex overflow-hidden max-md:p-0 md:p-2.5 lg:p-4">
+      <div className="relative flex-1 min-h-0 flex overflow-hidden border border-[color:var(--line)] bg-surface-light dark:bg-surface-dark shadow-pop rounded-2xl md:rounded-3xl">
+        <Sidebar />
 
-      <div className="flex-1 min-w-0 flex flex-col h-screen">
-        <Topbar title={currentTitle(pathname)} />
-        <main
-          key={pathname}
-          className="flex-1 min-h-0 overflow-y-auto px-4 pb-10 md:px-6 md:px-7 md:pb-12 animate-fade-in"
-        >
-          <div className="w-full mx-auto max-w-[1560px]">
-            <Outlet />
-          </div>
-        </main>
+        <div className="flex-1 min-w-0 min-h-0 flex flex-col">
+          <Topbar />
+          <main
+            key={pathname}
+            className="flex-1 min-h-0 overflow-y-auto px-4 pb-12 md:px-6 lg:px-8"
+          >
+            <div className="w-full mx-auto max-w-[1440px] pt-1">
+              <Outlet />
+            </div>
+          </main>
+        </div>
       </div>
 
       <CommandPalette />

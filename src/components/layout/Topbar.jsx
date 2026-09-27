@@ -9,34 +9,29 @@ import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
 const iconBtn =
-  'h-9 w-9 rounded-md flex items-center justify-center shrink-0 text-muted-light dark:text-muted-dark ' +
+  'h-9 w-9 rounded-lg flex items-center justify-center shrink-0 text-muted-light dark:text-muted-dark ' +
   'hover:text-ink-light dark:hover:text-ink-dark hover:bg-black/[0.04] dark:hover:bg-white/[0.05] transition-colors'
 
-// Full-width sticky header for the content column. No floating margins — it
-// is the top edge of the console, separated from the page by a hairline and a
-// blur rather than by empty canvas.
-export default function Topbar({ title }) {
+// Utility row only. The page title and its controls belong to the page itself
+// (see PageHeader), which is what the reference shells do — a single row of
+// global affordances, then the page owns the space under it.
+export default function Topbar() {
   const { theme, toggle } = useThemeStore()
   const { setCommandOpen } = useUIStore()
-  const { user, isLocalMode } = useAuthStore()
+  const { user } = useAuthStore()
 
   const onToggle = () => { toggle(); setTimeout(applyTheme, 0) }
 
   return (
-    <header
-      className="sticky top-0 z-20 h-16 shrink-0 flex items-center gap-3 px-4 md:px-6 md:px-7
-                 bg-canvas-light/85 dark:bg-canvas-dark/85 backdrop-blur-xl
-                 border-b border-[color:var(--line)]"
-    >
+    <header className="shrink-0 h-16 flex items-center gap-3 px-4 md:px-6 lg:px-8">
       <MobileNav />
-      <h1 className="font-display text-base md:text-lg font-semibold tracking-tight truncate">{title}</h1>
 
       <button
         onClick={() => setCommandOpen(true)}
-        className="ml-1 hidden sm:flex items-center gap-2.5 h-9 px-3.5 rounded-md text-sm w-72 max-w-[34vw] transition-colors border border-[color:var(--line)] bg-black/[0.02] dark:bg-white/[0.02] text-dusk hover:border-[color:var(--line-strong)] hover:text-muted-light dark:hover:text-muted-dark"
+        className="flex items-center gap-2.5 h-9 px-3.5 rounded-lg text-sm w-full max-w-[420px] transition-colors border border-[color:var(--line)] bg-black/[0.02] dark:bg-white/[0.02] text-dusk hover:border-[color:var(--line-strong)] hover:text-muted-light dark:hover:text-muted-dark"
       >
         <Search size={15} strokeWidth={2.2} />
-        <span className="flex-1 text-left">Search anything</span>
+        <span className="flex-1 text-left">Search or jump to</span>
         <kbd className="text-[10px] px-1.5 py-0.5 rounded-[7px] border border-[color:var(--line)] font-mono">⌘K</kbd>
       </button>
 
@@ -48,14 +43,9 @@ export default function Topbar({ title }) {
           {theme === 'dark' ? <Sun size={17} strokeWidth={2.2} /> : <Moon size={17} strokeWidth={2.2} />}
         </button>
         <NotificationCenter />
-        <Link to="/settings" className="ml-1 rounded-full shrink-0">
-          <Avatar name={user?.displayName || 'You'} src={user?.photoURL} size={34} />
+        <Link to="/settings" className="ml-1 rounded-full shrink-0" title={user?.displayName || 'Profile'}>
+          <Avatar name={user?.displayName || 'You'} src={user?.photoURL} size={32} />
         </Link>
-        {isLocalMode && (
-          <span className="hidden xl:inline text-[11px] font-medium px-2 py-1 rounded-md border border-[color:var(--line)] text-dusk shrink-0">
-            Local mode
-          </span>
-        )}
       </div>
     </header>
   )

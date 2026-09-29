@@ -91,7 +91,18 @@ export default function FinancePage() {
     setBudgetModalOpen(false)
   }
 
-  const allCategoryOptions = typeFilter === 'income' ? INCOME_CATEGORIES : typeFilter === 'expense' ? EXPENSE_CATEGORIES : [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES]
+  // 'lainnya' exists in BOTH the expense and income lists, so merging them
+  // yields two entries with the same `value` — which React rejects as a
+  // duplicate key. The merged list tags each entry with its side and the
+  // <option> key uses that; the value stays untouched because it has to
+  // match the category stored on the transaction.
+  const allCategoryOptions =
+    typeFilter === 'income' ? INCOME_CATEGORIES
+      : typeFilter === 'expense' ? EXPENSE_CATEGORIES
+        : [
+          ...EXPENSE_CATEGORIES.map((c) => ({ ...c, side: 'e' })),
+          ...INCOME_CATEGORIES.map((c) => ({ ...c, side: 'i' })),
+        ]
 
   return (
     <div>
@@ -256,7 +267,9 @@ export default function FinancePage() {
         </div>
         <Select value={categoryFilter || ''} onChange={(e) => setCategoryFilter(e.target.value || null)} className="w-44 h-8 text-xs">
           <option value="">Semua kategori</option>
-          {allCategoryOptions.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+          {/* `c.side` is only set on the merged list; the single-side lists
+              already have unique values, so the key falls back cleanly. */}
+          {allCategoryOptions.map((c) => <option key={`${c.side || 'x'}-${c.value}`} value={c.value}>{c.label}</option>)}
         </Select>
         <div className="relative flex-1 min-w-[160px]">
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-dusk" />

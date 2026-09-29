@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Pin, MoreHorizontal, Star, Trash2, Copy, Archive, ArchiveRestore, Palette } from 'lucide-react'
+import { Pin, MoreHorizontal, Star, Trash2, Copy, Archive, ArchiveRestore, Palette, Link2, Paperclip } from 'lucide-react'
 import { cn, formatDate } from '@/lib/utils'
 import { htmlToPlainText, looksLikeHtml } from '@/lib/safeMarkdown'
+import { linksOf, attachmentsOf } from '@/lib/noteAttachments'
 
 // Note accent palette. Cards themselves are flat in Space+ — the chosen colour
 // only shows up on the small chips, the icon buttons and the picker dot, so a
@@ -88,7 +89,6 @@ function parsePreview(content) {
     const items = listLines.map((l) => l.replace(/^[-*•]\s+/, '').replace(/^\d+[.)]\s+/, ''))
     return { type: 'list', items: items.slice(0, 6), more: items.length > 6 }
   }
-
   const headingLine = lines.find((l) => /^#{1,3}\s+/.test(l))
   const heading = headingLine ? headingLine.replace(/^#{1,3}\s+/, '') : null
   const body = lines
@@ -110,12 +110,15 @@ export default function CardNotes({
   onDuplicate,
   onToggleArchive,
   onChangeColor,
+  compact = false,
   className,
 }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef(null)
   const palette = NOTE_COLORS[colorKey] || NOTE_COLORS.gray
   const preview = parsePreview(note.content)
+  const linkCount = linksOf(note).length
+  const docCount = attachmentsOf(note).length
 
   useEffect(() => {
     if (!menuOpen) return
@@ -133,7 +136,8 @@ export default function CardNotes({
       onClick={onOpen}
       onKeyDown={(e) => { if (e.key === 'Enter') onOpen?.() }}
       className={cn(
-        'group relative flex flex-col gap-3 rounded-2xl p-5 cursor-pointer card-hover',
+        'group relative flex flex-col gap-3 rounded-2xl cursor-pointer card-hover',
+        compact ? 'p-4 gap-2.5' : 'p-5',
         'border border-[color:var(--line)]',
         palette.bg,
         className
@@ -231,29 +235,33 @@ export default function CardNotes({
       </div>
 
       {/* title */}
-      <h3 className={cn('font-display font-semibold tracking-tight text-[17px] leading-snug line-clamp-2', palette.title)}>
+      <h3 className={cn(
+        'font-display font-semibold tracking-tight leading-snug line-clamp-2',
+        compact ? 'text-[15px]' : 'text-[17px]',
+        palette.title
+      )}>
         {note.title || 'Untitled'}
       </h3>
 
       {/* content preview */}
-      <div className={cn('text-[13px] leading-relaxed flex-1', palette.body)}>
+      <div className={cn('flex-1', compact ? 'text-[12.5px] leading-relaxed' : 'text-[13.5px] leading-relaxed', palette.body)}>
         {preview.type === 'empty' && <p className="italic text-dusk">Empty</p>}
 
         {preview.type === 'text' && (
           <>
             {preview.heading && <p className={cn('font-semibold mb-1', palette.title)}>{preview.heading}</p>}
-            <p className="line-clamp-4">{preview.body}</p>
+            <p className={compact ? 'line-clamp-2' : 'line-clamp-4'}>{preview.body}</p>
           </>
         )}
 
         {preview.type === 'list' && (
-          <ul className="space-y-1">
+          <ul className="space-y-0.5">
             {preview.items.map((item, i) => (
               <li
                 key={i}
                 className={cn(
                   'truncate',
-                  i === preview.items.length - 1 && !preview.more && 'font-medium'
+                  !compact && i === preview.items.length - 1 && !preview.more && 'font-medium'
                 )}
               >
                 {item}
@@ -265,11 +273,27 @@ export default function CardNotes({
       </div>
 
       {/* footer */}
-      <div className="flex items-center justify-between pt-1">
-        <span className="text-[11px] text-dusk">
+      <div className="flex items-center justify-between gap-2 pt-1">
+        <span className="text-[11px] text-dusk truncate">
           {formatDate(note.updatedAt || note.createdAt)}
         </span>
-        {note.favorite && <Star size={13} className="text-amber-500 fill-amber-500" />}
+        <div className="flex items-center gap-2.5 shrink-0">
+          {/* Attachment markers, so a card tells you what is inside it before
+              you open it. */}
+          {linkCount > 0 && (
+            <span className="flex items-center gap-1 text-[11px] text-dusk" title={`${linkCount} link`}>
+              <Link2 size={11} strokeWidth={2.2} />
+              <span className="font-mono tabular-nums">{linkCount}</span>
+            </span>
+          )}
+          {docCount > 0 && (
+            <span className="flex items-center gap-1 text-[11px] text-dusk" title={`${docCount} document`}>
+              <Paperclip size={11} strokeWidth={2.2} />
+              <span className="font-mono tabular-nums">{docCount}</span>
+            </span>
+          )}
+          {note.favorite && <Star size={13} className="text-amber-500 fill-amber-500" />}
+        </div>
       </div>
     </div>
   )

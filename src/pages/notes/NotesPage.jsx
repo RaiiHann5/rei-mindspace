@@ -1,13 +1,27 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, StickyNote, Archive, X } from 'lucide-react'
+import { Plus, Search, StickyNote, Archive, X, LayoutGrid, Rows3, ArrowDownWideNarrow } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useCollection } from '@/hooks/useCollection'
-import { PageHeader, Button, Input, EmptyState, Skeleton } from '@/components/ui'
+import { PageHeader, Button, Input, EmptyState, Skeleton, Select } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import CardNotes, { colorForNote } from '@/components/notes/CardNotes'
 
 const DEFAULT_CATEGORIES = ['General', 'Work', 'Personal', 'Ideas', 'Study']
+
+// Density. `roomy` is the new default — four columns left each card around
+// 330px, which clipped the preview to a couple of words. Three columns with a
+// larger gap gives the card room to actually show its content.
+const GRID = {
+  roomy: 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5',
+  dense: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3.5',
+}
+
+const SORTS = {
+  updated: { label: 'Updated', fn: (a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt) },
+  created: { label: 'Newest', fn: (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0) },
+  title: { label: 'A–Z', fn: (a, b) => (a.title || '').localeCompare(b.title || '') },
+}
 
 export default function NotesPage() {
   const { items, isLoading, createItem, updateItem, removeItem } = useCollection('notes')
@@ -17,6 +31,8 @@ export default function NotesPage() {
   const [showArchived, setShowArchived] = useState(false)
   const [addingCategory, setAddingCategory] = useState(false)
   const [newCategory, setNewCategory] = useState('')
+  const [grid, setGrid] = useState('roomy')
+  const [sort, setSort] = useState('updated')
 
   const categories = useMemo(() => {
     const existing = new Set(items.map((n) => n.folder).filter(Boolean))
@@ -24,12 +40,15 @@ export default function NotesPage() {
     return ['All', ...existing]
   }, [items])
 
-  const filtered = useMemo(() => items
-    .filter((n) => (showArchived ? !!n.archived : !n.archived))
-    .filter((n) => category === 'All' || n.folder === category)
-    .filter((n) => !query.trim() || `${n.title || ''}`.toLowerCase().includes(query.toLowerCase()) || `${n.content || ''}`.toLowerCase().includes(query.toLowerCase()))
-    .sort((a, b) => (b.pinned - a.pinned) || (new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))),
-    [items, category, query, showArchived])
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return items
+      .filter((n) => (showArchived ? !!n.archived : !n.archived))
+      .filter((n) => category === 'All' || n.folder === category)
+      .filter((n) => !q || `${n.title || ''}`.toLowerCase().includes(q) || `${n.content || ''}`.toLowerCase().includes(q))
+      // Pinned first always, then the chosen order within each pin group.
+      .sort((a, b) => (b.pinned - a.pinned) || SORTS[sort].fn(a, b))
+  }, [items, category, query, showArchived, sort])
 
   const archivedCount = useMemo(() => items.filter((n) => n.archived).length, [items])
 
@@ -134,13 +153,49 @@ export default function NotesPage() {
                 </button>
               )}
             </div>
+            <div className="ml-auto flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] text-dusk hidden lg:inline flex items-center gap-1">
+                  <ArrowDownWideNarrow size={12} strokeWidth={2} />
+                  Sort
+                </span>
+                <Select value={sort} onChange={(e) => setSort(e.target.value)} className="h-8 w-32 text-[13px]">
+                  {Object.entries(SORTS).map(([k, v]) => (
+                    <option key={k} value={k}>{v.label}</option>
+                  ))}
+                </Select>
+              </div>
+
+              <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-black/[0.04] dark:bg-white/[0.05]">
+                {[
+                  { id: 'roomy', icon: LayoutGrid, label: 'Roomy' },
+                  { id: 'dense', icon: Rows3, label: 'Dense' },
+                ].map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => setGrid(opt.id)}
+                    title={opt.label}
+                    aria-label={`${opt.label} grid`}
+                    aria-pressed={grid === opt.id}
+                    className={cn(
+                      'h-7 w-8 rounded-md grid place-items-center transition-colors neo-press',
+                      grid === opt.id
+                        ? 'bg-surface-light dark:bg-panel2-dark text-ink-light dark:text-ink-dark shadow-soft'
+                        : 'text-dusk hover:text-ink-light dark:hover:text-ink-dark'
+                    )}
+                  >
+                    <opt.icon size={14} strokeWidth={2} />
+                  </button>
+                ))}
+              </div>
+            </div>
           </>
         }
       />
 
       {isLoading ? (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-48 rounded-2xl" />)}
+        <div className={cn(GRID[grid])}>
+          {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-52 rounded-2xl" />)}
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
@@ -150,22 +205,28 @@ export default function NotesPage() {
           onAction={showArchived ? undefined : createNote}
         />
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((n, i) => (
-            <CardNotes
-              key={n.id}
-              note={n}
-              colorKey={colorForNote(n, i)}
-              onOpen={() => navigate(`/notes/${n.id}`)}
-              onTogglePin={() => updateItem(n.id, { pinned: !n.pinned })}
-              onToggleFavorite={() => updateItem(n.id, { favorite: !n.favorite })}
-              onDuplicate={() => duplicate(n)}
-              onDelete={() => del(n)}
-              onToggleArchive={() => toggleArchive(n)}
-              onChangeColor={(color) => changeColor(n, color)}
-            />
-          ))}
-        </div>
+        <>
+          <div className={cn(GRID[grid])}>
+            {filtered.map((n, i) => (
+              <CardNotes
+                key={n.id}
+                note={n}
+                colorKey={colorForNote(n, i)}
+                onOpen={() => navigate(`/notes/${n.id}`)}
+                onTogglePin={() => updateItem(n.id, { pinned: !n.pinned })}
+                onToggleFavorite={() => updateItem(n.id, { favorite: !n.favorite })}
+                onDuplicate={() => duplicate(n)}
+                onDelete={() => del(n)}
+                onToggleArchive={() => toggleArchive(n)}
+                onChangeColor={(color) => changeColor(n, color)}
+                compact={grid === 'dense'}
+              />
+            ))}
+          </div>
+          <p className="mt-5 text-[11px] text-dusk font-mono tabular-nums">
+            {filtered.length} note{filtered.length === 1 ? '' : 's'}
+          </p>
+        </>
       )}
     </div>
   )

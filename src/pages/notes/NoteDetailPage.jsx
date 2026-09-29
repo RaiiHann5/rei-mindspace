@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Pin, Star, Trash2, Copy, Clock, Folder, Tag, X, Plus, Archive, ArchiveRestore, Palette, Check } from 'lucide-react'
+import { ArrowLeft, Pin, Star, Trash2, Copy, Clock, Folder, Tag, X, Plus, Archive, ArchiveRestore, Palette, Check, Link2, ChevronDown } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useCollection } from '@/hooks/useCollection'
 import { Skeleton } from '@/components/ui'
@@ -8,6 +8,8 @@ import { cn, formatDate } from '@/lib/utils'
 import { looksLikeHtml, plainTextToHtml } from '@/lib/safeMarkdown'
 import { NOTE_COLORS, colorForNote } from '@/components/notes/CardNotes'
 import RichTextEditor from '@/components/notes/RichTextEditor'
+import NoteAttachments from '@/components/notes/NoteAttachments'
+import { linksOf, attachmentsOf } from '@/lib/noteAttachments'
 
 const DEFAULT_CATEGORIES = ['General', 'Work', 'Personal', 'Ideas', 'Study']
 
@@ -20,6 +22,7 @@ export default function NoteDetailPage() {
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(false)
   const [colorMenuOpen, setColorMenuOpen] = useState(false)
   const [newCategoryInput, setNewCategoryInput] = useState('')
+  const [showAttachments, setShowAttachments] = useState(false)
   const categoryMenuRef = useRef(null)
   const colorMenuRef = useRef(null)
 
@@ -307,6 +310,38 @@ export default function NoteDetailPage() {
           />
         </div>
       </div>
+
+      {/* Links and uploaded documents live under the writing surface rather than
+          in the header — they are supporting material, not part of the note
+          body, and a note that has none should not pay for the section. */}
+      {(linksOf(note).length > 0 || attachmentsOf(note).length > 0) && (
+        <NoteAttachments
+          links={linksOf(note)}
+          attachments={attachmentsOf(note)}
+          onChange={(patch) => updateItem(note.id, patch)}
+        />
+      )}
+      {linksOf(note).length === 0 && attachmentsOf(note).length === 0 && (
+        <div>
+          <button
+            onClick={() => setShowAttachments((v) => !v)}
+            className="flex items-center gap-1.5 text-[12.5px] font-medium text-dusk hover:text-ink-light dark:hover:text-ink-dark transition-colors"
+          >
+            <Link2 size={13} strokeWidth={2.2} />
+            Add a link or document
+            <ChevronDown size={13} className={cn('transition-transform', showAttachments && 'rotate-180')} />
+          </button>
+          {showAttachments && (
+            <div className="mt-3">
+              <NoteAttachments
+                links={[]}
+                attachments={[]}
+                onChange={(patch) => { updateItem(note.id, patch); setShowAttachments(false) }}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

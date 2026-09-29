@@ -7,6 +7,7 @@ import {
   Pencil, Check, Loader2, Heart,
 } from 'lucide-react'
 import { Button, Textarea } from '@/components/ui'
+import MoodFace, { MOOD_TONE } from '@/components/journal/MoodFace'
 import { cn, debounce } from '@/lib/utils'
 import {
   MOODS, TAG_SUGGESTIONS, randomPrompt, countWords, estimateMinutes, entryCompletion, isEntryBlank,
@@ -179,20 +180,20 @@ export default function JournalEntryPanel({ entry, updateItem, onDeleteRequest }
         <div className="flex gap-2 flex-wrap">
           {MOODS.map((m) => {
             const active = draft.mood === m.value
+            const tone = MOOD_TONE[m.value] || MOOD_TONE[3]
             return (
               <button
                 key={m.value}
                 disabled={!isEditing}
                 onClick={() => patch({ mood: m.value }, { immediate: true })}
+                title={m.label}
                 className={cn(
-                  'group flex flex-col items-center gap-1 rounded-xl px-2.5 py-2 transition-colors disabled:cursor-default neo-press',
-                  active
-                    ? 'bg-primary-500/15 text-primary-600 dark:text-primary-400'
-                    : 'text-ink-light dark:text-ink-dark',
+                  'group flex flex-col items-center gap-1.5 rounded-xl px-3 py-2 transition-all disabled:cursor-default neo-press',
+                  active ? cn('ring-2', tone.bg, tone.text) : 'text-ink-light dark:text-ink-dark',
                   isEditing && !active && 'hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
                 )}
               >
-                <span className="text-xl leading-none">{m.emoji}</span>
+                <MoodFace value={m.value} size={30} />
                 <span className={cn('text-[10px] font-semibold', active ? '' : 'text-dusk')}>{m.label}</span>
               </button>
             )

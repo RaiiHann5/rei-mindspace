@@ -88,8 +88,11 @@ export default function HabitsPage() {
               <Card key={h.id} hover className="group cursor-pointer" onClick={() => navigate(`/habits/${h.id}`)}>
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className={cn('h-10 w-10 rounded-xl flex items-center justify-center shrink-0', iconTone[h.color] || iconTone.primary)}>
-                      <HabitIcon name={h.icon} size={19} />
+                    <div
+                      className={cn('h-11 w-11 rounded-xl flex items-center justify-center shrink-0', iconTone[h.color] || iconTone.primary)}
+                      title={h.icon}
+                    >
+                      <HabitIcon name={h.icon} size={22} />
                     </div>
                     <div className="min-w-0">
                       <p className="font-display font-semibold tracking-tight truncate">{h.name}</p>

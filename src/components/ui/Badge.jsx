@@ -2,42 +2,54 @@ import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-// Badges, rebuilt from the reference shells.
+// Badges, per the reference: a full pill with a 2px border in the tone's own
+// colour, a low-opacity tint of that colour behind it, the label in the tone,
+// and — the detail that makes these read as designed rather than generated —
+// a leading icon sitting in its own slightly deeper rounded tile.
 //
-// The old version was a 10px chip wrapped in a `ring-1`, which read as an
-// outlined pill and fought the flat panels it sat on. The reference treatment
-// is a soft filled chip: a low-opacity tint of the tone behind text in the
-// tone itself, no border and no ring, so a row of six badges reads as one
-// quiet band of colour instead of six separate objects.
-//
-// `solid` is now the gradient variant and is reserved for the single most
-// important state on a row (a live status), because the ember gradient is the
-// app's one glow and a row of six of them would undo that.
+// Earlier iteration dropped the border entirely in favour of a flat tint. The
+// reference is right that the border is what makes a badge look deliberate, so
+// it is back, at 2px, always in the tone.
 const tones = {
   default: {
-    soft: 'bg-black/[0.06] dark:bg-white/[0.07] text-muted-light dark:text-muted-dark',
-    solid: 'bg-accent-gradient text-accent-ink',
+    text: 'text-ink-light dark:text-ink-dark',
+    border: 'border-[color:var(--line-strong)]',
+    fill: 'bg-black/[0.04] dark:bg-white/[0.05]',
+    iconTile: 'bg-black/[0.08] dark:bg-white/[0.10]',
     dot: 'bg-dusk',
+    icon: 'text-muted-light dark:text-muted-dark',
   },
   primary: {
-    soft: 'bg-primary-500/[0.14] text-primary-700 dark:text-ember-300',
-    solid: 'bg-accent-gradient text-accent-ink',
-    dot: 'bg-ember-500',
+    text: 'text-primary-700 dark:text-ember-300',
+    border: 'border-primary-500/70',
+    fill: 'bg-primary-500/[0.10]',
+    iconTile: 'bg-primary-500/20',
+    dot: 'bg-primary-500',
+    icon: 'text-primary-600 dark:text-ember-300',
   },
   amber: {
-    soft: 'bg-amber-500/[0.16] text-amber-700 dark:text-amber-300',
-    solid: 'bg-amber-500 text-ink-light',
+    text: 'text-amber-700 dark:text-amber-300',
+    border: 'border-amber-500/70',
+    fill: 'bg-amber-500/[0.12]',
+    iconTile: 'bg-amber-500/20',
     dot: 'bg-amber-500',
+    icon: 'text-amber-600 dark:text-amber-300',
   },
   teal: {
-    soft: 'bg-teal-500/[0.16] text-teal-700 dark:text-teal-300',
-    solid: 'bg-teal-500 text-ink-light',
+    text: 'text-teal-700 dark:text-teal-300',
+    border: 'border-teal-500/70',
+    fill: 'bg-teal-500/[0.12]',
+    iconTile: 'bg-teal-500/20',
     dot: 'bg-teal-500',
+    icon: 'text-teal-600 dark:text-teal-300',
   },
   rose: {
-    soft: 'bg-rose-500/[0.16] text-rose-700 dark:text-rose-300',
-    solid: 'bg-rose-500 text-white',
+    text: 'text-rose-700 dark:text-rose-300',
+    border: 'border-rose-500/70',
+    fill: 'bg-rose-500/[0.12]',
+    iconTile: 'bg-rose-500/20',
     dot: 'bg-rose-500',
+    icon: 'text-rose-600 dark:text-rose-300',
   },
 }
 
@@ -64,12 +76,11 @@ export default function Badge({
   }, [pop])
 
   const sizes = {
-    sm: 'h-[18px] px-1.5 text-[10.5px] gap-1',
-    md: 'h-[22px] px-2 text-[11.5px] gap-1.5',
-    lg: 'h-6 px-2.5 text-xs gap-1.5',
+    sm: { box: 'h-6 pl-1 pr-2.5 text-[11.5px] gap-1.5', tile: 'h-4 w-4', icon: 10 },
+    md: { box: 'h-7 pl-1 pr-3 text-[12.5px] gap-2', tile: 'h-[18px] w-[18px]', icon: 11 },
+    lg: { box: 'h-8 pl-1.5 pr-3.5 text-[13.5px] gap-2', tile: 'h-5 w-5', icon: 13 },
   }
-
-  const iconSizes = { sm: 10, md: 11, lg: 12 }
+  const s = sizes[size] || sizes.md
 
   const handleRemove = (e) => {
     e.stopPropagation()
@@ -80,25 +91,33 @@ export default function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-[7px] font-semibold leading-none whitespace-nowrap',
+        'group inline-flex items-center rounded-full border-2 font-semibold leading-none whitespace-nowrap',
         'transition-all duration-200 ease-out will-change-transform',
-        sizes[size],
-        variant === 'solid' ? palette.solid : palette.soft,
+        s.box,
+        palette.border,
+        palette.fill,
+        palette.text,
         pop && (mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0'),
         removing && 'scale-90 opacity-0',
         className
       )}
     >
-      {dot && (
-        <span className="relative flex h-[5px] w-[5px] shrink-0 items-center">
-          {pulse && (
-            <span className={cn('absolute inline-flex h-full w-full animate-ping rounded-full opacity-70', palette.dot)} />
-          )}
-          <span className={cn('relative inline-flex h-[5px] w-[5px] rounded-full', palette.dot)} />
+      {/* Icon tile — the reference's signature detail. Skipped when there is no
+          icon, so a plain label pill does not carry an empty notch. */}
+      {Icon && (
+        <span className={cn('grid place-items-center rounded-[6px] shrink-0', s.tile, palette.iconTile, palette.icon)}>
+          <Icon size={s.icon} strokeWidth={2.4} />
         </span>
       )}
 
-      {Icon && <Icon size={iconSizes[size]} className="shrink-0" strokeWidth={2.4} />}
+      {!Icon && dot && (
+        <span className="relative flex h-[6px] w-[6px] shrink-0 items-center">
+          {pulse && (
+            <span className={cn('absolute inline-flex h-full w-full animate-ping rounded-full opacity-70', palette.dot)} />
+          )}
+          <span className={cn('relative inline-flex h-[6px] w-[6px] rounded-full', palette.dot)} />
+        </span>
+      )}
 
       <span>{children}</span>
 
@@ -107,9 +126,9 @@ export default function Badge({
           type="button"
           onClick={handleRemove}
           aria-label="Remove"
-          className="shrink-0 -mr-0.5 rounded p-0.5 opacity-50 transition-opacity hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10"
+          className="-mr-1 shrink-0 rounded-full p-0.5 opacity-50 transition-opacity hover:opacity-100 hover:bg-black/10 dark:hover:bg-white/10"
         >
-          <X size={iconSizes[size]} strokeWidth={2.6} />
+          <X size={s.icon + 1} strokeWidth={2.8} />
         </button>
       )}
     </span>

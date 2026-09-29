@@ -1,7 +1,8 @@
-import { Search, Pin, Tag as TagIcon, X } from 'lucide-react'
+import { Search, Pin, Tag as TagIcon, X, CircleDashed } from 'lucide-react'
 import { id as idLocale } from 'date-fns/locale'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
+import MoodFace from '@/components/journal/MoodFace'
 import { MOODS, moodInfo, entryCompletion } from '@/lib/journalPrompts'
 import Select from '@/components/ui/Select'
 import Skeleton from '@/components/ui/Skeleton'
@@ -49,7 +50,7 @@ export default function JournalHistoryList({
                 ? 'bg-primary-500/15 ring-1 ring-inset ring-primary-500/30'
                 : 'hover:bg-black/[0.04] dark:hover:bg-white/[0.06]')}
           >
-            {m.emoji}
+            {m.value ? <MoodFace value={m.value} size={19} title={m.label} /> : null}
           </button>
         ))}
       </div>
@@ -88,7 +89,9 @@ export default function JournalHistoryList({
                 )}
               >
                 <div className="flex items-center gap-1.5 mb-1">
-                  <span className="text-base leading-none">{mood ? mood.emoji : '❔'}</span>
+                  {mood
+                    ? <MoodFace value={j.mood} size={19} title={mood.label} />
+                    : <CircleDashed size={15} strokeWidth={2} className="text-dusk shrink-0" />}
                   <span className="text-xs font-semibold capitalize">{format(new Date(j.date), 'EEE, d MMM', { locale: idLocale })}</span>
                   {j.pinned && <Pin size={10} className="fill-current text-amber-500 shrink-0" />}
                   <span className={cn('ml-auto text-[9px] font-semibold px-1.5 py-0.5 rounded-[7px] shrink-0 font-mono tabular-nums', done === total ? 'bg-teal-500/12 text-teal-700 dark:text-teal-300' : 'bg-black/[0.05] dark:bg-white/[0.08] text-dusk')}>
